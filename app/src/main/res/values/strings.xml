@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">IClother</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="login_hint">Email/Phone</string>
+    <string name="pwd">password</string>
+    <string name="action_login">login</string>
+    <string name="register_hint">No account? Create one</string>
+</resources>
