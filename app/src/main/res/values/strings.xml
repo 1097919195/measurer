@@ -7,4 +7,22 @@
     <string name="pwd">password</string>
     <string name="action_login">login</string>
     <string name="register_hint">No account? Create one</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to signIn -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="login_error_message">login failed</string>
+    <string name="action_login_again">Login Agagin?</string>
+    <string name="name_enter_valid">用户名输入无效</string>
+    <string name="pwd_enter_valid">请输入6-20位长度的密码</string>
 </resources>

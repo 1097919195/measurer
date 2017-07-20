@@ -11,10 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import stuido.tsing.iclother.R;
-import stuido.tsing.iclother.sign.SignActivity;
 
 /**
- * A login screen that offers login via email/password.
+ * A signIn screen that offers signIn via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,20 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_layout);
-        _emailText = (EditText) findViewById(R.id.input_email);
-        _passwordText = (EditText) findViewById(R.id.input_password);
-        _loginButton = (Button) findViewById(R.id.btn_login);
-        _signupLink = (TextView) findViewById(R.id.link_signup);
-        _loginButton.setOnClickListener(view -> login());
 
-        _signupLink.setOnClickListener(view -> {
-            // Start the Signup activity
-            Intent intent = new Intent(getApplicationContext(), SignActivity.class);
-            startActivityForResult(intent, REQUEST_SIGNUP);
-            finish();
-            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-        });
     }
 
     public void login() {
@@ -67,13 +53,11 @@ public class LoginActivity extends AppCompatActivity {
         // TODO: Implement your own authentication logic here.
 
         new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
+                () -> {
+                    // On complete call either onLoginSuccess or onLoginFailed
+                    onLoginSuccess();
+                    // onLoginFailed();
+                    progressDialog.dismiss();
                 }, 3000);
     }
 
