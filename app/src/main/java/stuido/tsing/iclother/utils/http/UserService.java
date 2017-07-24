@@ -1,4 +1,4 @@
-package stuido.tsing.iclother.utils;
+package stuido.tsing.iclother.utils.http;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;

@@ -1,13 +1,10 @@
-package stuido.tsing.iclother.utils;
+package stuido.tsing.iclother.utils.http;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import stuido.tsing.iclother.data.user.User;
-
-/**
- * Created by Endless on 2017/7/19.
- */
+import stuido.tsing.iclother.utils.ApiException;
 
 public class UserHttpHelper extends HttpHelper {
     public Observable<User> signIn(String name, String pwd) {

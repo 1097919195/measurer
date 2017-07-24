@@ -1,4 +1,4 @@
-package stuido.tsing.iclother.utils;
+package stuido.tsing.iclother.utils.http;
 
 /**
  * Created by Endless on 2017/7/19.

@@ -32,14 +32,14 @@ public class SignActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_layout);
+        setContentView(R.layout.sign_frag);
 //        ButterKnife.bind(this);
 //
 //        _signupButton.setOnClickListener(view -> signup());
 //
 //        _loginLink.setOnClickListener(view -> {
 //            // Finish the registration screen and return to the Login activity
-//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            Intent intent = new Intent(getApplicationContext(), AccountActivity.class);
 //            startActivity(intent);
 //            finish();
 //            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

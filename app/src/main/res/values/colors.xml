@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<color name="primary">#E43F3F</color>-->
-    <color name="primary">#d84042</color>
+    <color name="primary">#f83f1d</color>
     <color name="primary_dark">#E12929</color>
     <color name="primary_darker">#CC1D1D</color>
     <color name="accent">#FFFFFF</color>
@@ -16,4 +16,5 @@
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
     <color name="bgcolorLogin">#6bf4ed</color>
+    <color name="snackbar_color">#59fa8c</color>
 </resources>

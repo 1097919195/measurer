@@ -1,7 +1,7 @@
 package stuido.tsing.iclother.data.user;
 
 import io.reactivex.Observable;
-import stuido.tsing.iclother.utils.UserHttpHelper;
+import stuido.tsing.iclother.utils.http.UserHttpHelper;
 
 /**
  * Created by Endless on 2017/7/20.
