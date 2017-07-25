@@ -6,7 +6,9 @@ import android.widget.Toast;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
+import stuido.tsing.iclother.utils.ApiException;
 import stuido.tsing.iclother.utils.progress.ProgressCancelListener;
 import stuido.tsing.iclother.utils.progress.ProgressDialogHandler;
 
@@ -41,7 +43,6 @@ public class ProgressSubscriber<T> extends Subscriber<T> implements ProgressCanc
 
     @Override
     public void onCompleted() {
-        Toast.makeText(context, "completed", Toast.LENGTH_LONG).show();
         dismissProgressDialog();
     }
 
@@ -51,8 +52,12 @@ public class ProgressSubscriber<T> extends Subscriber<T> implements ProgressCanc
             Toast.makeText(context, "网络中断，请检查您的网络状态", Toast.LENGTH_SHORT).show();
         } else if (e instanceof ConnectException) {
             Toast.makeText(context, "网络中断，请检查您的网络状态", Toast.LENGTH_SHORT).show();
+        } else if (e instanceof HttpException) {
+            Toast.makeText(context, "当前服务不可用", Toast.LENGTH_SHORT).show();
+        } else if (e instanceof ApiException) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "出错啦: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         dismissProgressDialog();
     }

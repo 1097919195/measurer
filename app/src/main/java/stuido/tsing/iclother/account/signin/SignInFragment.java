@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import stuido.tsing.iclother.R;
@@ -22,13 +18,12 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class SignInFragment extends BaseFragment implements SignInContract.View {
     private SignInContract.Presenter loginPresenter;
-    private CoordinatorLayout coordinatorLayout;
+    //    private CoordinatorLayout coordinatorLayout;
     public EditText _nameText = null;
     public EditText _passwordText = null;
     private Button _loginButton = null;
     private TextView _signupLink = null;
     private static SignInFragment instance;
-    private ProgressBar _progressView;
     private static final int DELAY_TIME = 5;
     private ProgressSubscriber progressSubscriber;
     private static final String TAG = "SignInFragment";
@@ -74,24 +69,19 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         progressSubscriber.dismissProgressDialog();
     }
 
-    @Override
-    public void showSignInSuccess() {
-        // TODO: 2017/7/24  jump to homeActivity
-        _progressView.setVisibility(View.GONE);
-        _loginButton.setEnabled(true);
-        showToast(getResources().getString(R.string.login_success_hint));
-
-    }
-
-    @Override
-    public void showSignInError() {
-        //因为某些原因登录失败，再次尝试登陆
-        _progressView.setVisibility(View.GONE);
-        Snackbar.make(coordinatorLayout, getString(R.string.login_error_message), Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_login_again, __ ->
-                        loginPresenter.signIn(progressSubscriber)
-                ).setActionTextColor(getResources().getColor(R.color.snackbar_color)).show();
-    }
+//    @Override
+//    public void showSignInSuccess() {
+//        showToast(getResources().getString(R.string.login_success_hint));
+//    }
+//
+//    @Override
+//    public void showSignInError() {
+//        //因为某些原因登录失败，再次尝试登陆
+//        Snackbar.make(coordinatorLayout, getString(R.string.login_error_message), Snackbar.LENGTH_LONG)
+//                .setAction(R.string.action_login_again, __ ->
+//                        loginPresenter.signIn(progressSubscriber)
+//                ).setActionTextColor(getResources().getColor(R.color.snackbar_color)).show();
+//    }
 
     @Override
     public void setPresenter(SignInContract.Presenter presenter) {
@@ -109,16 +99,16 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         _passwordText = mRootView.findViewById(R.id.input_password);
         _loginButton = mRootView.findViewById(R.id.btn_login);
         _signupLink = mRootView.findViewById(R.id.link_signup);
-        coordinatorLayout = mRootView.findViewById(R.id.snackbar_common);
+//        coordinatorLayout = mRootView.findViewById(R.id.snackbar_common);
     }
 
     @Override
     protected void initEvent() {
-        _loginButton.setOnClickListener(__ -> {
-            loginPresenter.signIn(progressSubscriber);
-        });
+        _loginButton.setOnClickListener(__ ->
+                        loginPresenter.signIn(progressSubscriber)
+                // FIXME: 2017/7/26 若用户名或密码输入错误，无法再次输入
+        );
         _signupLink.setOnClickListener(__ -> {
-            // Todo switch to sign fragment
             switchContent(instance, new SignUpFragment(), R.id.sign_up_frag);
         });
     }

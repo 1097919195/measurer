@@ -10,9 +10,9 @@ import stuido.tsing.iclother.base.BaseView;
 
 public interface SignInContract {
     interface View extends BaseView<Presenter> {
-        void showSignInSuccess();
-
-        void showSignInError();
+//        void showSignInSuccess();
+//
+//        void showSignInError();
     }
 
     interface Presenter extends BasePresenter {

@@ -15,7 +15,6 @@ import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
  */
 public class AccountActivity extends AppCompatActivity {
 
-    private static final int REQUEST_SIGNUP = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,16 +26,18 @@ public class AccountActivity extends AppCompatActivity {
         if (signInFragment == null) {
             signInFragment = SignInFragment.newInstance();
             BaseFragment.addFragmentToActivity(getSupportFragmentManager(), signInFragment, R.id.acc_content_frame);
-
         }
         new SignInPresenter(signInFragment, SchedulerProvider.getInstance());
+
     }
 
 
     @Override
     public void onBackPressed() {
         // Disable going back to the HomeActivity
-        moveTaskToBack(true);
+//        moveTaskToBack(false);
+        // TODO: 2017/7/26 返回到手机主界面
+//        finish();
     }
 
 }

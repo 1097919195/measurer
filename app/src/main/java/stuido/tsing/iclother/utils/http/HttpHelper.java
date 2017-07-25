@@ -35,9 +35,8 @@ public class HttpHelper {
     protected class HttpResponseFunc<T> implements Func1<HttpResponse<T>, T> {
         @Override
         public T call(HttpResponse<T> httpResponse) {
-            if (httpResponse.getStatus() != 200) {
+            if (httpResponse.getStatus() >= 1000)
                 throw new ApiException(httpResponse.getMsg());
-            }
             return httpResponse.getData();
         }
     }
