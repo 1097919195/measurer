@@ -2,7 +2,7 @@ package stuido.tsing.iclother.utils.schedulers;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.Scheduler;
+import rx.Scheduler;
 
 ;
 

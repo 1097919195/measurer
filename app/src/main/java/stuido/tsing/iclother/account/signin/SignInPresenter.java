@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import io.reactivex.disposables.CompositeDisposable;
+import rx.Subscriber;
 import stuido.tsing.iclother.data.user.UserRepository;
 import stuido.tsing.iclother.utils.schedulers.BaseSchedulerProvider;
 
@@ -35,15 +36,6 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     @Override
     public void subscribe() {
-        mName = mView._nameText.getText().toString();
-        mPwd = mView._passwordText.getText().toString();
-
-        mSubscriptions.add(new UserRepository()
-                .signIn(mName, mPwd)
-                .subscribeOn(mSchedulerProvider.computation())
-                .observeOn(mSchedulerProvider.ui())
-                .subscribe(__ -> mView.showSignInSuccess(), __ -> mView.showSignInError()
-                ));
     }
 
     @Override
@@ -51,16 +43,20 @@ public class SignInPresenter implements SignInContract.Presenter {
         mSubscriptions.clear();
     }
 
+
     @Override
-    public void signIn() {
+    public void signIn(Subscriber o) {
         mName = mView._nameText.getText().toString();
         mPwd = mView._passwordText.getText().toString();
         if (!mView.validate()) {
             return;
         }
-        new UserRepository().signIn(mName, mPwd);
+
+        new UserRepository()
+                .signIn(mName, mPwd)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(o);
+//        mSubscriptions.add();
     }
-
-
-
 }

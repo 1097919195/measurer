@@ -1,5 +1,6 @@
 package stuido.tsing.iclother.account.signin;
 
+import rx.Subscriber;
 import stuido.tsing.iclother.base.BasePresenter;
 import stuido.tsing.iclother.base.BaseView;
 
@@ -15,6 +16,6 @@ public interface SignInContract {
     }
 
     interface Presenter extends BasePresenter {
-        void signIn();
+        void signIn(Subscriber o);
     }
 }

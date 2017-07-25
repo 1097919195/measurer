@@ -15,13 +15,7 @@ import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
  */
 public class AccountActivity extends AppCompatActivity {
 
-    private static final String TAG = "AccountActivity";
     private static final int REQUEST_SIGNUP = 0;
-    private SignInPresenter signInPresenter;
-//    EditText _emailText = null;
-//    EditText _passwordText = null;
-//    Button _loginButton = null;
-//    TextView _signupLink = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,20 +30,8 @@ public class AccountActivity extends AppCompatActivity {
 
         }
         // TODO: 2017/7/24 instantiate presenter
-        signInPresenter = new SignInPresenter(signInFragment, SchedulerProvider.getInstance());
+        new SignInPresenter(signInFragment, SchedulerProvider.getInstance());
     }
-
-//    public void login() {
-//
-//        new android.os.Handler().postDelayed(
-//                () -> {
-//                    // On complete call either onLoginSuccess or onLoginFailed
-//                    onLoginSuccess();
-//                    // onLoginFailed();
-//                    progressDialog.dismiss();
-//                }, 3000);
-//    }
-
 
 
     @Override
@@ -58,15 +40,5 @@ public class AccountActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-//    public void onLoginSuccess() {
-//        _loginButton.setEnabled(true);
-//        finish();
-//    }
-//
-//    public void onLoginFailed() {
-//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-//
-//        _loginButton.setEnabled(true);
-//    }
 }
 

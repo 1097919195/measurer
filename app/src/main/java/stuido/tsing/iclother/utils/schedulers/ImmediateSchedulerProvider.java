@@ -2,9 +2,10 @@ package stuido.tsing.iclother.utils.schedulers;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 
 /**
  * Implementation of the {@link BaseSchedulerProvider} making all {@link Scheduler}s immediate.

@@ -4,8 +4,10 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.functions.Func1;
+import stuido.tsing.iclother.utils.ApiException;
 
 /**
  * Created by Endless on 2017/7/19.
@@ -25,9 +27,18 @@ public class HttpHelper {
         retrofit = new Retrofit.Builder()
                 .client(httpClientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();
     }
 
+    protected class HttpResponseFunc<T> implements Func1<HttpResponse<T>, T> {
+        @Override
+        public T call(HttpResponse<T> httpResponse) {
+            if (httpResponse.getStatus() != 200) {
+                throw new ApiException(httpResponse.getMsg());
+            }
+            return httpResponse.getData();
+        }
+    }
 }
