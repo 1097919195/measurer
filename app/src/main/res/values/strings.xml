@@ -1,23 +1,22 @@
 <resources>
     <string name="app_name">IMeasurer</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="login_hint">Email/Phone</string>
-    <string name="pwd">password</string>
-    <string name="action_login">login</string>
-    <string name="register_hint">No account? Create one</string>
+    <string name="login_hint">请输入用户名</string>
+    <string name="pwd">请输入密码</string>
+    <string name="action_login">登录</string>
+    <string name="register_hint">没有账号？去注册</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to signIn -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="action_sign_in_short">登录</string>
+    <string name="error_invalid_email">用户名无效</string>
+    <string name="error_invalid_password">输入密码格式不正确</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_field_required">请输入该字段</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -27,4 +26,11 @@
     <string name="pwd_enter_valid">请输入6-20位长度的密码</string>
     <string name="login_success_hint">登录成功！</string>
     <string name="progress_dialog_message">处理中, 请稍等...</string>
+    <string name="action_sign_up">注册</string>
+    <string name="have_acc">已有账号？去登录</string>
+    <string name="prompt_name">请输入账号名</string>
+    <string name="prompt_pwd">请输入密码</string>
+    <string name="prompt_renter_pwd">请再次输入密码</string>
+    <string name="pwd_not_same">两次密码不一样，请检查</string>
+    <string name="register_success_hint">注册成功</string>
 </resources>

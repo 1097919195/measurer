@@ -38,14 +38,9 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     @Override
     public void signIn(Subscriber o) {
-        String mName = mView._nameText.getText().toString();
-        String mPwd = mView._passwordText.getText().toString();
-        if (!mView.validate()) {
-            return;
-        }
-
         Subscription subscribe = new UserRepository()
-                .signIn(mName, mPwd)
+                .signIn(mView._nameText.getText().toString(), mView._passwordText.getText().toString())
+                .map(__ -> __.get_id())
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(o);

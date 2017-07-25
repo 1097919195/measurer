@@ -28,7 +28,6 @@ public class AccountActivity extends AppCompatActivity {
             BaseFragment.addFragmentToActivity(getSupportFragmentManager(), signInFragment, R.id.acc_content_frame);
         }
         new SignInPresenter(signInFragment, SchedulerProvider.getInstance());
-
     }
 
 

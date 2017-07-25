@@ -1,5 +1,6 @@
 package stuido.tsing.iclother.account.signup;
 
+import rx.Subscriber;
 import stuido.tsing.iclother.base.BasePresenter;
 import stuido.tsing.iclother.base.BaseView;
 
@@ -8,13 +9,13 @@ import stuido.tsing.iclother.base.BaseView;
  */
 
 public interface SignUpContract {
-    interface view extends BaseView<presenter> {
+    interface View extends BaseView<Presenter> {
         void showSignUpSuccess();
 
         void showSignUpError();
     }
 
-    interface presenter extends BasePresenter {
-        void signUp(String name, String pwd);
+    interface Presenter extends BasePresenter {
+        void signUp(Subscriber o);
     }
 }

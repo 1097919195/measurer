@@ -12,4 +12,11 @@ public class UserRepository implements UserDataSource {
     public Observable<User> signIn(String name, String pwd) {
         return new UserHttpHelper().signIn(name, pwd);
     }
+
+    @Override
+    public Observable<User> signUp(String name, String pwd) {
+        return new UserHttpHelper().signUp(name, pwd);
+    }
+
+
 }
