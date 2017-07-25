@@ -1,6 +1,8 @@
 package stuido.tsing.iclother.account.signin;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -17,10 +19,6 @@ import stuido.tsing.iclother.home.HomeActivity;
 import stuido.tsing.iclother.utils.suscriber.ProgressSubscriber;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
-
-/**
- * Created by Endless on 2017/7/20.
- */
 
 public class SignInFragment extends BaseFragment implements SignInContract.View {
     private SignInContract.Presenter loginPresenter;
@@ -49,6 +47,12 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
             showToast(getResources().getString(R.string.login_success_hint));
             Intent intent = new Intent(getActivity(), HomeActivity.class);
             startActivity(intent);
+            SharedPreferences sharedPreferences = getActivity()
+                    .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            edit.putBoolean("loginState", true);
+            edit.apply();
+            getActivity().finish();
         }, getActivity());
     }
 
@@ -105,7 +109,6 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         _passwordText = mRootView.findViewById(R.id.input_password);
         _loginButton = mRootView.findViewById(R.id.btn_login);
         _signupLink = mRootView.findViewById(R.id.link_signup);
-        _progressView = getActivity().findViewById(R.id.acc_progress);
         coordinatorLayout = mRootView.findViewById(R.id.snackbar_common);
     }
 

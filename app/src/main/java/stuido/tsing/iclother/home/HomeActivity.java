@@ -16,13 +16,13 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences loginState = getSharedPreferences("Iclother", MODE_PRIVATE);
+        setContentView(R.layout.activity_main_layout);
+        SharedPreferences loginState = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         boolean isLogin = loginState.getBoolean("loginState", false);
+
         if (!isLogin) {
             Intent intent = new Intent(this, AccountActivity.class);
             startActivity(intent);
-        } else {
-            setContentView(R.layout.activity_main_layout);
         }
     }
 }
