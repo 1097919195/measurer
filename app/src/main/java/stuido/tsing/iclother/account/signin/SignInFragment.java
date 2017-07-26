@@ -89,7 +89,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
 //    public void showSignInError() {
 //        //因为某些原因登录失败，再次尝试登陆
 //        Snackbar.make(coordinatorLayout, getString(R.string.login_error_message), Snackbar.LENGTH_LONG)
-//                .setAction(R.string.action_login_again, __ ->
+//                .setAction(R.string.action_login_again, measure ->
 //                        loginPresenter.signIn(progressSubscriber)
 //                ).setActionTextColor(getResources().getColor(R.color.snackbar_color)).show();
 //    }

@@ -33,4 +33,10 @@
     <string name="prompt_renter_pwd">请再次输入密码</string>
     <string name="pwd_not_same">两次密码不一样，请检查</string>
     <string name="register_success_hint">注册成功</string>
+    <string name="login_out">注销</string>
+    <string name="prompt_forget_pwd">忘记密码？</string>
+    <string name="btn_text_main">首页</string>
+    <string name="btn_text_measure">测量</string>
+    <string name="btn_text_help">帮助</string>
+    <string name="btn_text_about">个人中心</string>
 </resources>
