@@ -15,6 +15,8 @@
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
-    <color name="bgcolorLogin">#6bf4ed</color>
+    <color name="bgcolorLogin">#1e50f4</color>
     <color name="snackbar_color">#59fa8c</color>
+    <color name="btn_bg">#f83f1d</color>
+    <color name="btn_text_color">#f83f1d</color>
 </resources>

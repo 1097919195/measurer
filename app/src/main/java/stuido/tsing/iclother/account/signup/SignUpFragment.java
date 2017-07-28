@@ -36,6 +36,8 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     AppCompatButton btnSignup;
     @BindView(R.id.link_login)
     TextView linkLogin;
+//    @BindView(R.id.sign_up_back_nav)
+//    Toolbar toolbar;
 
     private SignUpContract.Presenter signUpPresenter;
     private Unbinder bind;
@@ -56,6 +58,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     @Override
     protected void initView() {
         bind = ButterKnife.bind(this, mRootView);
+
     }
 
     @Override

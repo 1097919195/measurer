@@ -66,9 +66,12 @@
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_login"
-                android:layout_width="150dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
+                android:textSize="20sp"
                 android:layout_centerHorizontal="true"
+                android:textColor="@color/btn_text_color"
+                android:background="@drawable/btn_radius_shape"
                 android:text="@string/action_login" />
 
             <TextView
