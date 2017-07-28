@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,8 +37,8 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     AppCompatButton btnSignup;
     @BindView(R.id.link_login)
     TextView linkLogin;
-//    @BindView(R.id.sign_up_back_nav)
-//    Toolbar toolbar;
+    @BindView(R.id.sign_up_nav)
+    Toolbar toolbar;
 
     private SignUpContract.Presenter signUpPresenter;
     private Unbinder bind;
@@ -58,7 +59,11 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     @Override
     protected void initView() {
         bind = ButterKnife.bind(this, mRootView);
-
+        //注册页面返回导航栏
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(__ ->
+                switchContent(instance, SignInFragment.newInstance(), R.id.acc_content_frame)
+        );
     }
 
     @Override

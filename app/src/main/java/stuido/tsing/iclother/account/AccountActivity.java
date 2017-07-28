@@ -19,7 +19,7 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.account_act);
 
         SignInFragment signInFragment = (SignInFragment) getSupportFragmentManager().findFragmentById(R.id.acc_content_frame);

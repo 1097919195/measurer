@@ -11,7 +11,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <view
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/sign_up_nav"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="@string/action_sign_up"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="#a1aefc" />
