@@ -14,14 +14,14 @@ import butterknife.Unbinder;
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.account.signup.SignUpFragment;
 import stuido.tsing.iclother.account.signup.SignUpPresenter;
-import stuido.tsing.iclother.base.BaseFragment;
+import stuido.tsing.iclother.base.AccountFragment;
 import stuido.tsing.iclother.home.HomeActivity;
 import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 import stuido.tsing.iclother.utils.suscriber.ProgressSubscriber;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-public class SignInFragment extends BaseFragment implements SignInContract.View {
+public class SignInFragment extends AccountFragment implements SignInContract.View {
     @BindView(R.id.input_email)
     EditText _nameText;
     @BindView(R.id.input_password)

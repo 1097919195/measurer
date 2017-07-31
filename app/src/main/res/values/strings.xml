@@ -39,4 +39,8 @@
     <string name="btn_text_measure">测量</string>
     <string name="btn_text_help">帮助</string>
     <string name="btn_text_about">个人中心</string>
+    <string name="menu_action">操作</string>
+    <string name="person_center">个人中心</string>
+    <string name="main_act_title">首页</string>
+    <string name="main_act_action_menu_title">扫描</string>
 </resources>

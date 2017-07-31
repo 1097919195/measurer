@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-public abstract class BaseFragment extends Fragment {
+public abstract class AccountFragment extends Fragment {
     protected View mRootView;
 
     @Nullable

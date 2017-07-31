@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.account.signin.SignInFragment;
-import stuido.tsing.iclother.base.BaseFragment;
+import stuido.tsing.iclother.base.AccountFragment;
 import stuido.tsing.iclother.home.HomeActivity;
 import stuido.tsing.iclother.utils.suscriber.ProgressSubscriber;
 
@@ -25,7 +25,7 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * Created by Endless on 2017/7/24.
  */
 
-public class SignUpFragment extends BaseFragment implements SignUpContract.View {
+public class SignUpFragment extends AccountFragment implements SignUpContract.View {
     private static SignUpFragment instance;
     @BindView(R.id.input_mobile)
     EditText inputName;

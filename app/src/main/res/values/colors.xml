@@ -19,4 +19,5 @@
     <color name="snackbar_color">#59fa8c</color>
     <color name="btn_bg">#f83f1d</color>
     <color name="btn_text_color">#f83f1d</color>
+    <color name="toolbar_text">#fff</color>
 </resources>

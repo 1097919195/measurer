@@ -1,30 +1,35 @@
 package stuido.tsing.iclother.home;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import stuido.tsing.iclother.R;
-import stuido.tsing.iclother.account.AccountActivity;
 import stuido.tsing.iclother.base.BaseActivity;
 
 public class HomeActivity extends BaseActivity {
+    HomePresenter presenter;
+    @Override
+    protected CharSequence getToolbarTitle() {
+        return getString(R.string.main_act_title);
+    }
+
     @Override
     protected void initView() {
-        setContentView(R.layout.activity_main_layout);
+        setContentView(R.layout.main_act);
+//        act_content_view.addView();
     }
 
     @Override
     protected void initEvent() {
-        //todo del it
-        findViewById(R.id.login_out).setOnClickListener(__ -> {
-            SharedPreferences.Editor edit = getSharedPreferences(getString(R.string.app_name), MODE_APPEND).edit();
-            edit.putBoolean("loginState", false);
-            edit.putString("id", null);
-            edit.apply();
-            Toast.makeText(this, "login out", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, AccountActivity.class);
-            startActivity(intent);
-        });
     }
+
+    @Override
+    protected void actionMenuClickEvent() {
+        Toast.makeText(this, "text", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected CharSequence getActionMenuTitle() {
+        return getString(R.string.main_act_action_menu_title);
+    }
+
 }

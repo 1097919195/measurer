@@ -7,7 +7,7 @@ import android.view.Window;
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.account.signin.SignInFragment;
 import stuido.tsing.iclother.account.signin.SignInPresenter;
-import stuido.tsing.iclother.base.BaseFragment;
+import stuido.tsing.iclother.base.AccountFragment;
 import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 
 /**
@@ -25,7 +25,7 @@ public class AccountActivity extends AppCompatActivity {
         SignInFragment signInFragment = (SignInFragment) getSupportFragmentManager().findFragmentById(R.id.acc_content_frame);
         if (signInFragment == null) {
             signInFragment = SignInFragment.newInstance();
-            BaseFragment.addFragmentToActivity(getSupportFragmentManager(), signInFragment, R.id.acc_content_frame);
+            AccountFragment.addFragmentToActivity(getSupportFragmentManager(), signInFragment, R.id.acc_content_frame);
         }
         new SignInPresenter(signInFragment, SchedulerProvider.getInstance());
     }
