@@ -30,8 +30,7 @@ public class MeasurementDbHelper extends DbHelper {
                 MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                 MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID + TEXT_TYPE + COMMA_SEP +
                 MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA + TEXT_TYPE + COMMA_SEP +
-                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_CREATED_AT + TEXT_TYPE + COMMA_SEP +
-                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_UPDATED_AT + BOOLEAN_TYPE +
+                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER + BOOLEAN_TYPE +
                 " )";
     }
 }

@@ -12,7 +12,7 @@
     <color name="monsoon">#777777</color>
     <color name="jumbo">#888888</color>
     <color name="aluminum">#999999</color>
-    <color name="base">#AAAAAA</color>
+    <color name="base">#ffffff</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
     <color name="bgcolorLogin">#1e50f4</color>
@@ -20,4 +20,9 @@
     <color name="btn_bg">#f83f1d</color>
     <color name="btn_text_color">#f83f1d</color>
     <color name="toolbar_text">#fff</color>
+    <drawable name="touchFeedback">#CFD8DC</drawable>
+    <!--渐变-->
+    <color name="colorPrimary">#455A64</color>
+    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorAccent">#D50000</color>
 </resources>

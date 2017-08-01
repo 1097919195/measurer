@@ -117,7 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case R.id.btn_measure:
                 mTabIndicator.get(1).setIconAlpha(1.0f);
-//                if (!(this instanceof MeasureActivity)) nav(MeasureActivity.class);
+//                if (!(this instanceof MeasurementActivity)) nav(MeasurementActivity.class);
                 break;
             case R.id.btn_help:
                 mTabIndicator.get(2).setIconAlpha(1.0f);

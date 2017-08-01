@@ -7,14 +7,15 @@ import java.util.UUID;
 
 public class Measurement {
     public Measurement(@Nullable String userId, @Nullable String data,
-                       @NonNull String id) {
+                       @NonNull String id, int sex) {
         mId = id;
         mData = data;
-        mUserId = userId;
+        mUserName = userId;
+        mSex = sex;
     }
 
-    public Measurement(@Nullable String userId, @Nullable String data) {
-        this(userId, data, UUID.randomUUID().toString());
+    public Measurement(@Nullable String userId, @Nullable String data, int sex) {
+        this(userId, data, UUID.randomUUID().toString(), sex);
     }
 
     public String getmId() {
@@ -25,11 +26,16 @@ public class Measurement {
         return mData;
     }
 
-    public String getmUserId() {
-        return mUserId;
+    public String getmUserName() {
+        return mUserName;
+    }
+
+    public int getmSex() {
+        return mSex;
     }
 
     private String mId;
     private String mData;
-    private String mUserId;
+    private String mUserName;
+    private int mSex;
 }

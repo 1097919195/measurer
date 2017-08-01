@@ -43,4 +43,12 @@
     <string name="person_center">个人中心</string>
     <string name="main_act_title">首页</string>
     <string name="main_act_action_menu_title">扫描</string>
+    <string name="measurement_item_user_title">用户名：</string>
+    <string name="measurement_item_user_xw_title">胸围：</string>
+    <string name="measurement_item_user_tw_title">臀围：</string>
+    <string name="measurement_item_user_yw_title">腰围：</string>
+    <string name="loading_measurement_error">测量数据加载错误</string>
+    <string name="save_measurement_success">测量数据保存成功</string>
+    <string name="no_measurements_all">暂无测量数据</string>
+    <string name="no_measurements_add">去测量</string>
 </resources>

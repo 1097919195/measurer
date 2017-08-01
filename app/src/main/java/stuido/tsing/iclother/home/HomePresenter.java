@@ -2,6 +2,8 @@ package stuido.tsing.iclother.home;
 
 import android.support.annotation.NonNull;
 
+import rx.Observable;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 import stuido.tsing.iclother.data.measure.Measurement;
 import stuido.tsing.iclother.data.measure.MeasurementDataSource;
@@ -15,7 +17,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class HomePresenter implements HomeContract.Presenter {
     private final HomeContract.View homeView;
-    private final boolean mIsDataMissing;
     @NonNull
     private CompositeSubscription mSubscriptions;
 
@@ -25,47 +26,73 @@ public class HomePresenter implements HomeContract.Presenter {
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
 
-
     private boolean mFirstLoad = true;
 
     public HomePresenter(@NonNull MeasurementDataSource measureDataSource,
-                         @NonNull HomeContract.View view, boolean shouldLoadDataFromRepo,
+                         @NonNull HomeContract.View view,
                          @NonNull BaseSchedulerProvider schedulerProvider) {
         mRepository = checkNotNull(measureDataSource);
         homeView = checkNotNull(view);
-        mIsDataMissing = shouldLoadDataFromRepo;
         mSchedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
         homeView.setPresenter(this);
     }
 
-
     @Override
     public void subscribe() {
+        loadMeasurements(false);
     }
 
     @Override
     public void unsubscribe() {
-
+        mSubscriptions.clear();
     }
 
     @Override
     public void result(int requestCode, int resultCode) {
-
+        // TODO: 2017/8/1 测量完保存成功跳转首页
+        homeView.showSuccessfullySavedMessage();
     }
 
     @Override
     public void loadMeasurements(boolean forceUpdate) {
-
+        loadMeasurements(forceUpdate || mFirstLoad, true);
+        mFirstLoad = false;
     }
 
     @Override
     public void addNewMeasurement() {
-
+        homeView.showScanView();
     }
 
     @Override
     public void openMeasurementDetails(@NonNull Measurement measurement) {
+        checkNotNull(measurement);
+        homeView.showMeasurementDetailsUi(measurement.getmId());
+    }
 
+    private void loadMeasurements(final boolean forceUpdate, final boolean showLoadingUI) {
+        if (showLoadingUI) {
+            homeView.setLoadingIndicator(true);
+        }
+        if (forceUpdate) {
+            mRepository.refreshMeasurements();
+        }
+        mSubscriptions.clear();
+        Subscription subscribe = mRepository.getMeasurements()
+                .flatMap(measurements -> Observable.from(measurements))
+                .toList()
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(measurements -> {
+                            if (measurements.isEmpty()) {
+                                homeView.showNoMeasurementView();
+                            } else {
+                                homeView.showMeasurementList(measurements);
+                            }
+                        },
+                        e -> homeView.showLoadingMeasurementError(),
+                        () -> homeView.setLoadingIndicator(false));
+        mSubscriptions.add(subscribe);
     }
 }

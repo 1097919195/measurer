@@ -22,7 +22,7 @@ public interface HomeContract {
 
         void showLoadingMeasurementError();
 
-        void showNoMeasurement();
+        void showNoMeasurementView();
 
         void showSuccessfullySavedMessage();
     }

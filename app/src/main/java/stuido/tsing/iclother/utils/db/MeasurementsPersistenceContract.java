@@ -35,5 +35,6 @@ public final class MeasurementsPersistenceContract {
         public static final String COLUMN_NAME_ENTRY_ID = "entryid";
         public static final String COLUMN_NAME_USER_ID = "userId";
         public static final String COLUMN_NAME_DATA = "data";
+        public static final String COLUMN_NAME_GENDER = "gender";
     }
 }

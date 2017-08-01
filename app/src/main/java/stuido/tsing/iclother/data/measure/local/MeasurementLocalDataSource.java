@@ -46,7 +46,8 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
         String userId = c.getString(c.getColumnIndexOrThrow(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID));
         String data =
                 c.getString(c.getColumnIndexOrThrow(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA));
-        return new Measurement(userId, data, itemId);
+        int gender = Integer.parseInt(c.getString(c.getColumnIndexOrThrow(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER)));
+        return new Measurement(userId, data, itemId, gender);
     }
 
     public static MeasurementLocalDataSource getInstance(@NonNull Context context, @NonNull BaseSchedulerProvider provider) {
@@ -65,7 +66,8 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
         String[] projection = {
                 MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_ENTRY_ID,
                 MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA,
-                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID
+                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID,
+                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER
         };
         String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), MeasurementsPersistenceContract.MeasurementEntry.TABLE_NAME);
         return briteDatabase.createQuery(MeasurementsPersistenceContract.MeasurementEntry.TABLE_NAME, sql)
@@ -77,7 +79,8 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
         String[] projection = {
                 MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_ENTRY_ID,
                 MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA,
-                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID
+                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID,
+                MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER
         };
         String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
                 TextUtils.join(",", projection), MeasurementsPersistenceContract.MeasurementEntry.TABLE_NAME,
@@ -92,7 +95,8 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
         ContentValues values = new ContentValues();
         values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_ENTRY_ID, measurement.getmId());
         values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA, measurement.getmData());
-        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID, measurement.getmUserId());
+        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID, measurement.getmUserName());
+        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER, measurement.getmSex());
         briteDatabase.insert(MeasurementsPersistenceContract.MeasurementEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
