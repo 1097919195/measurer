@@ -1,7 +1,9 @@
-package stuido.tsing.iclother.utils.http;
+package stuido.tsing.iclother.utils.http.account;
 
 import rx.Observable;
 import stuido.tsing.iclother.data.user.User;
+import stuido.tsing.iclother.utils.http.HttpHelper;
+import stuido.tsing.iclother.utils.http.HttpResponse;
 
 public class UserHttpHelper extends HttpHelper {
     public Observable<User> signIn(String name, String pwd) {

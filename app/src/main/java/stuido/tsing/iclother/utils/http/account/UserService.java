@@ -1,9 +1,10 @@
-package stuido.tsing.iclother.utils.http;
+package stuido.tsing.iclother.utils.http.account;
 
 import rx.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import stuido.tsing.iclother.data.user.User;
+import stuido.tsing.iclother.utils.http.HttpResponse;
 
 /**
  * Created by Endless on 2017/7/19.

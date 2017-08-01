@@ -15,7 +15,7 @@ import stuido.tsing.iclother.utils.ApiException;
 
 public class HttpHelper {
     private static final String BASE_URL = "http://liutsing.io/api/";
-    private static final int DEFAULT_TIMEOUT = 60;
+    private static final int DEFAULT_TIMEOUT = 600;
     protected Retrofit retrofit;
 
     //构造方法私有
@@ -32,7 +32,7 @@ public class HttpHelper {
                 .build();
     }
 
-    protected class HttpResponseFunc<T> implements Func1<HttpResponse<T>, T> {
+    public class HttpResponseFunc<T> implements Func1<HttpResponse<T>, T> {
         @Override
         public T call(HttpResponse<T> httpResponse) {
             if (httpResponse.getStatus() >= 1000)

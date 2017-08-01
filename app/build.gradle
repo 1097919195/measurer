@@ -47,6 +47,7 @@ dependencies {
     compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
     compile 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.1.0'
 
     testCompile 'junit:junit:4.12'
 }
