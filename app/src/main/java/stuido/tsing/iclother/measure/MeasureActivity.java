@@ -6,6 +6,7 @@ import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.base.BaseActivity;
 import stuido.tsing.iclother.utils.ActivityUtils;
 import stuido.tsing.iclother.utils.BLEclientHelper;
+import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 
 /**
  * Created by Endless on 2017/7/19.
@@ -14,6 +15,7 @@ import stuido.tsing.iclother.utils.BLEclientHelper;
 public class MeasureActivity extends BaseActivity {
     public static final int REQUEST_ADD_MEASUREMENT = 1;
     private RxBleClient rxBleClient;
+    private MeasurePresenter mPresenter;
 
     @Override
     protected CharSequence getToolbarTitle() {
@@ -29,6 +31,7 @@ public class MeasureActivity extends BaseActivity {
             measure_fragment = MeasureFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), measure_fragment, R.id.act_content_view);
         }
+        mPresenter = new MeasurePresenter(rxBleClient, measure_fragment, SchedulerProvider.getInstance());
     }
 
     @Override
