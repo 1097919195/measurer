@@ -10,6 +10,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // TODO: 2017/8/2 判断当前手机API版本
         //todo 登录状态
     }
 }

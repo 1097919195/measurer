@@ -3,13 +3,28 @@
     <!-- 连框颜色值 -->
     <item>
         <shape>
-            <solid android:color="#cccccc" />
+            <solid android:color="@color/layout_border_color" />
         </shape>
     </item>
     <!-- 主体背景颜色值 -->
-    <item android:top="1dp"> <!--设置只有底部有边框-->
+    <item android:top="1dp">
         <shape>
-            <solid android:color="#ffffff" />
+            <solid android:color="@color/primary_lighter" />
+        </shape>
+    </item>
+    <item android:left="1dp">
+        <shape>
+            <solid android:color="@color/primary_lighter" />
+        </shape>
+    </item>
+    <item android:right="1dp">
+        <shape>
+            <solid android:color="@color/primary_lighter" />
+        </shape>
+    </item>
+    <item android:bottom="1dp">
+        <shape>
+            <solid android:color="@color/primary_lighter" />
         </shape>
     </item>
 </layer-list>

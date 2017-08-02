@@ -42,7 +42,7 @@
     <string name="menu_action">操作</string>
     <string name="person_center">个人中心</string>
     <string name="main_act_title">首页</string>
-    <string name="main_act_action_menu_title">扫描</string>
+    <string name="main_act_action_menu_title">测量</string>
     <string name="measurement_item_user_title">用户名：</string>
     <string name="measurement_item_user_xw_title">胸围：</string>
     <string name="measurement_item_user_tw_title">臀围：</string>
@@ -51,4 +51,23 @@
     <string name="save_measurement_success">测量数据保存成功</string>
     <string name="no_measurements_all">暂无测量数据</string>
     <string name="no_measurements_add">去测量</string>
+    <string name="measure_gender_title">性别：</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="measure_height_prompt">身高：</string>
+    <string name="cm_unit">cm</string>
+    <string name="measure_weight_prompt">体重：</string>
+    <string name="kg_unit">kg</string>
+    <string name="measure_ruler_state">电子尺状态：</string>
+    <string name="measure_ruler_battery">电量：</string>
+    <string name="measure_button_prompt">开始测量</string>
+    <string name="measure_act_title">量体</string>
+    <string name="scan_device">扫描设备</string>
+    <string name="disconnect_device">断开连接</string>
+    <string name="save_measure_result">保存</string>
+    <string name="measure_item_title">测量项目</string>
+    <string name="measure_value_title">测量值</string>
+    <string name="xiongwei_prompt">胸围</string>
+    <string name="yaowei_prompt">腰围</string>
+    <string name="tunwei_prompt">臀围</string>
 </resources>

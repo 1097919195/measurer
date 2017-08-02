@@ -37,6 +37,7 @@ public class HttpHelper {
         public T call(HttpResponse<T> httpResponse) {
             if (httpResponse.getStatus() >= 1000)
                 throw new ApiException(httpResponse.getMsg());
+//            if (httpResponse.getData() == null) throw new ApiException("暂无数据");
             return httpResponse.getData();
         }
     }

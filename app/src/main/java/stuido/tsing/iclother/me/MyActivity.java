@@ -22,10 +22,10 @@ public class MyActivity extends BaseActivity {
         return getString(R.string.person_center);
     }
 
-    @Override
-    protected void initView() {
-        setContentView(R.layout.me_act);
-    }
+//    @Override
+//    protected void initView() {
+//        setContentView(R.layout.me_act);
+//    }
 
     @Override
     protected void initEvent() {

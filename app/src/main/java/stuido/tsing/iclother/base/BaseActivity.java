@@ -21,6 +21,7 @@ import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.account.AccountActivity;
 import stuido.tsing.iclother.home.HomeActivity;
 import stuido.tsing.iclother.me.MyActivity;
+import stuido.tsing.iclother.measure.MeasureActivity;
 import stuido.tsing.iclother.utils.view.ChangeColorIconWithTextView;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -45,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         beforeInit();
-        initView();
+        setContentView(R.layout.base_act);
         ButterKnife.bind(this);
         initToolbar();
         initTabIndicator();
@@ -88,8 +89,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected abstract void initView();
-
     protected abstract void initEvent();
 
     private void resetOtherTabs() {
@@ -117,7 +116,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case R.id.btn_measure:
                 mTabIndicator.get(1).setIconAlpha(1.0f);
-//                if (!(this instanceof MeasurementActivity)) nav(MeasurementActivity.class);
+                if (!(this instanceof MeasureActivity)) nav(MeasureActivity.class);
                 break;
             case R.id.btn_help:
                 mTabIndicator.get(2).setIconAlpha(1.0f);

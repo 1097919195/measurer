@@ -1,12 +1,13 @@
 package stuido.tsing.iclother.home;
 
-import android.widget.Toast;
+import android.content.Intent;
 
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.base.BaseActivity;
 import stuido.tsing.iclother.data.measure.MeasurementRepository;
 import stuido.tsing.iclother.data.measure.local.MeasurementLocalDataSource;
 import stuido.tsing.iclother.data.measure.remote.MeasurementRemoteDataSource;
+import stuido.tsing.iclother.measure.MeasureActivity;
 import stuido.tsing.iclother.utils.ActivityUtils;
 import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 
@@ -18,12 +19,6 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected CharSequence getToolbarTitle() {
         return getString(R.string.main_act_title);
-    }
-
-    @Override
-    protected void initView() {
-        setContentView(R.layout.main_act);
-//        act_content_view.addView();
     }
 
     @Override
@@ -48,7 +43,8 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void actionMenuClickEvent() {
-        Toast.makeText(this, "text", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(HomeActivity.this, MeasureActivity.class);
+        startActivity(intent);
     }
 
     @Override

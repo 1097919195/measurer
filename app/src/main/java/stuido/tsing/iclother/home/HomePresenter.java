@@ -1,6 +1,7 @@
 package stuido.tsing.iclother.home;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import rx.Observable;
 import rx.Subscription;
@@ -16,6 +17,7 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  */
 
 public class HomePresenter implements HomeContract.Presenter {
+    private static final String TAG = "HomeFragment";
     private final HomeContract.View homeView;
     @NonNull
     private CompositeSubscription mSubscriptions;
@@ -91,7 +93,10 @@ public class HomePresenter implements HomeContract.Presenter {
                                 homeView.showMeasurementList(measurements);
                             }
                         },
-                        e -> homeView.showLoadingMeasurementError(),
+                        e -> {
+                            homeView.showLoadingMeasurementError();
+                            Log.e(TAG, e.getMessage());
+                        },
                         () -> homeView.setLoadingIndicator(false));
         mSubscriptions.add(subscribe);
     }

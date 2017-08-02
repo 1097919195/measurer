@@ -27,7 +27,7 @@ import stuido.tsing.iclother.data.measure.UserSex;
 import stuido.tsing.iclother.data.measure.item.MeasurementFemaleItem;
 import stuido.tsing.iclother.data.measure.item.MeasurementItem;
 import stuido.tsing.iclother.data.measure.item.MeasurementMaleItem;
-import stuido.tsing.iclother.measurement.MeasurementActivity;
+import stuido.tsing.iclother.measure.MeasureActivity;
 import stuido.tsing.iclother.measurementdetail.MeasurementDetailActivity;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.measurement_frag, container, false);
+        View root = inflater.inflate(R.layout.measurement_list_frag, container, false);
         //set up measurement view
         ListView listview = root.findViewById(R.id.measurements_list);
         listview.setAdapter(measurementAdapter);
@@ -124,8 +124,8 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void showScanView() {
-        Intent intent = new Intent(getActivity(), MeasurementActivity.class);
-        startActivityForResult(intent, MeasurementActivity.REQUEST_ADD_MEASUREMENT);
+        Intent intent = new Intent(getActivity(), MeasureActivity.class);
+        startActivityForResult(intent, MeasureActivity.REQUEST_ADD_MEASUREMENT);
     }
 
     @Override
@@ -137,6 +137,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void showLoadingMeasurementError() {
+        setLoadingIndicator(false);
         showMessage(getString(R.string.loading_measurement_error));
     }
 
@@ -206,7 +207,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
             View rowView = view;
             if (rowView == null) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                rowView = inflater.inflate(R.layout.measurement_item, viewGroup, false);
+                rowView = inflater.inflate(R.layout.measurement_list_item, viewGroup, false);
             }
 
             final Measurement measurement = getItem(i);

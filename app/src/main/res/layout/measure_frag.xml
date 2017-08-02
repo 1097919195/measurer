@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!--base info-->
+        <include layout="@layout/measure_base_div" />
+        <!--ruler info-->
+        <include layout="@layout/measure_ruler_info" />
+
+        <include layout="@layout/measure_list_layout" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/save_measure_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_measure_result"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+</ScrollView>

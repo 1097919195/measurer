@@ -4,6 +4,8 @@
     <color name="primary">#f83f1d</color>
     <color name="primary_dark">#E12929</color>
     <color name="primary_darker">#CC1D1D</color>
+    <color name="primary_lighter">#3df83f1d</color>
+
     <color name="accent">#FFFFFF</color>
 
     <color name="black">#000000</color>
@@ -25,4 +27,8 @@
     <color name="colorPrimary">#455A64</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorAccent">#D50000</color>
+    <color name="layout_border_color">#9c9c9c</color>
+    <color name="measure_button">#f83f1d</color>
+    <color name="ble_connected">#00ff00</color>
+    <color name="battery_color">#ff5001</color>
 </resources>

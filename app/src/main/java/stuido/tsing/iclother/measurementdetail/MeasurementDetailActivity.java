@@ -13,10 +13,7 @@ public class MeasurementDetailActivity extends BaseActivity {
         return null;
     }
 
-    @Override
-    protected void initView() {
 
-    }
 
     @Override
     protected void initEvent() {

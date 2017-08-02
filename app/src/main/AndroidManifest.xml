@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="22" />
 
     <application
         android:name=".base.BaseApplication"
@@ -25,6 +28,9 @@
         </activity>
         <activity android:name=".account.AccountActivity" />
         <activity android:name=".me.MyActivity" />
+        <activity
+            android:name=".measure.MeasureActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
 
 </manifest>

@@ -11,8 +11,8 @@ import stuido.tsing.iclother.utils.http.HttpResponse;
 
 public class MeasurementHelper extends HttpHelper {
     public Observable<List<Measurement>> getMeasurements() {
-        Observable<HttpResponse<List<Measurement>>> measurements = retrofit.create(MeasurementService.class).getMeasurements();
-
+        Observable<HttpResponse<List<Measurement>>> measurements = retrofit.create(MeasurementService.class)
+                .getMeasurements();
         return measurements.map(new HttpResponseFunc<>());
     }
 
