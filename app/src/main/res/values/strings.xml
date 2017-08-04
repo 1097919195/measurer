@@ -84,4 +84,6 @@
     <string name="service_primary">主要服务</string>
     <string name="service_secondary">次要服务</string>
     <string name="choose_character_prompt">请选择蓝牙特性</string>
+    <string name="bluetooth_disabled">请开启蓝牙</string>
+    <string name="bluetooth_not_avavilable">蓝牙当前不可用</string>
 </resources>

@@ -46,6 +46,8 @@ public interface MeasureContract {
         void showUnknownError();
 
         void showServiceListView(RxBleDeviceServices deviceServices);
+
+        void showUnknownError(String s);
     }
 
     interface Presenter extends BasePresenter {
@@ -55,7 +57,7 @@ public interface MeasureContract {
 
         boolean isScanning();
 
-        void connectDevice(String macAddress);
+        void connectDevice();
 
         boolean isConnected();
 

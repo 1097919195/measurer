@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.ble.BleService;
 
 public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.ViewHolder> {
@@ -51,6 +52,8 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
         final BleService bleService = mDatas.get(position);
         holder.line1.setText(String.format(Locale.getDefault(), "Service: (%s)", bleService.getName()));
         holder.line2.setText(String.format(Locale.getDefault(), "%s", bleService.getUuid()));
+        holder.line1.setTextColor(mFragment.getResources().getColor(R.color.battery_color));
+        holder.line2.setTextColor(mFragment.getResources().getColor(R.color.battery_color));
     }
 
     @Override

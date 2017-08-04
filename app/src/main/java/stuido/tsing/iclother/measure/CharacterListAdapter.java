@@ -11,14 +11,17 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.ble.BleCharacter;
 
 public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdapter.ViewHolder> {
     private List<BleCharacter> mDatas;
+    private MeasureFragment mFragment;
     private OnAdapterItemClickListener onAdapterItemClickListener;
 
-    public CharacterListAdapter(List<BleCharacter> bleCharacters) {
+    public CharacterListAdapter(MeasureFragment fragment, List<BleCharacter> bleCharacters) {
         mDatas = bleCharacters;
+        mFragment = fragment;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -49,6 +52,8 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
         final BleCharacter bleCharacter = mDatas.get(position);
         holder.line1.setText(String.format(Locale.getDefault(), "特性: (%s)", bleCharacter.getName()));
         holder.line2.setText(String.format(Locale.getDefault(), "%s", bleCharacter.getUuid()));
+        holder.line1.setTextColor(mFragment.getResources().getColor(R.color.battery_color));
+        holder.line2.setTextColor(mFragment.getResources().getColor(R.color.battery_color));
     }
 
     @Override

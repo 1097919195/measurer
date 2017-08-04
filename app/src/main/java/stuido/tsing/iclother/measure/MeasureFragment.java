@@ -83,6 +83,8 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private List<BleService> bleServiceList = new ArrayList<>();
     private List<BleCharacter> bleCharacters = new ArrayList<>();
     private Map<String, BluetoothGattService> bleServiceMap = new LinkedHashMap<>();
+    private MaterialDialog serviceListDialog;
+    private MaterialDialog characteristicListDialog;
 
     public MeasureFragment() {
     }
@@ -129,7 +131,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.measure_frag, container, false);
         unbinder = ButterKnife.bind(this, root);
-        measureButton.setVisibility(View.INVISIBLE);
+//        measureButton.setVisibility(View.INVISIBLE);
         return root;
     }
 
@@ -227,10 +229,10 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
         switch (bleScanException.getReason()) {
             case BleScanException.BLUETOOTH_NOT_AVAILABLE:
-                Toast.makeText(getActivity(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.bluetooth_not_avavilable), Toast.LENGTH_SHORT).show();
                 break;
             case BleScanException.BLUETOOTH_DISABLED:
-                Toast.makeText(getActivity(), "Enable bluetooth and try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.bluetooth_disabled), Toast.LENGTH_SHORT).show();
                 break;
             case BleScanException.LOCATION_PERMISSION_MISSING:
                 Toast.makeText(getActivity(),
@@ -302,7 +304,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     private void onAdapterItemClick(ScanResult results) {
         String macAddress = results.getBleDevice().getMacAddress();
-        mPresenter.connectDevice(macAddress);
+        mPresenter.connectDevice();
     }
 
     @Override
@@ -330,6 +332,11 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     @Override
+    public void showUnknownError(String s) {
+        Snackbar.make(getView(), s, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void updateMeasureData(int length, float battery, float angle) {
         rulerBattery.setText(battery + "");
         // TODO: 017/8/3 更新当前焦点输入的框的结果
@@ -340,6 +347,9 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.choose_device_prompt)
                 .items(macAddress)
+                .backgroundColor(getResources().getColor(R.color.white))
+                .contentColor(getResources().getColor(R.color.primary))
+                .titleColor(getResources().getColor(R.color.battery_color))
                 .itemsCallback((dialog, view, which, text) -> mPresenter.discoveryServices(text.toString()))
                 .show();
     }
@@ -360,29 +370,38 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             bleServiceMap.put(service.getUuid().toString(), service);
         }
         ServiceListAdapter adapter = new ServiceListAdapter(this, bleServiceList);
-        new MaterialDialog.Builder(getActivity())
+        serviceListDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.choose_service_prompt)
                 // second parameter is an optional layout manager. Must be a LinearLayoutManager or GridLayoutManager.
                 .adapter(adapter, null)
+                .titleColor(getResources().getColor(R.color.battery_color))
+                .backgroundColor(getResources().getColor(R.color.white))
                 .show();
         adapter.setOnAdapterItemClickListener(this::showCharacteristicListView);
     }
 
     private void showCharacteristicListView(String uuid) {
         checkNotNull(bleServiceMap);
+        checkNotNull(serviceListDialog);
+        serviceListDialog.dismiss();
         BluetoothGattService service = bleServiceMap.get(uuid);
         for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
             bleCharacters.add(new BleCharacter(describeProperties(characteristic), characteristic.getUuid().toString()));
         }
-        CharacterListAdapter adapter = new CharacterListAdapter(bleCharacters);
-        new MaterialDialog.Builder(getActivity())
+        CharacterListAdapter adapter = new CharacterListAdapter(this, bleCharacters);
+        characteristicListDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.choose_character_prompt)
                 .adapter(adapter, null)
+                .titleColor(getResources().getColor(R.color.battery_color))
+                .backgroundColor(getResources().getColor(R.color.white))
+                .titleColor(getResources().getColor(R.color.primary))
                 .show();
         adapter.setOnAdapterItemClickListener(this::onCharacteristicItemClick);
     }
 
     private void onCharacteristicItemClick(String uuid) {
+        checkNotNull(characteristicListDialog);
+        characteristicListDialog.dismiss();
         mPresenter.chooseCharacteristic(uuid);
     }
 

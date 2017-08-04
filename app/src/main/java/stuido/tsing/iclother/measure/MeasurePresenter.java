@@ -6,9 +6,11 @@ import android.util.Log;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
+import com.polidea.rxandroidble.exceptions.BleAlreadyConnectedException;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanFilter;
 import com.polidea.rxandroidble.scan.ScanSettings;
+import com.polidea.rxandroidble.utils.ConnectionSharingAdapter;
 
 import java.util.UUID;
 
@@ -37,6 +39,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private Subscription scanSubscription;
     private RxBleDevice bleDevice;
     private UUID characteristicUUID;
+    private String macAddress;
     private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
     private Observable<RxBleConnection> connectionObservable;
 
@@ -85,14 +88,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                     .observeOn(mSchedulerProvider.ui())
                     .doOnUnsubscribe(this::clearSubscription)
                     .subscribe(scanResult -> {
-                                measurementView.addScanResult(scanResult);
-                                scanSubscription.unsubscribe();
-                            },
-                            e -> {
-                                if (e instanceof BleScanException) {
-                                    measurementView.handleBleScanException((BleScanException) e);
-                                }
-                            });
+                        measurementView.addScanResult(scanResult);
+                        scanSubscription.unsubscribe();
+                    }, this::handleError);
 //            scanSubscription.unsubscribe();
             measurementView.updateButtonUIState();
         }
@@ -109,20 +107,26 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     @Override
-    public void connectDevice(String macAddress) {
-        bleDevice = rxBleClient.getBleDevice(macAddress);
-        connectionObservable = prepareConnectionObservable();
-        connectionObservable
-                .flatMap(RxBleConnection::discoverServices)
-                .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUUID))
-                .observeOn(mSchedulerProvider.ui())
-                .doOnUnsubscribe(() -> measurementView.showConnecting())
-                .subscribe(characteristic -> measurementView.showServiceChoiceView(characteristic), this::handleError);
+    public void connectDevice() {
+        if (isConnected()) {
+            triggerDisconnect();
+        } else {
+            connectionObservable
+                    .flatMap(RxBleConnection::discoverServices)
+                    .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUUID))
+                    .observeOn(mSchedulerProvider.ui())
+                    .doOnUnsubscribe(() -> Log.e("connecting", "is on connecting"))
+                    .subscribe(c -> {
+                        measurementView.updateButtonUIState();
+                        Log.e(getClass().getSimpleName(), "Hey, connection has been established!");
+                    }, this::handleError);
+        }
     }
 
     @Override
     public void discoveryServices(String s) {
         bleDevice = rxBleClient.getBleDevice(s);
+        macAddress = s;
         bleDevice.establishConnection(false)
                 .flatMap(RxBleConnection::discoverServices)
                 .first() // Disconnect automatically after discovery
@@ -138,22 +142,26 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void chooseCharacteristic(String uuid) {
         characteristicUUID = UUID.fromString(checkNotNull(uuid));
-        startMeasure();
+        connectionObservable = prepareConnectionObservable();
+        connectDevice();
+//        startMeasure();
     }
 
     @Override
     public void startMeasure() {
-//        if (!isConnected()) {
-//            measurementView.showBleDisconnectHint();
-//            return;
-//        }
-        bleDevice.establishConnection(false)
+        if (!isConnected()) {
+            measurementView.showBleDisconnectHint();
+            return;
+        }
+        connectionObservable
                 .flatMap(rxBleConnection -> rxBleConnection.setupNotification(characteristicUUID))
-                .doOnNext(notificationObservable ->
-                        // Notification has been set up
-                        measurementView.showStartReceiveData()
-                )
-                .flatMap(notificationObservable -> notificationObservable) // <-- Notification has been set up, now observe value changes.
+                .flatMap(notificationObservable -> notificationObservable)
+//                .doOnNext(notificationObservable ->
+//                        // Notification has been set up
+//                        measurementView.showStartReceiveData()
+//                )
+                .observeOn(mSchedulerProvider.ui())
+                // <-- Notification has been set up, now observe value changes.
                 .subscribe(this::handleBleResult, this::handleError);
     }
 
@@ -173,16 +181,22 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private Observable<RxBleConnection> prepareConnectionObservable() {
         checkNotNull(bleDevice);
         return bleDevice
-                .establishConnection(false);
-//                .takeUntil(disconnectTriggerSubject);
-//                .compose(new ConnectionSharingAdapter());
+                .establishConnection(false)
+                .takeUntil(disconnectTriggerSubject)
+                .compose(new ConnectionSharingAdapter());
     }
 
     private void handleError(Throwable e) {
         if (e instanceof BleScanException) {
             measurementView.handleBleScanException((BleScanException) e);
+        } else if (e instanceof BleAlreadyConnectedException) {
+            measurementView.showUnknownError("重复连接，请检查");
         } else {
             measurementView.showUnknownError();
         }
+    }
+
+    private void triggerDisconnect() {
+        disconnectTriggerSubject.onNext(null);
     }
 }
