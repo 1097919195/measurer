@@ -1,11 +1,14 @@
 package stuido.tsing.iclother.measure;
 
+import android.Manifest;
+
 import com.polidea.rxandroidble.RxBleClient;
 
+import kr.co.namee.permissiongen.PermissionGen;
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.base.BaseActivity;
 import stuido.tsing.iclother.utils.ActivityUtils;
-import stuido.tsing.iclother.utils.BLEclientHelper;
+import stuido.tsing.iclother.utils.BleClientHelper;
 import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 
 /**
@@ -24,7 +27,7 @@ public class MeasureActivity extends BaseActivity {
 
     @Override
     protected void initEvent() {
-        rxBleClient = BLEclientHelper.getInstance(MeasureActivity.this);
+        rxBleClient = BleClientHelper.getInstance(MeasureActivity.this);
         MeasureFragment measure_fragment = (MeasureFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.act_content_view);
         if (measure_fragment == null) {
@@ -32,6 +35,13 @@ public class MeasureActivity extends BaseActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), measure_fragment, R.id.act_content_view);
         }
         mPresenter = new MeasurePresenter(rxBleClient, measure_fragment, SchedulerProvider.getInstance());
+        PermissionGen.with(MeasureActivity.this)
+                .addRequestCode(100)
+                .permissions(
+                        Manifest.permission.LOCATION_HARDWARE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                .request();
     }
 
     @Override
@@ -43,4 +53,6 @@ public class MeasureActivity extends BaseActivity {
     protected CharSequence getActionMenuTitle() {
         return null;
     }
+
+
 }

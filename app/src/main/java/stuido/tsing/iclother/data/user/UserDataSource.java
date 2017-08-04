@@ -7,7 +7,7 @@ import rx.Observable;
  */
 
 public interface UserDataSource {
-    public Observable<User> signIn(String name, String pwd);
+    Observable<User> signIn(String name, String pwd);
 
-    public Observable<User> signUp(String name, String pwd);
+    Observable<User> signUp(String name, String pwd);
 }

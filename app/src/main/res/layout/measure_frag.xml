@@ -11,7 +11,7 @@
         <include layout="@layout/measure_base_div" />
         <!--ruler info-->
         <include layout="@layout/measure_ruler_info" />
-
+        <!--measure item-->
         <include layout="@layout/measure_list_layout" />
 
         <android.support.v7.widget.AppCompatButton

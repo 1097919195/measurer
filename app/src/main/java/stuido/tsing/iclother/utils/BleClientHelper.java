@@ -8,7 +8,7 @@ import com.polidea.rxandroidble.RxBleClient;
  * Created by Endless on 2017/8/2.
  */
 
-public class BLEclientHelper {
+public class BleClientHelper {
     public static RxBleClient INSTANCE;
 
     public static RxBleClient getInstance(Context context) {

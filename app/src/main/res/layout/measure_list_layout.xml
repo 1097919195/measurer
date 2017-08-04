@@ -39,7 +39,8 @@
         <EditText
             android:id="@+id/xiongwei_et"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number" />
 
     </TableRow>
 
@@ -59,7 +60,8 @@
         <EditText
             android:id="@+id/yaowei_et"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number" />
 
     </TableRow>
 
@@ -79,7 +81,8 @@
         <EditText
             android:id="@+id/tunwei_et"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number" />
 
     </TableRow>
 </TableLayout>

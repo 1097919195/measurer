@@ -70,4 +70,18 @@
     <string name="xiongwei_prompt">胸围</string>
     <string name="yaowei_prompt">腰围</string>
     <string name="tunwei_prompt">臀围</string>
+    <string name="stop_scan">停止扫描</string>
+    <string name="start_scan">开始扫描</string>
+    <string name="connected">已连接</string>
+    <string name="disconnected">未连接</string>
+    <string name="device_disconnected">蓝牙未连接</string>
+    <string name="ble_info">蓝牙状态:</string>
+    <string name="battery_unknown">N/A</string>
+    <string name="connecting">连接中...</string>
+    <string name="choose_device_prompt">请选择蓝牙设备</string>
+    <string name="unKnownError">未知错误</string>
+    <string name="choose_service_prompt">请选择服务</string>
+    <string name="service_primary">主要服务</string>
+    <string name="service_secondary">次要服务</string>
+    <string name="choose_character_prompt">请选择蓝牙特性</string>
 </resources>
