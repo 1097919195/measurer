@@ -15,6 +15,7 @@ import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.ble.BleCharacter;
 
 public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdapter.ViewHolder> {
+
     private List<BleCharacter> mDatas;
     private MeasureFragment mFragment;
     private OnAdapterItemClickListener onAdapterItemClickListener;
@@ -25,11 +26,12 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(android.R.id.text1)
-        TextView line1;
-        @BindView(android.R.id.text2)
-        TextView line2;
+        @BindView(R.id.txt_title)
+        TextView txtTitle;
+        @BindView(R.id.txt_uuid)
+        TextView txtUuid;
+        @BindView(R.id.txt_type)
+        TextView txtType;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -50,15 +52,17 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BleCharacter bleCharacter = mDatas.get(position);
-        holder.line1.setText(String.format(Locale.getDefault(), "特性: (%s)", bleCharacter.getName()));
-        holder.line2.setText(String.format(Locale.getDefault(), "%s", bleCharacter.getUuid()));
-        holder.line1.setTextColor(mFragment.getResources().getColor(R.color.battery_color));
-        holder.line2.setTextColor(mFragment.getResources().getColor(R.color.battery_color));
+        holder.txtTitle.setText(String.format(Locale.getDefault(), "特征（%d）", position));
+        holder.txtUuid.setText(String.format(Locale.getDefault(), "%s", bleCharacter.getUuid()));
+        holder.txtType.setText(String.format(Locale.getDefault(), "特性（%s）", bleCharacter.getUuid()));
+        holder.txtTitle.setTextColor(mFragment.getResources().getColor(R.color.darker_gray));
+        holder.txtUuid.setTextColor(mFragment.getResources().getColor(R.color.darker_gray));
+        holder.txtType.setTextColor(mFragment.getResources().getColor(R.color.darker_gray));
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.two_line_list_item, parent, false);
+        final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ble_service_item, parent, false);
         itemView.setOnClickListener(v -> {
             if (onAdapterItemClickListener != null) {
                 String uuid = ((TextView) v.findViewById(android.R.id.text2)).getText().toString();

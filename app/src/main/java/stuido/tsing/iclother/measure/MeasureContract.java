@@ -25,7 +25,7 @@ public interface MeasureContract {
 
         void handleBleScanException(BleScanException e);
 
-        void addScanResult(ScanResult scanResult);
+        void showScanResult(ScanResult scanResult);
 
         void updateButtonUIState();
 
@@ -33,9 +33,9 @@ public interface MeasureContract {
 
         void showBleDisconnectHint();
 
-        void updateMeasureData(int length, float battery, float angle);
+        void updateMeasureData(int length, int battery, int angle);
 
-        void showAlreadyConnectedException();
+        void showAlreadyConnectedError();
 
         void showConnecting();
 
@@ -48,6 +48,14 @@ public interface MeasureContract {
         void showServiceListView(RxBleDeviceServices deviceServices);
 
         void showUnknownError(String s);
+
+        void finishScan();
+
+        void showConnected();
+
+        void bleDeviceMeasuring();
+
+        void showScanning();
     }
 
     interface Presenter extends BasePresenter {

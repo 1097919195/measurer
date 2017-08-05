@@ -39,7 +39,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private Subscription scanSubscription;
     private RxBleDevice bleDevice;
     private UUID characteristicUUID;
-    private String macAddress;
     private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
     private Observable<RxBleConnection> connectionObservable;
 
@@ -74,6 +73,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         mSubscription.add(subscribe);
     }
 
+    /**
+     * 扫描按钮事件
+     */
     public void scanToggle() {
         if (isScanning()) {
             scanSubscription.unsubscribe();
@@ -85,14 +87,15 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                             .build(),
                     new ScanFilter.Builder().build())
+                    .doOnSubscribe(() -> measurementView.showScanning())
                     .observeOn(mSchedulerProvider.ui())
                     .doOnUnsubscribe(this::clearSubscription)
                     .subscribe(scanResult -> {
-                        measurementView.addScanResult(scanResult);
+                        measurementView.showScanResult(scanResult);
                         scanSubscription.unsubscribe();
-                    }, this::handleError);
+                    }, this::handleError, () -> measurementView.finishScan());
 //            scanSubscription.unsubscribe();
-            measurementView.updateButtonUIState();
+//            measurementView.updateButtonUIState();
         }
     }
 
@@ -115,10 +118,10 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                     .flatMap(RxBleConnection::discoverServices)
                     .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUUID))
                     .observeOn(mSchedulerProvider.ui())
-                    .doOnUnsubscribe(() -> Log.e("connecting", "is on connecting"))
+                    .doOnUnsubscribe(() -> Log.d(getClass().toString(), "is on connecting"))
                     .subscribe(c -> {
-                        measurementView.updateButtonUIState();
-                        Log.e(getClass().getSimpleName(), "Hey, connection has been established!");
+                        measurementView.showConnected();
+                        Log.d(getClass().getSimpleName(), "Hey, connection has been established!");
                     }, this::handleError);
         }
     }
@@ -126,7 +129,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void discoveryServices(String s) {
         bleDevice = rxBleClient.getBleDevice(s);
-        macAddress = s;
         bleDevice.establishConnection(false)
                 .flatMap(RxBleConnection::discoverServices)
                 .first() // Disconnect automatically after discovery
@@ -144,7 +146,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         characteristicUUID = UUID.fromString(checkNotNull(uuid));
         connectionObservable = prepareConnectionObservable();
         connectDevice();
-//        startMeasure();
     }
 
     @Override
@@ -156,12 +157,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         connectionObservable
                 .flatMap(rxBleConnection -> rxBleConnection.setupNotification(characteristicUUID))
                 .flatMap(notificationObservable -> notificationObservable)
-//                .doOnNext(notificationObservable ->
-//                        // Notification has been set up
-//                        measurementView.showStartReceiveData()
-//                )
+                .doOnSubscribe(() -> measurementView.bleDeviceMeasuring())
                 .observeOn(mSchedulerProvider.ui())
-                // <-- Notification has been set up, now observe value changes.
+                .doOnNext(notificationObservable -> measurementView.showStartReceiveData())
                 .subscribe(this::handleBleResult, this::handleError);
     }
 
@@ -174,7 +172,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         int a1 = length ^ code;
         int a2 = battery ^ code;
         int a3 = angle ^ code;
-        Log.e("result", "length:" + a1 + "mm;battery:" + a2 + ";angle:" + a3);
+        Log.d(getClass().toString(), "length:" + a1 + "mm;battery:" + a2 + ";angle:" + a3);
         measurementView.updateMeasureData(a1, a2, a3);
     }
 

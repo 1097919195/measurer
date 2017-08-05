@@ -6,85 +6,64 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.polidea.rxandroidble.RxBleDevice;
-import com.polidea.rxandroidble.scan.ScanResult;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import stuido.tsing.iclother.R;
+import stuido.tsing.iclother.data.ble.BleDevice;
 
 class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    private MeasureFragment mFragment;
+    private List<BleDevice> mDatas;
 
-        @BindView(android.R.id.text1)
-        TextView line1;
-        @BindView(android.R.id.text2)
-        TextView line2;
+    public ScanResultsAdapter(MeasureFragment fragment, List<BleDevice> devices) {
+        mFragment = fragment;
+        mDatas = devices;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.txt_name)
+        TextView txtName;
+        @BindView(R.id.txt_mac)
+        TextView txtMac;
+        @BindView(R.id.txt_rssi)
+        TextView txtRssi;
 
         ViewHolder(View itemView) {
             super(itemView);
+
             ButterKnife.bind(this, itemView);
         }
     }
 
     interface OnAdapterItemClickListener {
-
         void onAdapterViewClick(View view);
     }
 
-    private static final Comparator<ScanResult> SORTING_COMPARATOR = (lhs, rhs) ->
-            lhs.getBleDevice().getMacAddress().compareTo(rhs.getBleDevice().getMacAddress());
-    private final List<ScanResult> data = new ArrayList<>();
     private OnAdapterItemClickListener onAdapterItemClickListener;
-
-    void addScanResult(ScanResult bleScanResult) {
-        // Not the best way to ensure distinct devices, just for sake on the demo.
-
-        for (int i = 0; i < data.size(); i++) {
-
-            if (data.get(i).getBleDevice().equals(bleScanResult.getBleDevice())) {
-                data.set(i, bleScanResult);
-                notifyItemChanged(i);
-                return;
-            }
-        }
-
-        data.add(bleScanResult);
-        Collections.sort(data, SORTING_COMPARATOR);
-        notifyDataSetChanged();
-    }
-
-    void clearScanResults() {
-        data.clear();
-        notifyDataSetChanged();
-    }
-
-    ScanResult getItemAtPosition(int childAdapterPosition) {
-        return data.get(childAdapterPosition);
-    }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return mDatas.size();
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final ScanResult rxBleScanResult = data.get(position);
-        final RxBleDevice bleDevice = rxBleScanResult.getBleDevice();
-        holder.line1.setText(String.format(Locale.getDefault(), "%s (%s)", bleDevice.getMacAddress(), bleDevice.getName()));
-        holder.line2.setText(String.format(Locale.getDefault(), "RSSI: %d", rxBleScanResult.getRssi()));
+        final BleDevice device = mDatas.get(position);
+        holder.txtName.setText(String.format(Locale.getDefault(), "%s", device.getName()));
+        holder.txtName.setTextColor(mFragment.getResources().getColor(R.color.ble_device_name));
+        holder.txtMac.setText(String.format(Locale.getDefault(), "%s", device.getAddress()));
+        holder.txtMac.setTextColor(mFragment.getResources().getColor(R.color.ble_device_address));
+        holder.txtRssi.setText(String.format(Locale.getDefault(), "%s", device.getRssi()));
+        holder.txtRssi.setTextColor(mFragment.getResources().getColor(R.color.black));
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.two_line_list_item, parent, false);
+        final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ble_list_item, parent, false);
         itemView.setOnClickListener(v -> {
             if (onAdapterItemClickListener != null) {
                 onAdapterItemClickListener.onAdapterViewClick(v);

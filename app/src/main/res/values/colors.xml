@@ -32,4 +32,13 @@
     <color name="ble_connected">#00ff00</color>
     <color name="battery_color">#ff5001</color>
     <color name="error">#ff0000</color>
+    <color name="ble_disconnected">#ff0000</color>
+    <color name="measuring">#00ff00</color>
+    <color name="green">#00ff00</color>
+    <color name="ble_device_name">#000000</color>
+    <color name="ble_device_address">#ff5001</color>
+    <color name="scan_result_list_title">#1e50f4</color>
+    <color name="divider">#999999</color>
+    <color name="darker_gray">#aaaaaa</color>
+    <color name="ff5001">#ff5001</color>
 </resources>

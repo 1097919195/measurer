@@ -38,6 +38,7 @@ import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.ble.BleCharacter;
+import stuido.tsing.iclother.data.ble.BleDevice;
 import stuido.tsing.iclother.data.ble.BleService;
 import stuido.tsing.iclother.data.measure.Measurement;
 
@@ -77,14 +78,14 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     Unbinder unbinder;
     private MeasureContract.Presenter mPresenter;
     private Map<String, String> mData = new LinkedHashMap<>();
-    //    private RecyclerView recyclerView;
-//    private ScanResultsAdapter resultsAdapter;
     private List<String> macAddress = new ArrayList<>();
     private List<BleService> bleServiceList = new ArrayList<>();
+    private List<BleDevice> bleDevices = new ArrayList<>();
     private List<BleCharacter> bleCharacters = new ArrayList<>();
     private Map<String, BluetoothGattService> bleServiceMap = new LinkedHashMap<>();
     private MaterialDialog serviceListDialog;
     private MaterialDialog characteristicListDialog;
+    private MaterialDialog scanningDialog;
 
     public MeasureFragment() {
     }
@@ -94,20 +95,9 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        configureResultList();
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
-//
-//    @PermissionSuccess(requestCode = 100)
-//    public void doSomething() {
-//
-//    }
 
     @PermissionFail(requestCode = 100)
     public void doFailSomething() {
@@ -131,7 +121,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.measure_frag, container, false);
         unbinder = ButterKnife.bind(this, root);
-//        measureButton.setVisibility(View.INVISIBLE);
         return root;
     }
 
@@ -207,7 +196,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     @Override
-    public void showAlreadyConnectedException() {
+    public void showAlreadyConnectedError() {
         Snackbar.make(getView(), "重复连接", Snackbar.LENGTH_SHORT).show();
     }
 
@@ -223,6 +212,14 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private void showInputError(String field) {
         Toast.makeText(getActivity(), field + "不能为空", Toast.LENGTH_SHORT).show();
         return;
+    }
+
+    @Override
+    public void showScanning() {
+        scanningDialog = new MaterialDialog.Builder(getActivity())
+                .progress(true, 100)
+                .backgroundColor(getResources().getColor(R.color.white))
+                .show();
     }
 
     public void handleBleScanException(BleScanException bleScanException) {
@@ -270,15 +267,28 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     @Override
-    public void addScanResult(ScanResult result) {
-        setLoadingIndicator(false);
+    public void showScanResult(ScanResult result) {
+        scanningDialog.dismiss();
         RxBleDevice device = result.getBleDevice();
-        String name = device.getName();
-        String address = device.getMacAddress();
-        macAddress.clear();
-//        macAddress.add("名称: "+name+"\n地址: "+address);
-        macAddress.add(address);
-        showDeviceList();
+        bleDevices.clear();
+        bleDevices.add(new BleDevice(device.getName(), device.getMacAddress(), result.getRssi()));
+        ScanResultsAdapter adapter = new ScanResultsAdapter(this, bleDevices);
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.choose_device_prompt)
+                .adapter(adapter, null)
+                .backgroundColor(getResources().getColor(R.color.white))
+                .titleColor(getResources().getColor(R.color.scan_result_list_title))
+                .dividerColor(getResources().getColor(R.color.divider))
+                .show();
+        adapter.setOnAdapterItemClickListener(v ->
+                mPresenter.discoveryServices(((TextView) v.findViewById(R.id.txt_mac)).getText().toString())
+        );
+    }
+
+    @Override
+    public void finishScan() {
+        scanToggleBtn.setText(getString(R.string.scan_finished));
+        scanToggleBtn.setEnabled(false);
     }
 
     @Override
@@ -287,39 +297,9 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         scanToggleBtn.setText(mPresenter.isScanning() ? getString(R.string.stop_scan) : getString(R.string.start_scan));
     }
 
-    private void configureResultList() {
-//        recyclerView = new RecyclerView(getActivity());
-//        recyclerView.setHasFixedSize(true);
-//        LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(recyclerLayoutManager);
-//        resultsAdapter = new ScanResultsAdapter();
-//        recyclerView.setAdapter(resultsAdapter);
-//        resultsAdapter.setOnAdapterItemClickListener(view -> {
-//            final int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
-//            final ScanResult itemAtPosition = resultsAdapter.getItemAtPosition(childAdapterPosition);
-//            onAdapterItemClick(itemAtPosition);
-//        });
-    }
-
-
-    private void onAdapterItemClick(ScanResult results) {
-        String macAddress = results.getBleDevice().getMacAddress();
-        mPresenter.connectDevice();
-    }
-
     @Override
     public void showServiceChoiceView(BluetoothGattCharacteristic characteristic) {
         int properties = characteristic.getProperties();
-//        mPresenter.discoveryServices(text.toString());
-//        boolean connected = mPresenter.isConnected();
-//        if (connected) {
-//            scanToggleBtn.setEnabled(false);
-//            rulerState.setText(getString(R.string.connected));
-//            measureButton.setVisibility(View.VISIBLE);
-//        } else {
-//            rulerState.setText(getString(R.string.disconnected));
-//            rulerState.setTextColor(getResources().getColor(R.color.error));
-//        }
     }
 
     @Override
@@ -337,21 +317,24 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     @Override
-    public void updateMeasureData(int length, float battery, float angle) {
-        rulerBattery.setText(battery + "");
+    public void updateMeasureData(int length, int battery, int angle) {
+        rulerBattery.setText(battery + "%");
+        rulerState.setTextColor(getResources().getColor(R.color.green));
         // TODO: 017/8/3 更新当前焦点输入的框的结果
         yaoweiEt.setText(length + "");
+        yaoweiEt.setTextColor(getResources().getColor(R.color.black));
     }
 
-    public void showDeviceList() {
-        new MaterialDialog.Builder(getActivity())
-                .title(R.string.choose_device_prompt)
-                .items(macAddress)
-                .backgroundColor(getResources().getColor(R.color.white))
-                .contentColor(getResources().getColor(R.color.primary))
-                .titleColor(getResources().getColor(R.color.battery_color))
-                .itemsCallback((dialog, view, which, text) -> mPresenter.discoveryServices(text.toString()))
-                .show();
+    @Override
+    public void bleDeviceMeasuring() {
+        measureButton.setText(getString(R.string.measuring));
+        measureButton.setTextColor(getResources().getColor(R.color.measuring));
+    }
+
+    @Override
+    public void showConnected() {
+        rulerState.setText(mPresenter.isConnected() ? getString(R.string.connected) : getString(R.string.disconnected));
+        rulerState.setTextColor(getResources().getColor(R.color.ble_connected));
     }
 
     /**
@@ -374,8 +357,9 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                 .title(R.string.choose_service_prompt)
                 // second parameter is an optional layout manager. Must be a LinearLayoutManager or GridLayoutManager.
                 .adapter(adapter, null)
-                .titleColor(getResources().getColor(R.color.battery_color))
+                .titleColor(getResources().getColor(R.color.scan_result_list_title))
                 .backgroundColor(getResources().getColor(R.color.white))
+                .dividerColor(getResources().getColor(R.color.divider))
                 .show();
         adapter.setOnAdapterItemClickListener(this::showCharacteristicListView);
     }
@@ -395,6 +379,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                 .titleColor(getResources().getColor(R.color.battery_color))
                 .backgroundColor(getResources().getColor(R.color.white))
                 .titleColor(getResources().getColor(R.color.primary))
+                .dividerColor(getResources().getColor(R.color.divider))
                 .show();
         adapter.setOnAdapterItemClickListener(this::onCharacteristicItemClick);
     }
@@ -412,9 +397,9 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     private String describeProperties(BluetoothGattCharacteristic characteristic) {
         List<String> properties = new ArrayList<>();
-        if (isCharacteristicReadable(characteristic)) properties.add("Read");
-        if (isCharacteristicWritable(characteristic)) properties.add("Write");
-        if (isCharacteristicNotifiable(characteristic)) properties.add("Notify");
+        if (isCharacteristicReadable(characteristic)) properties.add("可读");
+        if (isCharacteristicWritable(characteristic)) properties.add("可写");
+        if (isCharacteristicNotifiable(characteristic)) properties.add("通知");
         return TextUtils.join(" ", properties);
     }
 
