@@ -54,8 +54,8 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
         final BleCharacter bleCharacter = mDatas.get(position);
         holder.txtTitle.setText(String.format(Locale.getDefault(), "特征（%d）", position));
         holder.txtUuid.setText(String.format(Locale.getDefault(), "%s", bleCharacter.getUuid()));
-        holder.txtType.setText(String.format(Locale.getDefault(), "特性（%s）", bleCharacter.getUuid()));
-        holder.txtTitle.setTextColor(mFragment.getResources().getColor(R.color.darker_gray));
+        holder.txtType.setText(String.format(Locale.getDefault(), "特性（%s）", bleCharacter.getName()));
+        holder.txtTitle.setTextColor(mFragment.getResources().getColor(R.color.ff5001));
         holder.txtUuid.setTextColor(mFragment.getResources().getColor(R.color.darker_gray));
         holder.txtType.setTextColor(mFragment.getResources().getColor(R.color.darker_gray));
     }
@@ -65,7 +65,7 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
         final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ble_service_item, parent, false);
         itemView.setOnClickListener(v -> {
             if (onAdapterItemClickListener != null) {
-                String uuid = ((TextView) v.findViewById(android.R.id.text2)).getText().toString();
+                String uuid = ((TextView) v.findViewById(R.id.txt_uuid)).getText().toString();
                 onAdapterItemClickListener.onAdapterViewClick(uuid);
             }
         });

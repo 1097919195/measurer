@@ -1,5 +1,28 @@
 package stuido.tsing.iclother.data.measure.item;
 
+import stuido.tsing.iclother.data.measure.item.parts.AoYao;
+import stuido.tsing.iclother.data.measure.item.parts.BiChang;
+import stuido.tsing.iclother.data.measure.item.parts.BiWei;
+import stuido.tsing.iclother.data.measure.item.parts.DaTuiWei;
+import stuido.tsing.iclother.data.measure.item.parts.DuWei;
+import stuido.tsing.iclother.data.measure.item.parts.JianKuan;
+import stuido.tsing.iclother.data.measure.item.parts.JiaoHuaiWei;
+import stuido.tsing.iclother.data.measure.item.parts.JingWei;
+import stuido.tsing.iclother.data.measure.item.parts.QiaGuHeight;
+import stuido.tsing.iclother.data.measure.item.parts.ShangTuDu;
+import stuido.tsing.iclother.data.measure.item.parts.ShouWanWei;
+import stuido.tsing.iclother.data.measure.item.parts.TongDang;
+import stuido.tsing.iclother.data.measure.item.parts.TouWei;
+import stuido.tsing.iclother.data.measure.item.parts.TunWei;
+import stuido.tsing.iclother.data.measure.item.parts.WanBeiAngle;
+import stuido.tsing.iclother.data.measure.item.parts.XiWei;
+import stuido.tsing.iclother.data.measure.item.parts.XiaTuDu;
+import stuido.tsing.iclother.data.measure.item.parts.XiaoTuiWei;
+import stuido.tsing.iclother.data.measure.item.parts.XiongWei;
+import stuido.tsing.iclother.data.measure.item.parts.YaoWei;
+import stuido.tsing.iclother.data.measure.item.parts.YouJianXie;
+import stuido.tsing.iclother.data.measure.item.parts.ZuoJianXie;
+
 //            头围
 //    颈围
 //            肩宽
@@ -23,202 +46,202 @@ package stuido.tsing.iclother.data.measure.item;
 //            下凸肚角度
 //    凹腰角度
 public class MeasurementItem {
-    public String getTouwei() {
-        return touwei;
+    protected TouWei TouWei;
+    protected JingWei JingWei;
+    protected JianKuan JianKuan;
+    protected BiWei BiWei;
+    protected ShouWanWei ShouWanWei;
+    protected BiChang BiChang;
+    protected XiongWei XiongWei;
+    protected DuWei DuWei;
+    protected YaoWei YaoWei;
+    protected TunWei TunWei;
+    protected DaTuiWei DaTuiWei;
+    protected XiWei XiWei;
+    protected XiaoTuiWei XiaoTuiWei;
+    protected JiaoHuaiWei JiaoHuaiWei;
+    protected TongDang TongDang;
+    protected QiaGuHeight QiaGuHeight;
+    protected ZuoJianXie ZuoJianXie;
+    protected YouJianXie YouJianXie;
+    protected WanBeiAngle WanBeiAngle;
+    protected ShangTuDu ShangTuDu;
+    protected XiaTuDu XiaTuDu;
+    protected AoYao AoYao;
+
+    public TouWei getTouWei() {
+        return TouWei;
     }
 
-    public void setTouwei(String touwei) {
-        this.touwei = touwei;
+    public void setTouWei(TouWei touWei) {
+        TouWei = touWei;
     }
 
-    public String getJingwei() {
-        return jingwei;
+    public JingWei getJingWei() {
+        return JingWei;
     }
 
-    public void setJingwei(String jingwei) {
-        this.jingwei = jingwei;
+    public void setJingWei(JingWei jingWei) {
+        JingWei = jingWei;
     }
 
-    public String getJiankuan() {
-        return jiankuan;
+    public JianKuan getJianKuan() {
+        return JianKuan;
     }
 
-    public void setJiankuan(String jiankuan) {
-        this.jiankuan = jiankuan;
+    public void setJianKuan(JianKuan jianKuan) {
+        JianKuan = jianKuan;
     }
 
-    public String getBiwei() {
-        return biwei;
+    public BiWei getBiWei() {
+        return BiWei;
     }
 
-    public void setBiwei(String biwei) {
-        this.biwei = biwei;
+    public void setBiWei(BiWei biWei) {
+        BiWei = biWei;
     }
 
-    public String getShouwanwei() {
-        return shouwanwei;
+    public ShouWanWei getShouWanWei() {
+        return ShouWanWei;
     }
 
-    public void setShouwanwei(String shouwanwei) {
-        this.shouwanwei = shouwanwei;
+    public void setShouWanWei(ShouWanWei shouWanWei) {
+        ShouWanWei = shouWanWei;
     }
 
-    public String getBichang() {
-        return bichang;
+    public BiChang getBiChang() {
+        return BiChang;
     }
 
-    public void setBichang(String bichang) {
-        this.bichang = bichang;
+    public void setBiChang(BiChang biChang) {
+        BiChang = biChang;
     }
 
-    public String getXiongwei() {
-        return xiongwei;
+    public XiongWei getXiongWei() {
+        return XiongWei;
     }
 
-    public void setXiongwei(String xiongwei) {
-        this.xiongwei = xiongwei;
+    public void setXiongWei(XiongWei xiongWei) {
+        XiongWei = xiongWei;
     }
 
-    public String getDuwei() {
-        return duwei;
+    public DuWei getDuWei() {
+        return DuWei;
     }
 
-    public void setDuwei(String duwei) {
-        this.duwei = duwei;
+    public void setDuWei(DuWei duWei) {
+        DuWei = duWei;
     }
 
-    public String getYaowei() {
-        return yaowei;
+    public YaoWei getYaoWei() {
+        return YaoWei;
     }
 
-    public void setYaowei(String yaowei) {
-        this.yaowei = yaowei;
+    public void setYaoWei(YaoWei yaoWei) {
+        YaoWei = yaoWei;
     }
 
-    public String getTunwei() {
-        return tunwei;
+    public TunWei getTunWei() {
+        return TunWei;
     }
 
-    public void setTunwei(String tunwei) {
-        this.tunwei = tunwei;
+    public void setTunWei(TunWei tunWei) {
+        TunWei = tunWei;
     }
 
-    public String getDatuiwei() {
-        return datuiwei;
+    public DaTuiWei getDaTuiWei() {
+        return DaTuiWei;
     }
 
-    public void setDatuiwei(String datuiwei) {
-        this.datuiwei = datuiwei;
+    public void setDaTuiWei(DaTuiWei daTuiWei) {
+        DaTuiWei = daTuiWei;
     }
 
-    public String getQiwei() {
-        return qiwei;
+    public XiWei getXiWei() {
+        return XiWei;
     }
 
-    public void setQiwei(String qiwei) {
-        this.qiwei = qiwei;
+    public void setXiWei(XiWei xiWei) {
+        XiWei = xiWei;
     }
 
-    public String getXiaotuiwei() {
-        return xiaotuiwei;
+    public XiaoTuiWei getXiaoTuiWei() {
+        return XiaoTuiWei;
     }
 
-    public void setXiaotuiwei(String xiaotuiwei) {
-        this.xiaotuiwei = xiaotuiwei;
+    public void setXiaoTuiWei(XiaoTuiWei xiaoTuiWei) {
+        XiaoTuiWei = xiaoTuiWei;
     }
 
-    public String getJiaohuaiwei() {
-        return jiaohuaiwei;
+    public JiaoHuaiWei getJiaoHuaiWei() {
+        return JiaoHuaiWei;
     }
 
-    public void setJiaohuaiwei(String jiaohuaiwei) {
-        this.jiaohuaiwei = jiaohuaiwei;
+    public void setJiaoHuaiWei(JiaoHuaiWei jiaoHuaiWei) {
+        JiaoHuaiWei = jiaoHuaiWei;
     }
 
-    public String getTongdang() {
-        return tongdang;
+    public TongDang getTongDang() {
+        return TongDang;
     }
 
-    public void setTongdang(String tongdang) {
-        this.tongdang = tongdang;
+    public void setTongDang(TongDang tongDang) {
+        TongDang = tongDang;
     }
 
-    public String getQiaguheight() {
-        return qiaguheight;
+    public QiaGuHeight getQiaGuHeight() {
+        return QiaGuHeight;
     }
 
-    public void setQiaguheight(String qiaguheight) {
-        this.qiaguheight = qiaguheight;
+    public void setQiaGuHeight(QiaGuHeight qiaGuHeight) {
+        QiaGuHeight = qiaGuHeight;
     }
 
-    public String getZuojianxie() {
-        return zuojianxie;
+    public ZuoJianXie getZuoJianXie() {
+        return ZuoJianXie;
     }
 
-    public void setZuojianxie(String zuojianxie) {
-        this.zuojianxie = zuojianxie;
+    public void setZuoJianXie(ZuoJianXie zuoJianXie) {
+        ZuoJianXie = zuoJianXie;
     }
 
-    public String getYoujianxie() {
-        return youjianxie;
+    public YouJianXie getYouJianXie() {
+        return YouJianXie;
     }
 
-    public void setYoujianxie(String youjianxie) {
-        this.youjianxie = youjianxie;
+    public void setYouJianXie(YouJianXie youJianXie) {
+        YouJianXie = youJianXie;
     }
 
-    public String getWanbeiangle() {
-        return wanbeiangle;
+    public WanBeiAngle getWanBeiAngle() {
+        return WanBeiAngle;
     }
 
-    public void setWanbeiangle(String wanbeiangle) {
-        this.wanbeiangle = wanbeiangle;
+    public void setWanBeiAngle(WanBeiAngle wanBeiAngle) {
+        WanBeiAngle = wanBeiAngle;
     }
 
-    public String getShangtudu() {
-        return shangtudu;
+    public ShangTuDu getShangTuDu() {
+        return ShangTuDu;
     }
 
-    public void setShangtudu(String shangtudu) {
-        this.shangtudu = shangtudu;
+    public void setShangTuDu(ShangTuDu shangTuDu) {
+        ShangTuDu = shangTuDu;
     }
 
-    public String getXiatudu() {
-        return xiatudu;
+    public XiaTuDu getXiaTuDu() {
+        return XiaTuDu;
     }
 
-    public void setXiatudu(String xiatudu) {
-        this.xiatudu = xiatudu;
+    public void setXiaTuDu(XiaTuDu xiaTuDu) {
+        XiaTuDu = xiaTuDu;
     }
 
-    public String getAoyao() {
-        return aoyao;
+    public AoYao getAoYao() {
+        return AoYao;
     }
 
-    public void setAoyao(String aoyao) {
-        this.aoyao = aoyao;
+    public void setAoYao(AoYao aoYao) {
+        AoYao = aoYao;
     }
-
-    private String touwei;
-    private String jingwei;
-    private String jiankuan;
-    private String biwei;
-    private String shouwanwei;
-    private String bichang;
-    private String xiongwei;
-    private String duwei;
-    private String yaowei;
-    private String tunwei;
-    private String datuiwei;
-    private String qiwei;
-    private String xiaotuiwei;
-    private String jiaohuaiwei;
-    private String tongdang;
-    private String qiaguheight;
-    private String zuojianxie;
-    private String youjianxie;
-    private String wanbeiangle;
-    private String shangtudu;
-    private String xiatudu;
-    private String aoyao;
 }

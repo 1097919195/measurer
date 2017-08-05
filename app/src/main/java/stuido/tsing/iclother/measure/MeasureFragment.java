@@ -8,18 +8,21 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.gson.GsonBuilder;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleDeviceServices;
 import com.polidea.rxandroidble.exceptions.BleScanException;
@@ -40,7 +43,9 @@ import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.ble.BleCharacter;
 import stuido.tsing.iclother.data.ble.BleDevice;
 import stuido.tsing.iclother.data.ble.BleService;
-import stuido.tsing.iclother.data.measure.Measurement;
+import stuido.tsing.iclother.data.measure.item.MeasurementItem;
+import stuido.tsing.iclother.data.measure.item.parts.Part;
+import stuido.tsing.iclother.utils.DensityUtil;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -67,18 +72,19 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     TextView rulerBattery;
     @BindView(R.id.measure_button)
     AppCompatButton measureButton;
-    @BindView(R.id.xiongwei_et)
-    EditText xiongweiEt;
-    @BindView(R.id.yaowei_et)
-    EditText yaoweiEt;
-    @BindView(R.id.tunwei_et)
-    EditText tunweiEt;
+    //    @BindView(R.id.xiongwei_et)
+//    EditText xiongweiEt;
+//    @BindView(R.id.yaowei_et)
+//    EditText yaoweiEt;
+//    @BindView(R.id.tunwei_et)
+//    EditText tunweiEt;
     @BindView(R.id.save_measure_result)
     AppCompatButton saveMeasureResult;
+    @BindView(R.id.measure_table_layout)
+    TableLayout measureTableLayout;
     Unbinder unbinder;
     private MeasureContract.Presenter mPresenter;
     private Map<String, String> mData = new LinkedHashMap<>();
-    private List<String> macAddress = new ArrayList<>();
     private List<BleService> bleServiceList = new ArrayList<>();
     private List<BleDevice> bleDevices = new ArrayList<>();
     private List<BleCharacter> bleCharacters = new ArrayList<>();
@@ -86,6 +92,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private MaterialDialog serviceListDialog;
     private MaterialDialog characteristicListDialog;
     private MaterialDialog scanningDialog;
+    private static final float TEXT_VIEW_HEIGHT = 30;
 
     public MeasureFragment() {
     }
@@ -121,7 +128,55 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.measure_frag, container, false);
         unbinder = ButterKnife.bind(this, root);
+        try {
+            Class<?> aClass = Class.forName("stuido.tsing.iclother.data.measure.item.MeasurementItem");
+            MeasurementItem item = (MeasurementItem) aClass.newInstance();
+            for (java.lang.reflect.Field field : item.getClass().getDeclaredFields()) {
+                String name = field.getName();
+                Class<?> itemSubclass = Class.forName("stuido.tsing.iclother.data.measure.item.parts." + name);
+                Part part = (Part) itemSubclass.newInstance();
+                String cn = part.getCn();
+                TableRow tableRow = getTableRow(cn);
+                measureTableLayout.addView(tableRow);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         return root;
+    }
+
+    @NonNull
+    private TableRow getTableRow(String cn) {
+        TableRow tableRow = new TableRow(getActivity());
+        tableRow.setLayoutParams(new TableRow
+                .LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        tableRow.setPadding(0, 5, 0, 0);
+
+        TextView textView = new TextView(getActivity());
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        textView.setBackground(getResources().getDrawable(R.drawable.table_border_1dp));
+        textView.setHeight(DensityUtil.dip2px(getActivity(), TEXT_VIEW_HEIGHT));
+        textView.setPadding(0, 3, 0, 3);
+        textView.setText(cn);
+
+        EditText editText = new EditText(getActivity());
+        editText.setGravity(Gravity.CENTER_VERTICAL);
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editText.setTextColor(getResources().getColor(R.color.ff5001));
+        editText.setBackground(getResources().getDrawable(R.drawable.table_border_1dp));
+        editText.setHeight(DensityUtil.dip2px(getActivity(), TEXT_VIEW_HEIGHT));
+        editText.setPadding(0, 5, 0, 5);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        tableRow.addView(textView);
+        tableRow.addView(editText);
+        return tableRow;
     }
 
     @Override
@@ -161,23 +216,23 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         checkInputValid(height, "身高");
         String weight = measureWeightInput.getText().toString();
         checkInputValid(weight, "体重");
-        String xiongwei = xiongweiEt.getText().toString();
-        checkInputValid(xiongwei, "胸围");
-        String yaowei = yaoweiEt.getText().toString();
-        checkInputValid(yaowei, "腰围");
-        String tunwei = tunweiEt.getText().toString();
-        checkInputValid(tunwei, "臀围");
-        mData.put("xiongwei", xiongwei);
-        mData.put("yaowei", yaowei);
-        mData.put("tunwei", tunwei);
-        int sex = 0;
-        if (sexRadioGroup.getCheckedRadioButtonId() == radioFemale.getId()) {
-            sex = 1;
-        }
-
-        String data = new GsonBuilder().enableComplexMapKeySerialization().create().toJson(mData);
-        Measurement measurement = new Measurement("11", data, sex);
-        mPresenter.saveMeasurement(measurement);
+//        String xiongwei = xiongweiEt.getText().toString();
+//        checkInputValid(xiongwei, "胸围");
+//        String yaowei = yaoweiEt.getText().toString();
+//        checkInputValid(yaowei, "腰围");
+//        String tunwei = tunweiEt.getText().toString();
+//        checkInputValid(tunwei, "臀围");
+//        mData.put("xiongwei", xiongwei);
+//        mData.put("yaowei", yaowei);
+//        mData.put("tunwei", tunwei);
+//        int sex = 0;
+//        if (sexRadioGroup.getCheckedRadioButtonId() == radioFemale.getId()) {
+//            sex = 1;
+//        }
+//
+//        String data = new GsonBuilder().enableComplexMapKeySerialization().create().toJson(mData);
+//        Measurement measurement = new Measurement("11", data, sex);
+//        mPresenter.saveMeasurement(measurement);
     }
 
     @Override
@@ -321,8 +376,8 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         rulerBattery.setText(battery + "%");
         rulerState.setTextColor(getResources().getColor(R.color.green));
         // TODO: 017/8/3 更新当前焦点输入的框的结果
-        yaoweiEt.setText(length + "");
-        yaoweiEt.setTextColor(getResources().getColor(R.color.black));
+//        yaoweiEt.setText(length + "");
+//        yaoweiEt.setTextColor(getResources().getColor(R.color.black));
     }
 
     @Override

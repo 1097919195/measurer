@@ -219,9 +219,9 @@ public class HomeFragment extends Fragment implements HomeContract.View {
             } else {
                 measurementItem = new Gson().fromJson(measurement.getmData(), MeasurementFemaleItem.class);
             }
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurementItem.getXiongwei());
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurementItem.getYaowei());
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurementItem.getTunwei());
+//            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurementItem.getXiongwei());
+//            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurementItem.getYaowei());
+//            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurementItem.getTunwei());
 
             rowView.setOnClickListener(__ -> measurementItemListener.onMeasurementClick(measurement));
 

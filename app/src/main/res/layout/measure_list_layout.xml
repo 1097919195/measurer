@@ -1,88 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/measure_table_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:background="@color/white"
+    android:stretchColumns="0,1">
 
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginTop="1dp">
+        android:background="@color/table_title"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/measure_item_title"
-            android:textColor="@color/black" />
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/measure_value_title"
-            android:textColor="@color/black" />
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
     </TableRow>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginTop="1dp">
+    <!--<TableRow-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:paddingTop="5dp">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/xiongwei_prompt"
-            android:textColor="@color/black" />
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@drawable/table_border_1dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/xiongwei_prompt"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="@color/black" />-->
 
-        <EditText
-            android:id="@+id/xiongwei_et"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
+    <!--<EditText-->
+    <!--android:id="@+id/xiongwei_et"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@drawable/table_border_1dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:inputType="number"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="@color/ff5001" />-->
 
-    </TableRow>
+    <!--</TableRow>-->
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginTop="1dp">
+    <!--<TableRow-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:paddingTop="5dp">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/yaowei_prompt"
-            android:textColor="@color/black" />
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@drawable/table_border_1dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/yaowei_prompt"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="@color/black" />-->
 
-        <EditText
-            android:id="@+id/yaowei_et"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
+    <!--<EditText-->
+    <!--android:id="@+id/yaowei_et"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@drawable/table_border_1dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:inputType="number"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="@color/ff5001" />-->
 
-    </TableRow>
+    <!--</TableRow>-->
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginTop="1dp">
+    <!--<TableRow-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:paddingTop="5dp">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tunwei_prompt"
-            android:textColor="@color/black" />
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@drawable/table_border_1dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/tunwei_prompt"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="@color/black" />-->
 
-        <EditText
-            android:id="@+id/tunwei_et"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
+    <!--<EditText-->
+    <!--android:id="@+id/tunwei_et"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@drawable/table_border_1dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:inputType="number"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="@color/ff5001" />-->
 
-    </TableRow>
+    <!--</TableRow>-->
 </TableLayout>
