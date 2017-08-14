@@ -16,6 +16,7 @@ import rx.Observable;
 import rx.functions.Func1;
 import stuido.tsing.iclother.data.measure.Measurement;
 import stuido.tsing.iclother.data.measure.MeasurementDataSource;
+import stuido.tsing.iclother.data.wuser.WeiXinUser;
 import stuido.tsing.iclother.utils.db.MeasurementsPersistenceContract;
 import stuido.tsing.iclother.utils.schedulers.BaseSchedulerProvider;
 
@@ -47,7 +48,10 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
         String data =
                 c.getString(c.getColumnIndexOrThrow(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA));
         int gender = Integer.parseInt(c.getString(c.getColumnIndexOrThrow(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER)));
-        return new Measurement(userId, data, itemId, gender);
+        WeiXinUser weiXinUser = new WeiXinUser();
+        weiXinUser.setSex(gender)
+                .setWid(userId);
+        return new Measurement(weiXinUser, data, itemId);
     }
 
     public static MeasurementLocalDataSource getInstance(@NonNull Context context, @NonNull BaseSchedulerProvider provider) {
@@ -95,8 +99,8 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
         ContentValues values = new ContentValues();
         values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_ENTRY_ID, measurement.getmId());
         values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA, measurement.getmData());
-        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID, measurement.getmUserName());
-        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER, measurement.getmSex());
+        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID, measurement.getUser().getNickname());
+        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER, measurement.getUser().getSex());
         briteDatabase.insert(MeasurementsPersistenceContract.MeasurementEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 

@@ -212,9 +212,9 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
             final Measurement measurement = getItem(i);
 
-            ((TextView) rowView.findViewById(R.id.measurement_item_user)).setText(measurement.getmUserName());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user)).setText(measurement.getUser().getNickname());
             MeasurementItem measurementItem;
-            if (measurement.getmSex() == UserSex.MALE) {
+            if (measurement.getUser().getSex() == UserSex.MALE) {
                 measurementItem = new Gson().fromJson(measurement.getmData(), MeasurementMaleItem.class);
             } else {
                 measurementItem = new Gson().fromJson(measurement.getmData(), MeasurementFemaleItem.class);

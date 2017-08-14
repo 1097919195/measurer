@@ -2,7 +2,6 @@ package stuido.tsing.iclother.measure;
 
 import android.Manifest;
 
-import com.baidu.tts.client.SpeechSynthesizer;
 import com.polidea.rxandroidble.RxBleClient;
 
 import kr.co.namee.permissiongen.PermissionGen;
@@ -18,6 +17,7 @@ import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 
 public class MeasureActivity extends BaseActivity {
     public static final int REQUEST_ADD_MEASUREMENT = 1;
+
     private RxBleClient rxBleClient;
     private MeasurePresenter mPresenter;
 
@@ -29,14 +29,14 @@ public class MeasureActivity extends BaseActivity {
     @Override
     protected void initEvent() {
         rxBleClient = BleClientHelper.getInstance(MeasureActivity.this);
-        SpeechSynthesizer synthesizer = SpeechSynthesizer.getInstance();
-        synthesizer.setContext(this);
         MeasureFragment measure_fragment = (MeasureFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.act_content_view);
+
         if (measure_fragment == null) {
             measure_fragment = MeasureFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), measure_fragment, R.id.act_content_view);
         }
+
         mPresenter = new MeasurePresenter(rxBleClient, measure_fragment, SchedulerProvider.getInstance());
         PermissionGen.with(MeasureActivity.this)
                 .addRequestCode(100)
@@ -47,6 +47,7 @@ public class MeasureActivity extends BaseActivity {
                 .request();
     }
 
+
     @Override
     protected void actionMenuClickEvent() {
 
@@ -56,6 +57,4 @@ public class MeasureActivity extends BaseActivity {
     protected CharSequence getActionMenuTitle() {
         return null;
     }
-
-
 }

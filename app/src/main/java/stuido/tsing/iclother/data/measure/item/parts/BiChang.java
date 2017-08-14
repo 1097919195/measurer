@@ -12,4 +12,9 @@ public class BiChang extends Part {
     public String getCn() {
         return cn;
     }
+
+    @Override
+    public String getEn() {
+        return en;
+    }
 }

@@ -13,4 +13,8 @@ public class AoYao extends Part {
         return cn;
     }
 
+    @Override
+    public String getEn() {
+        return en;
+    }
 }

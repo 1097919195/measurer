@@ -27,6 +27,7 @@ import stuido.tsing.iclother.utils.schedulers.BaseSchedulerProvider;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasurePresenter implements MeasureContract.Presenter {
+    private static final String BLE_NAME = "BLE_Ruler";
     @NonNull
     private RxBleClient rxBleClient;
     @NonNull
@@ -91,8 +92,12 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                     .observeOn(mSchedulerProvider.ui())
                     .doOnUnsubscribe(this::clearSubscription)
                     .subscribe(scanResult -> {
-                        measurementView.showScanResult(scanResult);
-                        scanSubscription.unsubscribe();
+                        // TODO: 2017/8/14 若设备已扫描到，就不再添加该结果
+                        String name = scanResult.getBleDevice().getName();
+                        if (name.equals(BLE_NAME)) {
+                            measurementView.showScanResult(scanResult);
+                            scanSubscription.unsubscribe();
+                        }
                     }, this::handleError, () -> measurementView.finishScan());
 //            scanSubscription.unsubscribe();
 //            measurementView.updateButtonUIState();
