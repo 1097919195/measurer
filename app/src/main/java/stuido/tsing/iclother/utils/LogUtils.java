@@ -25,7 +25,7 @@ public class LogUtils {
 
     public static void d(String paramString) {
         if (mDebuggable >= LEVEL_DEBUG)
-            Log.d(mTag, paramString);
+            Log.e(mTag, paramString);
     }
 
     public static void e(String paramString) {

@@ -2,6 +2,7 @@ package stuido.tsing.iclother.measure;
 
 import android.Manifest;
 
+import com.baidu.tts.client.SpeechSynthesizer;
 import com.polidea.rxandroidble.RxBleClient;
 
 import kr.co.namee.permissiongen.PermissionGen;
@@ -28,6 +29,8 @@ public class MeasureActivity extends BaseActivity {
     @Override
     protected void initEvent() {
         rxBleClient = BleClientHelper.getInstance(MeasureActivity.this);
+        SpeechSynthesizer synthesizer = SpeechSynthesizer.getInstance();
+        synthesizer.setContext(this);
         MeasureFragment measure_fragment = (MeasureFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.act_content_view);
         if (measure_fragment == null) {

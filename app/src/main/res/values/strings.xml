@@ -54,11 +54,11 @@
     <string name="measure_gender_title">性别：</string>
     <string name="male">男</string>
     <string name="female">女</string>
-    <string name="measure_height_prompt">身高：</string>
+    <string name="measure_height_prompt">身高:</string>
     <string name="cm_unit">cm</string>
-    <string name="measure_weight_prompt">体重：</string>
+    <string name="measure_weight_prompt">体重:</string>
     <string name="kg_unit">kg</string>
-    <string name="measure_ruler_state">电子尺状态：</string>
+    <string name="measure_ruler_state">电子尺状态:</string>
     <string name="measure_ruler_battery">电量：</string>
     <string name="measure_button_prompt">开始测量</string>
     <string name="measure_act_title">量体</string>
@@ -75,7 +75,7 @@
     <string name="connected">已连接</string>
     <string name="disconnected">未连接</string>
     <string name="device_disconnected">蓝牙未连接</string>
-    <string name="ble_info">蓝牙状态:</string>
+    <string name="ble_info">蓝牙状态：</string>
     <string name="battery_unknown">N/A</string>
     <string name="connecting">连接中...</string>
     <string name="choose_device_prompt">请选择蓝牙设备</string>
@@ -89,4 +89,12 @@
     <string name="scan_finished">扫描完成</string>
     <string name="measuring">正在测量...</string>
     <string name="scanning">正在扫描...</string>
+    <string-array name="angle_items">
+        <item>ZuoJianXie</item>
+        <item>YuoJianXie</item>
+        <item>WanBeiAngle</item>
+        <item>ShangTuDu</item>
+        <item>XiaTuDu</item>
+        <item>AoYao</item>
+    </string-array>
 </resources>

@@ -7,13 +7,13 @@ import stuido.tsing.iclother.data.measure.item.parts.XiaXiongWei;
  */
 
 public class MeasurementFemaleItem extends MeasurementItem {
-    private XiaXiongWei xiaXiongWei;
+    private XiaXiongWei XiaXiongWei;
 
     public XiaXiongWei getXiaXiongWei() {
-        return xiaXiongWei;
+        return XiaXiongWei;
     }
 
     public void setXiaXiongWei(XiaXiongWei xiaXiongWei) {
-        this.xiaXiongWei = xiaXiongWei;
+        XiaXiongWei = xiaXiongWei;
     }
 }

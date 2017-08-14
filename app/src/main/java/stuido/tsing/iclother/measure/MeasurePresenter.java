@@ -118,10 +118,10 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                     .flatMap(RxBleConnection::discoverServices)
                     .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUUID))
                     .observeOn(mSchedulerProvider.ui())
-                    .doOnUnsubscribe(() -> Log.d(getClass().toString(), "is on connecting"))
+                    .doOnUnsubscribe(() -> Log.e(getClass().toString(), "is on connecting"))
                     .subscribe(c -> {
                         measurementView.showConnected();
-                        Log.d(getClass().getSimpleName(), "Hey, connection has been established!");
+                        Log.e(getClass().getSimpleName(), "Hey, connection has been established!");
                     }, this::handleError);
         }
     }
@@ -172,7 +172,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         int a1 = length ^ code;
         int a2 = battery ^ code;
         int a3 = angle ^ code;
-        Log.d(getClass().toString(), "length:" + a1 + "mm;battery:" + a2 + ";angle:" + a3);
+        Log.e(getClass().toString(), "length:" + a1 + "mm;battery:" + a2 + ";angle:" + a3);
         measurementView.updateMeasureData(a1, a2, a3);
     }
 

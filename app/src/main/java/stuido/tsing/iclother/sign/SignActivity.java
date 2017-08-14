@@ -47,7 +47,7 @@ public class SignActivity extends AppCompatActivity {
     }
 
 //    public void signup() {
-//        Log.d(TAG, "Signup");
+//        Log.e(TAG, "Signup");
 //
 //        if (!validate()) {
 //            onSignupFailed();

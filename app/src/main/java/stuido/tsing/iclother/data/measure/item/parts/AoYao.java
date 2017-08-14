@@ -6,7 +6,7 @@ package stuido.tsing.iclother.data.measure.item.parts;
 
 public class AoYao extends Part {
     private String cn = "凹腰";
-    private String en = "XiongWei";
+    private String en = "AoYao";
 
     @Override
     public String getCn() {

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,9 @@ import com.polidea.rxandroidble.RxBleDeviceServices;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,17 +46,20 @@ import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.ble.BleCharacter;
 import stuido.tsing.iclother.data.ble.BleDevice;
 import stuido.tsing.iclother.data.ble.BleService;
+import stuido.tsing.iclother.data.measure.item.MeasurementFemaleItem;
 import stuido.tsing.iclother.data.measure.item.MeasurementItem;
+import stuido.tsing.iclother.data.measure.item.MeasurementMaleItem;
 import stuido.tsing.iclother.data.measure.item.parts.Part;
 import stuido.tsing.iclother.utils.DensityUtil;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-/**
- * Created by Endless on 2017/8/1.
- */
+//App ID: 9975769
+//        API Key: 8DNe2XqRDGO37cCejoeQ87si
+//        Secret Key: 7fa383e70cc976d0c60c38c3799e1b09
 
 public class MeasureFragment extends Fragment implements MeasureContract.View {
+    private final List<String> angleList;
     @BindView(R.id.radio_male)
     RadioButton radioMale;
     @BindView(R.id.radio_female)
@@ -72,19 +78,12 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     TextView rulerBattery;
     @BindView(R.id.measure_button)
     AppCompatButton measureButton;
-    //    @BindView(R.id.xiongwei_et)
-//    EditText xiongweiEt;
-//    @BindView(R.id.yaowei_et)
-//    EditText yaoweiEt;
-//    @BindView(R.id.tunwei_et)
-//    EditText tunweiEt;
     @BindView(R.id.save_measure_result)
     AppCompatButton saveMeasureResult;
     @BindView(R.id.measure_table_layout)
     TableLayout measureTableLayout;
     Unbinder unbinder;
     private MeasureContract.Presenter mPresenter;
-    private Map<String, String> mData = new LinkedHashMap<>();
     private List<BleService> bleServiceList = new ArrayList<>();
     private List<BleDevice> bleDevices = new ArrayList<>();
     private List<BleCharacter> bleCharacters = new ArrayList<>();
@@ -93,8 +92,13 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private MaterialDialog characteristicListDialog;
     private MaterialDialog scanningDialog;
     private static final float TEXT_VIEW_HEIGHT = 30;
+    private List<TableRow> maleRows = new ArrayList<>();
+    private List<TableRow> femaleRows = new ArrayList<>();
+    private String[] angleItems = new String[5];
 
     public MeasureFragment() {
+        angleItems = getResources().getStringArray(R.array.angle_items);
+        angleList = Arrays.asList(angleItems);
     }
 
     public static MeasureFragment newInstance() {
@@ -128,29 +132,50 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.measure_frag, container, false);
         unbinder = ButterKnife.bind(this, root);
+        if (maleRows.size() == 0) {
+            maleRows = initMeasureItemList("MeasurementMaleItem");
+        }
+        appendTableRows(maleRows);
+        return root;
+    }
+
+    private List<TableRow> initMeasureItemList(String type) {
+        List<TableRow> rows = new ArrayList<>();
+        MeasurementItem item;
         try {
-            Class<?> aClass = Class.forName("stuido.tsing.iclother.data.measure.item.MeasurementItem");
-            MeasurementItem item = (MeasurementItem) aClass.newInstance();
-            for (java.lang.reflect.Field field : item.getClass().getDeclaredFields()) {
+            Class<?> aClass = Class.forName("stuido.tsing.iclother.data.measure.item." + type);
+            if (type == "MeasurementMaleItem") {
+                item = (MeasurementMaleItem) aClass.newInstance();
+            } else {
+                item = (MeasurementFemaleItem) aClass.newInstance();
+            }
+            for (Field field : item.getClass().getDeclaredFields()) {
                 String name = field.getName();
                 Class<?> itemSubclass = Class.forName("stuido.tsing.iclother.data.measure.item.parts." + name);
                 Part part = (Part) itemSubclass.newInstance();
-                String cn = part.getCn();
-                TableRow tableRow = getTableRow(cn);
-                measureTableLayout.addView(tableRow);
+                TableRow tableRow = getTableRow(part.getCn(), part.getEn());
+                rows.add(tableRow);
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            for (Field field : item.getClass().getSuperclass().getDeclaredFields()) {
+                String name = field.getName();
+                Class<?> itemSubclass = Class.forName("stuido.tsing.iclother.data.measure.item.parts." + name);
+                Part part = (Part) itemSubclass.newInstance();
+                TableRow tableRow = getTableRow(part.getCn(), part.getEn());
+                rows.add(tableRow);
+            }
         } catch (java.lang.InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        return root;
+        return rows;
     }
 
     @NonNull
-    private TableRow getTableRow(String cn) {
+    private TableRow getTableRow(String cn, String en) {
+// TODO: 2017/8/5 布局对齐
         TableRow tableRow = new TableRow(getActivity());
         tableRow.setLayoutParams(new TableRow
                 .LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -161,7 +186,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setBackground(getResources().getDrawable(R.drawable.table_border_1dp));
-        textView.setHeight(DensityUtil.dip2px(getActivity(), TEXT_VIEW_HEIGHT));
+        textView.setHeight(DensityUtil.dp2px(getActivity(), TEXT_VIEW_HEIGHT));
         textView.setPadding(0, 3, 0, 3);
         textView.setText(cn);
 
@@ -170,9 +195,10 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         editText.setTextColor(getResources().getColor(R.color.ff5001));
         editText.setBackground(getResources().getDrawable(R.drawable.table_border_1dp));
-        editText.setHeight(DensityUtil.dip2px(getActivity(), TEXT_VIEW_HEIGHT));
+        editText.setHeight(DensityUtil.dp2px(getActivity(), TEXT_VIEW_HEIGHT));
         editText.setPadding(0, 5, 0, 5);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setTag(en);
 
         tableRow.addView(textView);
         tableRow.addView(editText);
@@ -195,7 +221,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         Snackbar.make(getView(), getString(R.string.device_disconnected), Snackbar.LENGTH_SHORT).show();
     }
 
-    @OnClick({R.id.scan_toggle_btn, R.id.measure_button, R.id.save_measure_result})
+    @OnClick({R.id.scan_toggle_btn, R.id.measure_button, R.id.save_measure_result, R.id.radio_male, R.id.radio_female})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.scan_toggle_btn:
@@ -207,9 +233,27 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             case R.id.save_measure_result:
                 saveMeasurement();
                 break;
+            case R.id.radio_male:
+                appendTableRows(maleRows);
+                break;
+            case R.id.radio_female:
+                if (femaleRows.size() == 0) {
+                    femaleRows = initMeasureItemList("MeasurementFemaleItem");
+                }
+                appendTableRows(femaleRows);
+                break;
         }
     }
 
+    void appendTableRows(List<TableRow> list) {
+        TableRow tableTitle = (TableRow) measureTableLayout.getChildAt(0);
+        measureTableLayout.removeAllViews();
+        measureTableLayout.addView(tableTitle);
+        for (TableRow row : list) {
+            measureTableLayout.addView(row);
+        }
+        Log.e(getClass().toString(), "布局变化");
+    }
 
     private void saveMeasurement() {
         String height = measureHeightInput.getText().toString();
@@ -376,8 +420,36 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         rulerBattery.setText(battery + "%");
         rulerState.setTextColor(getResources().getColor(R.color.green));
         // TODO: 017/8/3 更新当前焦点输入的框的结果
-//        yaoweiEt.setText(length + "");
-//        yaoweiEt.setTextColor(getResources().getColor(R.color.black));
+        if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
+            for (TableRow row : maleRows) {
+                if (assignValue(length, angle, row)) break;
+            }
+        } else {
+            for (TableRow row : femaleRows) {
+                if (assignValue(length, angle, row)) break;
+            }
+        }
+    }
+
+    /**
+     * 结果赋值，有几个字段需要的结果为角度
+     *
+     * @param length 长度
+     * @param row    行
+     * @return boolean
+     */
+    private boolean assignValue(int length, float angle, TableRow row) {
+        EditText editText = (EditText) row.getChildAt(1);
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            String tag = (String) editText.getTag();
+            if (angleList.contains(tag)) {
+                editText.setText(angle + "");
+            } else {
+                editText.setText(length + "");
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override

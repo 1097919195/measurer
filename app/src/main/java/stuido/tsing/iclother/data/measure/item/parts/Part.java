@@ -26,7 +26,7 @@ public class Part {
     }
 
     public String getEn() {
-        return en;
+        return getClass().toString();
     }
 
     public void setEn(String en) {

@@ -1,39 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
+    android:layout_height="40dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
     android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.5">
+        android:layout_weight="1.5"
+        android:paddingLeft="5dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="@string/measure_gender_title"
+            android:textAlignment="center"
             android:textColor="@color/black" />
 
         <RadioGroup
             android:id="@+id/sex_rg"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/radio_male"
-                android:layout_width="wrap_content"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/radio_custom"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center_vertical"
                 android:text="@string/male"
-                android:textColor="@color/black" />
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
 
             <RadioButton
                 android:id="@+id/radio_female"
-                android:layout_width="wrap_content"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/radio_custom"
+                android:button="@null"
+                android:gravity="center_vertical"
                 android:text="@string/female"
-                android:textColor="@color/black" />
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
         </RadioGroup>
     </LinearLayout>
 
@@ -44,19 +61,26 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="@string/measure_height_prompt"
+            android:textAlignment="center"
             android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/measure_height_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/table_border_1dp"
+            android:gravity="center_vertical"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/ff5001" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="@string/cm_unit"
             android:textColor="@color/black" />
     </LinearLayout>
@@ -68,20 +92,28 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="@string/measure_weight_prompt"
+            android:textAlignment="center"
             android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/measure_weight_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/table_border_1dp"
+            android:gravity="center_vertical"
+            android:inputType="numberDecimal"
+            android:textAlignment="center"
+            android:textColor="@color/ff5001" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="@string/kg_unit"
+            android:textAlignment="center"
             android:textColor="@color/black" />
     </LinearLayout>
 </LinearLayout>
