@@ -5,15 +5,15 @@ package stuido.tsing.iclother.data.measure.item.parts;
  */
 
 public class TongDang extends Part {
-    private String cn = "通挡";
-    private String en = "TongDang";
+//    private String cn = "通挡";
+//    private String en = "TongDang";
 
     public String getCn() {
-        return cn;
+        return "通挡";
     }
 
     @Override
     public String getEn() {
-        return en;
+        return "TongDang";
     }
 }

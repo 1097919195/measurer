@@ -16,17 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.measure.Measurement;
 import stuido.tsing.iclother.data.measure.UserSex;
-import stuido.tsing.iclother.data.measure.item.MeasurementFemaleItem;
-import stuido.tsing.iclother.data.measure.item.MeasurementItem;
-import stuido.tsing.iclother.data.measure.item.MeasurementMaleItem;
 import stuido.tsing.iclother.measure.MeasureActivity;
 import stuido.tsing.iclother.measurementdetail.MeasurementDetailActivity;
 
@@ -40,9 +35,9 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     private TextView mNoMeasurementMainView;
     private TextView mNoMeasurementAddView;
     private LinearLayout mMeasurementView;
+    private ListView listview;
 
     public HomeFragment() {
-
     }
 
     public static HomeFragment newInstance() {
@@ -77,7 +72,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.measurement_list_frag, container, false);
         //set up measurement view
-        ListView listview = root.findViewById(R.id.measurements_list);
+        listview = root.findViewById(R.id.measurements_list);
         listview.setAdapter(measurementAdapter);
         mMeasurementView = root.findViewById(R.id.measurementsLL);
 
@@ -115,11 +110,11 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void showMeasurementList(List<Measurement> measureList) {
         measurementAdapter.replaceData(measureList);
-        mMeasurementView.setVisibility(View.VISIBLE);
-        mNoMeasurementView.setVisibility(View.GONE);
-
         measurementAdapter = new MeasurementAdapter(measureList, __ -> mPresenter.openMeasurementDetails(__));
         measurementAdapter.setData(measureList);
+        listview.setAdapter(measurementAdapter);
+        mNoMeasurementView.setVisibility(View.GONE);
+        mMeasurementView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -212,16 +207,15 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
             final Measurement measurement = getItem(i);
 
-            ((TextView) rowView.findViewById(R.id.measurement_item_user)).setText(measurement.getUser().getNickname());
-            MeasurementItem measurementItem;
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_name)).setText(measurement.getUser().getNickname());
             if (measurement.getUser().getSex() == UserSex.MALE) {
-                measurementItem = new Gson().fromJson(measurement.getmData(), MeasurementMaleItem.class);
+                ((TextView) rowView.findViewById(R.id.measurement_item_user_gender)).setText("男");
             } else {
-                measurementItem = new Gson().fromJson(measurement.getmData(), MeasurementFemaleItem.class);
+                ((TextView) rowView.findViewById(R.id.measurement_item_user_gender)).setText("女");
             }
-//            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurementItem.getXiongwei());
-//            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurementItem.getYaowei());
-//            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurementItem.getTunwei());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurement.getmData().getXiongWei().toString());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurement.getmData().getYaoWei().toString());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurement.getmData().getTunWei().toString());
 
             rowView.setOnClickListener(__ -> measurementItemListener.onMeasurementClick(measurement));
 

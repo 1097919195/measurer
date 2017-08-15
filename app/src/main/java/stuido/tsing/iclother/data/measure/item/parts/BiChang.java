@@ -5,16 +5,16 @@ package stuido.tsing.iclother.data.measure.item.parts;
  */
 
 public class BiChang extends Part {
-    private String cn = "臂长";
-    private String en = "BiChang";
+//    private String cn = "臂长";
+//    private String en = "BiChang";
 
     @Override
     public String getCn() {
-        return cn;
+        return "臂长";
     }
 
     @Override
     public String getEn() {
-        return en;
+        return "BiChang";
     }
 }

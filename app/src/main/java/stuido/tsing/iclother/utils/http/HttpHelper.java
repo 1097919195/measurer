@@ -1,8 +1,5 @@
 package stuido.tsing.iclother.utils.http;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -26,12 +23,12 @@ public class HttpHelper {
         //手动创建一个OkHttpClient并设置超时时间
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
+//        Gson gson = new GsonBuilder()
+//                .setLenient()
+//                .create();
         retrofit = new Retrofit.Builder()
                 .client(httpClientBuilder.build())
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();
@@ -42,7 +39,7 @@ public class HttpHelper {
         public T call(HttpResponse<T> httpResponse) {
             if (httpResponse.getStatus() >= 1000)
                 throw new ApiException(httpResponse.getMsg());
-//            if (httpResponse.getData() == null) throw new ApiException("暂无数据");
+            if (httpResponse.getData() == null) throw new ApiException("暂无数据");
             return httpResponse.getData();
         }
     }

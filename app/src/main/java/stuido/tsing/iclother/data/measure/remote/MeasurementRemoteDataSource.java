@@ -2,6 +2,8 @@ package stuido.tsing.iclother.data.measure.remote;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +44,8 @@ public class MeasurementRemoteDataSource implements MeasurementDataSource {
 
     @Override
     public void saveMeasurement(@NonNull Measurement measurement) {
-        new MeasurementHelper().saveMeasurement(measurement);
+        String s = (new Gson()).toJson(measurement);
+        new MeasurementHelper().saveMeasurement(s);
     }
 
     @Override

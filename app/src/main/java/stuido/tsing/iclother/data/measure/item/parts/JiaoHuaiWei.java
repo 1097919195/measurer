@@ -5,15 +5,15 @@ package stuido.tsing.iclother.data.measure.item.parts;
  */
 
 public class JiaoHuaiWei extends Part {
-    private String cn = "脚踝围";
-    private String en = "JiaoHuaiWei";
+//    private String cn = "脚踝围";
+//    private String en = "JiaoHuaiWei";
 
     public String getCn() {
-        return cn;
+        return "脚踝围";
     }
 
     @Override
     public String getEn() {
-        return en;
+        return "JiaoHuaiWei";
     }
 }

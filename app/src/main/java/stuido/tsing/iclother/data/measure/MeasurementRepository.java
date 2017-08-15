@@ -34,16 +34,14 @@ public class MeasurementRepository implements MeasurementDataSource {
     @Nullable
     private Map<String, Measurement> mCachedMeasurement;
 
-    private MeasurementRepository(@NonNull MeasurementRemoteDataSource remoteDataSource,
-                                  @NonNull MeasurementLocalDataSource localDataSource) {
+    private MeasurementRepository(@NonNull MeasurementRemoteDataSource remoteDataSource) {
         measurementRemoteDataSource = remoteDataSource;
-        measurementLocalDataSource = localDataSource;
+//        measurementLocalDataSource = localDataSource;
     }
 
-    public static MeasurementRepository getInstance(@NonNull MeasurementRemoteDataSource remoteDataSource,
-                                                    @NonNull MeasurementLocalDataSource localDataSource) {
+    public static MeasurementRepository getInstance(@NonNull MeasurementRemoteDataSource remoteDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new MeasurementRepository(remoteDataSource, localDataSource);
+            INSTANCE = new MeasurementRepository(remoteDataSource);
         }
         return INSTANCE;
     }

@@ -73,175 +73,197 @@ public class MeasurementItem {
         return TouWei;
     }
 
-    public void setTouWei(TouWei touWei) {
+    public MeasurementItem setTouWei(TouWei touWei) {
         TouWei = touWei;
+        return this;
     }
 
     public JingWei getJingWei() {
         return JingWei;
     }
 
-    public void setJingWei(JingWei jingWei) {
+    public MeasurementItem setJingWei(JingWei jingWei) {
         JingWei = jingWei;
+        return this;
     }
 
     public JianKuan getJianKuan() {
         return JianKuan;
     }
 
-    public void setJianKuan(JianKuan jianKuan) {
+    public MeasurementItem setJianKuan(JianKuan jianKuan) {
         JianKuan = jianKuan;
+        return this;
     }
 
     public BiWei getBiWei() {
         return BiWei;
     }
 
-    public void setBiWei(BiWei biWei) {
+    public MeasurementItem setBiWei(BiWei biWei) {
         BiWei = biWei;
+        return this;
     }
 
     public ShouWanWei getShouWanWei() {
         return ShouWanWei;
     }
 
-    public void setShouWanWei(ShouWanWei shouWanWei) {
+    public MeasurementItem setShouWanWei(ShouWanWei shouWanWei) {
         ShouWanWei = shouWanWei;
+        return this;
     }
 
     public BiChang getBiChang() {
         return BiChang;
     }
 
-    public void setBiChang(BiChang biChang) {
+    public MeasurementItem setBiChang(BiChang biChang) {
         BiChang = biChang;
+        return this;
     }
 
     public XiongWei getXiongWei() {
         return XiongWei;
     }
 
-    public void setXiongWei(XiongWei xiongWei) {
+    public MeasurementItem setXiongWei(XiongWei xiongWei) {
         XiongWei = xiongWei;
+        return this;
     }
 
     public DuWei getDuWei() {
         return DuWei;
     }
 
-    public void setDuWei(DuWei duWei) {
+    public MeasurementItem setDuWei(DuWei duWei) {
         DuWei = duWei;
+        return this;
     }
 
     public YaoWei getYaoWei() {
         return YaoWei;
     }
 
-    public void setYaoWei(YaoWei yaoWei) {
+    public MeasurementItem setYaoWei(YaoWei yaoWei) {
         YaoWei = yaoWei;
+        return this;
     }
 
     public TunWei getTunWei() {
         return TunWei;
     }
 
-    public void setTunWei(TunWei tunWei) {
+    public MeasurementItem setTunWei(TunWei tunWei) {
         TunWei = tunWei;
+        return this;
     }
 
     public DaTuiWei getDaTuiWei() {
         return DaTuiWei;
     }
 
-    public void setDaTuiWei(DaTuiWei daTuiWei) {
+    public MeasurementItem setDaTuiWei(DaTuiWei daTuiWei) {
         DaTuiWei = daTuiWei;
+        return this;
     }
 
     public XiWei getXiWei() {
         return XiWei;
     }
 
-    public void setXiWei(XiWei xiWei) {
+    public MeasurementItem setXiWei(XiWei xiWei) {
         XiWei = xiWei;
+        return this;
     }
 
     public XiaoTuiWei getXiaoTuiWei() {
         return XiaoTuiWei;
     }
 
-    public void setXiaoTuiWei(XiaoTuiWei xiaoTuiWei) {
+    public MeasurementItem setXiaoTuiWei(XiaoTuiWei xiaoTuiWei) {
         XiaoTuiWei = xiaoTuiWei;
+        return this;
     }
 
     public JiaoHuaiWei getJiaoHuaiWei() {
         return JiaoHuaiWei;
     }
 
-    public void setJiaoHuaiWei(JiaoHuaiWei jiaoHuaiWei) {
+    public MeasurementItem setJiaoHuaiWei(JiaoHuaiWei jiaoHuaiWei) {
         JiaoHuaiWei = jiaoHuaiWei;
+        return this;
     }
 
     public TongDang getTongDang() {
         return TongDang;
     }
 
-    public void setTongDang(TongDang tongDang) {
+    public MeasurementItem setTongDang(TongDang tongDang) {
         TongDang = tongDang;
+        return this;
     }
 
     public QiaGuHeight getQiaGuHeight() {
         return QiaGuHeight;
     }
 
-    public void setQiaGuHeight(QiaGuHeight qiaGuHeight) {
+    public MeasurementItem setQiaGuHeight(QiaGuHeight qiaGuHeight) {
         QiaGuHeight = qiaGuHeight;
+        return this;
     }
 
     public ZuoJianXie getZuoJianXie() {
         return ZuoJianXie;
     }
 
-    public void setZuoJianXie(ZuoJianXie zuoJianXie) {
+    public MeasurementItem setZuoJianXie(ZuoJianXie zuoJianXie) {
         ZuoJianXie = zuoJianXie;
+        return this;
     }
 
     public YouJianXie getYouJianXie() {
         return YouJianXie;
     }
 
-    public void setYouJianXie(YouJianXie youJianXie) {
+    public MeasurementItem setYouJianXie(YouJianXie youJianXie) {
         YouJianXie = youJianXie;
+        return this;
     }
 
     public WanBeiAngle getWanBeiAngle() {
         return WanBeiAngle;
     }
 
-    public void setWanBeiAngle(WanBeiAngle wanBeiAngle) {
+    public MeasurementItem setWanBeiAngle(WanBeiAngle wanBeiAngle) {
         WanBeiAngle = wanBeiAngle;
+        return this;
     }
 
     public ShangTuDu getShangTuDu() {
         return ShangTuDu;
     }
 
-    public void setShangTuDu(ShangTuDu shangTuDu) {
+    public MeasurementItem setShangTuDu(ShangTuDu shangTuDu) {
         ShangTuDu = shangTuDu;
+        return this;
     }
 
     public XiaTuDu getXiaTuDu() {
         return XiaTuDu;
     }
 
-    public void setXiaTuDu(XiaTuDu xiaTuDu) {
+    public MeasurementItem setXiaTuDu(XiaTuDu xiaTuDu) {
         XiaTuDu = xiaTuDu;
+        return this;
     }
 
     public AoYao getAoYao() {
         return AoYao;
     }
 
-    public void setAoYao(AoYao aoYao) {
+    public MeasurementItem setAoYao(AoYao aoYao) {
         AoYao = aoYao;
+        return this;
     }
 }

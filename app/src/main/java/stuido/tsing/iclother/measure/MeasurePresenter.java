@@ -3,6 +3,7 @@ package stuido.tsing.iclother.measure;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -64,7 +65,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     @Override
     public void saveMeasurement(Measurement measurement) {
-        Subscription subscribe = new MeasurementHelper().saveMeasurement(measurement)
+        String s = (new Gson()).toJson(measurement);
+        Log.e(getClass().toString() + "json:", s);
+        Subscription subscribe = new MeasurementHelper().saveMeasurement(s)
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(__ -> measurementView.showSuccessSave(),

@@ -43,7 +43,8 @@
     <string name="person_center">个人中心</string>
     <string name="main_act_title">首页</string>
     <string name="main_act_action_menu_title">测量</string>
-    <string name="measurement_item_user_title">用户名：</string>
+    <string name="measurement_item_user_name">用户名：</string>
+    <string name="measurement_item_user_gender">性别：</string>
     <string name="measurement_item_user_xw_title">胸围：</string>
     <string name="measurement_item_user_tw_title">臀围：</string>
     <string name="measurement_item_user_yw_title">腰围：</string>

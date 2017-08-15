@@ -28,15 +28,17 @@ import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
-import com.google.gson.GsonBuilder;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleDeviceServices;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -343,12 +345,8 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         String weight = measureWeightInput.getText().toString();
         checkInputValid(weight, "体重");
         int count = measureTableLayout.getChildCount();
-        List<TableRow> rowList = new ArrayList<>();
         for (int i = 1; i < count; i++) {
             TableRow row = (TableRow) measureTableLayout.getChildAt(i);
-            rowList.add(row);
-        }
-        for (TableRow row : rowList) {
             EditText editText = (EditText) row.getChildAt(1);
             String tag = (String) editText.getTag();
             if (!TextUtils.isEmpty(editText.getText().toString())) {
@@ -356,20 +354,64 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                 mData.put(tag, v);
             }
         }
+        MeasurementItem item;
         int sex = 0;
+        Iterator<Map.Entry<String, String>> iterator = mData.entrySet().iterator();
         if (sexRadioGroup.getCheckedRadioButtonId() == radioFemale.getId()) {
             sex = 1;
+            item = getMeasurementItem("MeasurementFemaleItem", iterator);
+        } else {
+            item = getMeasurementItem("MeasurementMaleItem", iterator);
         }
-//
-        String data = new GsonBuilder().enableComplexMapKeySerialization().create().toJson(mData);
         WeiXinUser weiXinUser = new WeiXinUser();
-        weiXinUser.setHeight(height)
-                .setWeight(weight)
-                .setSex(sex)
-                .setWid("123123")
-                .setNickname("test");
-        Measurement measurement = new Measurement(weiXinUser, data);
+        // TODO: 2017/8/15 微信接口
+        weiXinUser.setHeight(height).setWeight(weight).setSex(sex).setWid("123123").setNickname("test");
+        Measurement measurement = new Measurement(weiXinUser, item);
         mPresenter.saveMeasurement(measurement);
+    }
+
+    private MeasurementItem getMeasurementItem(String type, Iterator<Map.Entry<String, String>> iterator) {
+        MeasurementItem item = null;
+        Class<?> Class2 = null;
+        try {
+            Class2 = Class.forName("stuido.tsing.iclother.data.measure.item." + type);
+            if (type.equals("MeasurementMaleItem")) {
+                item = (MeasurementMaleItem) Class2.newInstance();
+            } else {
+                item = (MeasurementFemaleItem) Class2.newInstance();
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = iterator.next();
+            String key = entry.getKey();
+            String value = entry.getValue();
+            try {
+                Class<?> aClass = Class.forName("stuido.tsing.iclother.data.measure.item.parts." + key);
+                Part part = (Part) aClass.newInstance();
+                part.setValue(value);
+                part.setEn(key);
+
+                Method method = Class2.getMethod("set" + key, aClass);
+                method.invoke(item, part);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (java.lang.InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return item;
     }
 
     @Override

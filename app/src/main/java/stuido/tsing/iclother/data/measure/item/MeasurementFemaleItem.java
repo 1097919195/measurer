@@ -13,7 +13,8 @@ public class MeasurementFemaleItem extends MeasurementItem {
         return XiaXiongWei;
     }
 
-    public void setXiaXiongWei(XiaXiongWei xiaXiongWei) {
+    public MeasurementFemaleItem setXiaXiongWei(XiaXiongWei xiaXiongWei) {
         XiaXiongWei = xiaXiongWei;
+        return this;
     }
 }

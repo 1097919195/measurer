@@ -4,14 +4,10 @@ import android.content.Intent;
 
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.base.BaseActivity;
-import stuido.tsing.iclother.data.measure.MeasurementRepository;
-import stuido.tsing.iclother.data.measure.local.MeasurementLocalDataSource;
 import stuido.tsing.iclother.data.measure.remote.MeasurementRemoteDataSource;
 import stuido.tsing.iclother.measure.MeasureActivity;
 import stuido.tsing.iclother.utils.ActivityUtils;
 import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
-
-import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class HomeActivity extends BaseActivity {
     HomePresenter presenter;
@@ -33,12 +29,9 @@ public class HomeActivity extends BaseActivity {
         }
 
         // Create the presenter
-        presenter = new HomePresenter(
-                MeasurementRepository.getInstance(MeasurementRemoteDataSource.getInstance(),
-                        MeasurementLocalDataSource.getInstance(checkNotNull(this), SchedulerProvider.getInstance())),
-                homeFragment,
-                SchedulerProvider.getInstance());
         // 恢复数据，如果有的话
+        presenter = new HomePresenter(MeasurementRemoteDataSource.getInstance(),
+                homeFragment, SchedulerProvider.getInstance());
     }
 
     @Override

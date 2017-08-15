@@ -22,5 +22,5 @@ public interface MeasurementService {
     Observable<HttpResponse<Measurement>> getMeasurement(@Path("id") String id);
 
     @POST("measurement/save")
-    Observable<HttpResponse> saveMeasurement(@Body Measurement measurement);
+    Observable<HttpResponse> saveMeasurement(@Body String measurement);
 }

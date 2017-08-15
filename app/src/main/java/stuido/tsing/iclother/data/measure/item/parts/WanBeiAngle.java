@@ -5,15 +5,15 @@ package stuido.tsing.iclother.data.measure.item.parts;
  */
 
 public class WanBeiAngle extends Part {
-    private String cn = "腕背角度";
-    private String en = "WanBeiAngle";
+//    private String cn = "腕背角度";
+//    private String en = "WanBeiAngle";
 
     public String getCn() {
-        return cn;
+        return "腕背角度";
     }
 
     @Override
     public String getEn() {
-        return en;
+        return "WanBeiAngle";
     }
 }

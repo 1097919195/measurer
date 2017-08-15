@@ -5,22 +5,23 @@ import android.support.annotation.Nullable;
 
 import java.util.UUID;
 
+import stuido.tsing.iclother.data.measure.item.MeasurementItem;
 import stuido.tsing.iclother.data.wuser.WeiXinUser;
 
 public class Measurement {
-    public Measurement(@Nullable WeiXinUser weiXinUser, @Nullable String data,
+    public Measurement(@Nullable WeiXinUser weiXinUser, @Nullable MeasurementItem data,
                        @NonNull String id) {
         cId = id;
         mData = data;
         user = weiXinUser;
     }
 
-    public Measurement(@Nullable WeiXinUser user, @Nullable String data) {
+    public Measurement(@Nullable WeiXinUser user, @Nullable MeasurementItem data) {
         this(user, data, UUID.randomUUID().toString());
     }
 
     private String cId;
-    private String mData;
+    private MeasurementItem mData;
     private WeiXinUser user;
 
     public String getcId() {
@@ -31,12 +32,12 @@ public class Measurement {
         this.cId = cId;
     }
 
-    public String getmData() {
+    public MeasurementItem getmData() {
         return mData;
     }
 
-    public void setmData(String mData) {
-        this.mData = mData;
+    public void setmData(MeasurementItem data) {
+        this.mData = data;
     }
 
     public WeiXinUser getUser() {
