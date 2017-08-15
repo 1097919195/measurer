@@ -29,15 +29,16 @@ public class WeiXinUser {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
+    public WeiXinUser setNickname(String nickname) {
         this.nickname = nickname;
+        return this;
     }
 
     public String getHeight() {
         return height;
     }
 
-    public WeiXinUser setHeight(String height) {
+    public WeiXinUser setHeight(@Nullable String height) {
         this.height = height;
         return this;
     }
@@ -46,7 +47,7 @@ public class WeiXinUser {
         return weight;
     }
 
-    public WeiXinUser setWeight(String weight) {
+    public WeiXinUser setWeight(@Nullable String weight) {
         this.weight = weight;
         return this;
     }
@@ -56,7 +57,8 @@ public class WeiXinUser {
         return wid;
     }
 
-    public void setWid(@Nullable String wid) {
+    public WeiXinUser setWid(@Nullable String wid) {
         this.wid = wid;
+        return this;
     }
 }

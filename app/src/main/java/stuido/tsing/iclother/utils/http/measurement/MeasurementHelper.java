@@ -1,5 +1,7 @@
 package stuido.tsing.iclother.utils.http.measurement;
 
+import com.fernandocejas.frodo.annotation.RxLogObservable;
+
 import java.util.List;
 
 import retrofit2.http.Body;
@@ -10,10 +12,11 @@ import stuido.tsing.iclother.utils.http.HttpHelper;
 import stuido.tsing.iclother.utils.http.HttpResponse;
 
 public class MeasurementHelper extends HttpHelper {
+    @RxLogObservable
     public Observable<List<Measurement>> getMeasurements() {
-        Observable<HttpResponse<List<Measurement>>> measurements = retrofit.create(MeasurementService.class)
-                .getMeasurements();
-        return measurements.map(new HttpResponseFunc<>());
+        return retrofit.create(MeasurementService.class)
+                .getMeasurements()
+                .map(new HttpResponseFunc<>());
     }
 
     public Observable<Measurement> getMeasurement(@Path("id") String id) {

@@ -365,14 +365,16 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         WeiXinUser weiXinUser = new WeiXinUser();
         weiXinUser.setHeight(height)
                 .setWeight(weight)
-                .setSex(sex);
+                .setSex(sex)
+                .setWid("123123")
+                .setNickname("test");
         Measurement measurement = new Measurement(weiXinUser, data);
         mPresenter.saveMeasurement(measurement);
     }
 
     @Override
     public void showSuccessSave() {
-
+        Snackbar.make(getView(), getString(R.string.save_measurement_success), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void saveMeasurement(Measurement measurement) {
         Subscription subscribe = new MeasurementHelper().saveMeasurement(measurement)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(__ -> measurementView.showSuccessSave(),
                         e -> measurementView.showSaveError(),
@@ -172,12 +172,12 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         String s = HexString.bytesToHex(v);
         int code = Integer.parseInt("8D6A", 16);
         int length = Integer.parseInt(s.substring(0, 4), 16);
-        int battery = Integer.parseInt(s.substring(4, 8), 16);
-        int angle = Integer.parseInt(s.substring(8, 12), 16);
+        int angle = Integer.parseInt(s.substring(4, 8), 16);
+        int battery = Integer.parseInt(s.substring(8, 12), 16);
         int a1 = length ^ code;
-        int a2 = battery ^ code;
-        int a3 = angle ^ code;
-        Log.e(getClass().toString(), "length:" + a1 + "mm;battery:" + a2 + ";angle:" + a3);
+        int a2 = angle ^ code;
+        int a3 = battery ^ code;
+        Log.e(getClass().toString() + "测量结果: ", "length:" + a1 + "mm;angle:" + a2 + ";battery:" + a3);
         measurementView.updateMeasureData(a1, a2, a3);
     }
 

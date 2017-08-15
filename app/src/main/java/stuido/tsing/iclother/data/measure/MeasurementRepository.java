@@ -28,13 +28,11 @@ public class MeasurementRepository implements MeasurementDataSource {
     @Nullable
     private static MeasurementLocalDataSource measurementLocalDataSource;
     @VisibleForTesting
-    private
-    boolean mCacheIsDirty = false;
+    private boolean mCacheIsDirty = false;
 
     @VisibleForTesting
     @Nullable
-    private
-    Map<String, Measurement> mCachedMeasurement;
+    private Map<String, Measurement> mCachedMeasurement;
 
     private MeasurementRepository(@NonNull MeasurementRemoteDataSource remoteDataSource,
                                   @NonNull MeasurementLocalDataSource localDataSource) {
@@ -95,12 +93,12 @@ public class MeasurementRepository implements MeasurementDataSource {
         }
 
         // Is the measurement in the local data source? If not, query the network.
-        Observable<Measurement> localMeasurement = getTaskWithIdFromLocalRepository(id);
+        Observable<Measurement> localMeasurement = getMeasurementWithIdFromLocalRepository(id);
         Observable<Measurement> remoteMeasurement = measurementRemoteDataSource
                 .getMeasurement(id)
                 .doOnNext(m -> {
                     measurementLocalDataSource.saveMeasurement(m);
-                    mCachedMeasurement.put(m.getmId(), m);
+                    mCachedMeasurement.put(m.getcId(), m);
                 });
 
         return Observable.concat(localMeasurement, remoteMeasurement).first()
@@ -122,7 +120,7 @@ public class MeasurementRepository implements MeasurementDataSource {
         if (mCachedMeasurement == null) {
             mCachedMeasurement = new LinkedHashMap<>();
         }
-        mCachedMeasurement.put(measurement.getmId(), measurement);
+        mCachedMeasurement.put(measurement.getcId(), measurement);
     }
 
     @Override
@@ -131,14 +129,13 @@ public class MeasurementRepository implements MeasurementDataSource {
     }
 
     private Observable<List<Measurement>> getAndSaveRemoteMeasurements() {
-        return measurementRemoteDataSource
-                .getMeasurements()
+        return measurementRemoteDataSource.getMeasurements()
                 .flatMap(new Func1<List<Measurement>, Observable<List<Measurement>>>() {
                     @Override
                     public Observable<List<Measurement>> call(List<Measurement> Measurements) {
-                        return Observable.from(Measurements).doOnNext(Measurement -> {
-                            measurementLocalDataSource.saveMeasurement(Measurement);
-                            mCachedMeasurement.put(Measurement.getmId(), Measurement);
+                        return Observable.from(Measurements).doOnNext(measurement -> {
+                            measurementLocalDataSource.saveMeasurement(measurement);
+                            mCachedMeasurement.put(measurement.getcId(), measurement);
                         }).toList();
                     }
                 })
@@ -146,9 +143,8 @@ public class MeasurementRepository implements MeasurementDataSource {
     }
 
     @NonNull
-    Observable<Measurement> getTaskWithIdFromLocalRepository(@NonNull final String id) {
-        return measurementLocalDataSource
-                .getMeasurement(id)
+    Observable<Measurement> getMeasurementWithIdFromLocalRepository(@NonNull final String id) {
+        return measurementLocalDataSource.getMeasurement(id)
                 .doOnNext(m -> mCachedMeasurement.put(id, m))
                 .first();
     }

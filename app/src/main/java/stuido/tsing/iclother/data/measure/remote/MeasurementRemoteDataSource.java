@@ -3,6 +3,7 @@ package stuido.tsing.iclother.data.measure.remote;
 import android.support.annotation.NonNull;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import stuido.tsing.iclother.data.measure.Measurement;
@@ -14,6 +15,7 @@ import stuido.tsing.iclother.utils.http.measurement.MeasurementHelper;
  */
 
 public class MeasurementRemoteDataSource implements MeasurementDataSource {
+    private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
     private static MeasurementRemoteDataSource INSTANCE;
 
     public static MeasurementRemoteDataSource getInstance() {
@@ -28,12 +30,14 @@ public class MeasurementRemoteDataSource implements MeasurementDataSource {
 
     @Override
     public Observable<List<Measurement>> getMeasurements() {
-        return new MeasurementHelper().getMeasurements();
+        return new MeasurementHelper().getMeasurements()
+                .delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public Observable<Measurement> getMeasurement(@NonNull String id) {
-        return new MeasurementHelper().getMeasurement(id);
+        return new MeasurementHelper().getMeasurement(id)
+                .delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS);
     }
 
     @Override

@@ -10,7 +10,7 @@ import stuido.tsing.iclother.data.wuser.WeiXinUser;
 public class Measurement {
     public Measurement(@Nullable WeiXinUser weiXinUser, @Nullable String data,
                        @NonNull String id) {
-        mId = id;
+        cId = id;
         mData = data;
         user = weiXinUser;
     }
@@ -19,16 +19,16 @@ public class Measurement {
         this(user, data, UUID.randomUUID().toString());
     }
 
-    private String mId;
+    private String cId;
     private String mData;
     private WeiXinUser user;
 
-    public String getmId() {
-        return mId;
+    public String getcId() {
+        return cId;
     }
 
-    public void setmId(String mId) {
-        this.mId = mId;
+    public void setcId(String cId) {
+        this.cId = cId;
     }
 
     public String getmData() {

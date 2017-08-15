@@ -3,7 +3,6 @@ package stuido.tsing.iclother.home;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 import stuido.tsing.iclother.data.measure.Measurement;
@@ -70,7 +69,7 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void openMeasurementDetails(@NonNull Measurement measurement) {
         checkNotNull(measurement);
-        homeView.showMeasurementDetailsUi(measurement.getmId());
+        homeView.showMeasurementDetailsUi(measurement.getcId());
     }
 
     private void loadMeasurements(final boolean forceUpdate, final boolean showLoadingUI) {
@@ -82,9 +81,14 @@ public class HomePresenter implements HomeContract.Presenter {
         }
         mSubscriptions.clear();
         Subscription subscribe = mRepository.getMeasurements()
-                .flatMap(measurements -> Observable.from(measurements))
-                .toList()
-                .subscribeOn(mSchedulerProvider.computation())
+//                .flatMap(new Func1<List<Measurement>, Observable<Measurement>>() {
+//                    @Override
+//                    public Observable<Measurement> call(List<Measurement> list) {
+//                        return Observable.from(list);
+//                    }
+//                })
+//                .toList()
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(measurements -> {
                             if (measurements.isEmpty()) {
@@ -98,6 +102,6 @@ public class HomePresenter implements HomeContract.Presenter {
                             Log.e(TAG, e.getMessage());
                         },
                         () -> homeView.setLoadingIndicator(false));
-        mSubscriptions.add(subscribe);
+//        mSubscriptions.add(subscribe);
     }
 }
