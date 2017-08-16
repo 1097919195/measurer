@@ -1,9 +1,12 @@
 package stuido.tsing.iclother.home;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import java.util.List;
+
+import rx.Observable;
 import rx.Subscription;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 import stuido.tsing.iclother.data.measure.Measurement;
 import stuido.tsing.iclother.data.measure.MeasurementDataSource;
@@ -16,17 +19,14 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  */
 
 public class HomePresenter implements HomeContract.Presenter {
-    private static final String TAG = "HomeFragment";
+    private static final String TAG = "HomePresenter";
     private final HomeContract.View homeView;
     @NonNull
     private CompositeSubscription mSubscriptions;
-
     @NonNull
     private final MeasurementDataSource mRepository;
-
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
-
     private boolean mFirstLoad = true;
 
     public HomePresenter(@NonNull MeasurementDataSource measureDataSource,
@@ -63,15 +63,21 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void addNewMeasurement() {
-        homeView.showScanView();
+        homeView.showScanButton();
     }
 
     @Override
     public void openMeasurementDetails(@NonNull Measurement measurement) {
         checkNotNull(measurement);
-        homeView.showMeasurementDetailsUi(measurement.getcId());
+        homeView.showMeasurementDetail(measurement.getcId());
     }
 
+    /**
+     * homeFragment创建后，首次加载数据
+     *
+     * @param forceUpdate   强制加载
+     * @param showLoadingUI 是否显示loading动画
+     */
     private void loadMeasurements(final boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI) {
             homeView.setLoadingIndicator(true);
@@ -79,29 +85,28 @@ public class HomePresenter implements HomeContract.Presenter {
         if (forceUpdate) {
             mRepository.refreshMeasurements();
         }
-        mSubscriptions.clear();
+        mSubscriptions.clear(); // TODO: 2017/8/16 ?
         Subscription subscribe = mRepository.getMeasurements()
-//                .flatMap(new Func1<List<Measurement>, Observable<Measurement>>() {
-//                    @Override
-//                    public Observable<Measurement> call(List<Measurement> list) {
-//                        return Observable.from(list);
-//                    }
-//                })
-//                .toList()
+                .flatMap(new Func1<List<Measurement>, Observable<Measurement>>() {
+                    @Override
+                    public Observable<Measurement> call(List<Measurement> list) {
+                        return Observable.from(list);
+                    }
+                })
+                .toList()
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(measurements -> {
-                            if (measurements.isEmpty()) {
-                                homeView.showNoMeasurementView();
-                            } else {
-                                homeView.showMeasurementList(measurements);
-                            }
-                        },
-                        e -> {
-                            homeView.showLoadingMeasurementError();
-                            Log.e(TAG, e.getMessage());
-                        },
+                .subscribe(this::processMeasurementList,
+                        e -> homeView.showLoadingMeasurementError(e),
                         () -> homeView.setLoadingIndicator(false));
-//        mSubscriptions.add(subscribe);
+        mSubscriptions.add(subscribe);
+    }
+
+    private void processMeasurementList(List<Measurement> measurements) {
+        if (measurements.isEmpty()) {
+            homeView.showNoMeasurementView(false);
+        } else {
+            homeView.showMeasurementList(measurements);
+        }
     }
 }

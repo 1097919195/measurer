@@ -18,7 +18,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
-    protected void initEvent() {
+    protected void initFragment() {
         HomeFragment homeFragment =
                 (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.act_content_view);
         if (homeFragment == null) {
@@ -29,9 +29,9 @@ public class HomeActivity extends BaseActivity {
         }
 
         // Create the presenter
-        // 恢复数据，如果有的话
         presenter = new HomePresenter(MeasurementRemoteDataSource.getInstance(),
                 homeFragment, SchedulerProvider.getInstance());
+        // 恢复数据，如果有的话
     }
 
     @Override

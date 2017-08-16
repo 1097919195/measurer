@@ -16,13 +16,13 @@ public interface HomeContract {
 
         void showMeasurementList(List<Measurement> measureList);
 
-        void showScanView();
+        void showScanButton();
 
-        void showMeasurementDetailsUi(String measurementId);
+        void showMeasurementDetail(String measurementId);
 
-        void showLoadingMeasurementError();
+        void showLoadingMeasurementError(Throwable e);
 
-        void showNoMeasurementView();
+        void showNoMeasurementView(boolean showAddView);
 
         void showSuccessfullySavedMessage();
     }

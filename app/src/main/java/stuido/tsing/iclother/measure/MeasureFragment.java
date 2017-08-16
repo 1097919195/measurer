@@ -54,6 +54,7 @@ import stuido.tsing.iclother.data.ble.BleCharacter;
 import stuido.tsing.iclother.data.ble.BleDevice;
 import stuido.tsing.iclother.data.ble.BleService;
 import stuido.tsing.iclother.data.measure.Measurement;
+import stuido.tsing.iclother.data.measure.UserSex;
 import stuido.tsing.iclother.data.measure.item.MeasurementFemaleItem;
 import stuido.tsing.iclother.data.measure.item.MeasurementItem;
 import stuido.tsing.iclother.data.measure.item.MeasurementMaleItem;
@@ -106,6 +107,8 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private SpeechSynthesizer speechSynthesizer;
     private static final String TEXT_MODEL_FILE_FULL_PATH_NAME = "bd_etts_text.dat";
     private static final String SPEECH_MODEL_FILE_FULL_PATH_NAME = "bd_etts_speech_female.dat";
+    private String PART_PACKAGE = Part.class.getPackage().getName();
+    private String ITEM_PACKAGE = MeasurementItem.class.getPackage().getName();
 
     public MeasureFragment() {
     }
@@ -216,32 +219,31 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         View root = inflater.inflate(R.layout.measure_frag, container, false);
         unbinder = ButterKnife.bind(this, root);
         if (maleRows.size() == 0) {
-            maleRows = initMeasureItemList("MeasurementMaleItem");
+            maleRows = initMeasureItemList(UserSex.MALE);
         }
         appendTableRows(maleRows);
         return root;
     }
 
-    private List<TableRow> initMeasureItemList(String type) {
+    private List<TableRow> initMeasureItemList(int type) {
         List<TableRow> rows = new ArrayList<>();
         MeasurementItem item;
         try {
-            Class<?> aClass = Class.forName("stuido.tsing.iclother.data.measure.item." + type);
-            if (type.equals("MeasurementMaleItem")) {
-                item = (MeasurementMaleItem) aClass.newInstance();
+            if (type == UserSex.MALE) {
+                item = (MeasurementMaleItem) Class.forName(ITEM_PACKAGE + ".MeasurementMaleItem").newInstance();
             } else {
-                item = (MeasurementFemaleItem) aClass.newInstance();
+                item = (MeasurementFemaleItem) Class.forName(ITEM_PACKAGE + ".MeasurementFemaleItem").newInstance();
             }
             for (Field field : item.getClass().getDeclaredFields()) {
                 String name = field.getName();
-                Class<?> itemSubclass = Class.forName("stuido.tsing.iclother.data.measure.item.parts." + name);
+                Class<?> itemSubclass = Class.forName(PART_PACKAGE + "." + name);
                 Part part = (Part) itemSubclass.newInstance();
                 TableRow tableRow = getTableRow(part.getCn(), part.getEn());
                 rows.add(tableRow);
             }
             for (Field field : item.getClass().getSuperclass().getDeclaredFields()) {
                 String name = field.getName();
-                Class<?> itemSubclass = Class.forName("stuido.tsing.iclother.data.measure.item.parts." + name);
+                Class<?> itemSubclass = Class.forName(PART_PACKAGE + "." + name);
                 Part part = (Part) itemSubclass.newInstance();
                 TableRow tableRow = getTableRow(part.getCn(), part.getEn());
                 rows.add(tableRow);
@@ -321,7 +323,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                 break;
             case R.id.radio_female:
                 if (femaleRows.size() == 0) {
-                    femaleRows = initMeasureItemList("MeasurementFemaleItem");
+                    femaleRows = initMeasureItemList(UserSex.FEMALE);
                 }
                 appendTableRows(femaleRows);
                 break;
@@ -335,7 +337,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         for (TableRow row : list) {
             measureTableLayout.addView(row);
         }
-        Log.e(getClass().toString(), "布局变化");
     }
 
     private void saveMeasurement() {
@@ -355,14 +356,12 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             }
         }
         MeasurementItem item;
-        int sex = 0;
+        int sex = UserSex.MALE;
         Iterator<Map.Entry<String, String>> iterator = mData.entrySet().iterator();
         if (sexRadioGroup.getCheckedRadioButtonId() == radioFemale.getId()) {
-            sex = 1;
-            item = getMeasurementItem("MeasurementFemaleItem", iterator);
-        } else {
-            item = getMeasurementItem("MeasurementMaleItem", iterator);
+            sex = UserSex.FEMALE;
         }
+        item = getMeasurementItem(sex, iterator);
         WeiXinUser weiXinUser = new WeiXinUser();
         // TODO: 2017/8/15 微信接口
         weiXinUser.setHeight(height).setWeight(weight).setSex(sex).setWid("123123").setNickname("test");
@@ -370,14 +369,15 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         mPresenter.saveMeasurement(measurement);
     }
 
-    private MeasurementItem getMeasurementItem(String type, Iterator<Map.Entry<String, String>> iterator) {
+    private MeasurementItem getMeasurementItem(int type, Iterator<Map.Entry<String, String>> iterator) {
         MeasurementItem item = null;
         Class<?> Class2 = null;
         try {
-            Class2 = Class.forName("stuido.tsing.iclother.data.measure.item." + type);
-            if (type.equals("MeasurementMaleItem")) {
+            if (type == UserSex.MALE) {
+                Class2 = Class.forName(ITEM_PACKAGE + ".MeasurementMaleItem");
                 item = (MeasurementMaleItem) Class2.newInstance();
             } else {
+                Class2 = Class.forName(ITEM_PACKAGE + ".MeasurementFemaleItem");
                 item = (MeasurementFemaleItem) Class2.newInstance();
             }
         } catch (ClassNotFoundException e) {
@@ -392,11 +392,10 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             String key = entry.getKey();
             String value = entry.getValue();
             try {
-                Class<?> aClass = Class.forName("stuido.tsing.iclother.data.measure.item.parts." + key);
+                Class<?> aClass = Class.forName(PART_PACKAGE + "." + key);
                 Part part = (Part) aClass.newInstance();
                 part.setValue(value);
                 part.setEn(key);
-
                 Method method = Class2.getMethod("set" + key, aClass);
                 method.invoke(item, part);
             } catch (ClassNotFoundException e) {

@@ -27,7 +27,7 @@ public class MeasureActivity extends BaseActivity {
     }
 
     @Override
-    protected void initEvent() {
+    protected void initFragment() {
         rxBleClient = BleClientHelper.getInstance(MeasureActivity.this);
         MeasureFragment measure_fragment = (MeasureFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.act_content_view);

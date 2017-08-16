@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/touchFeedback" android:state_pressed="true" />
-</selector>
+<?xml version="1.0" encoding="utf-8"?><!--<selector xmlns:android="http://schemas.android.com/apk/res/android">--><!--<item android:drawable="@drawable/touchFeedback" android:state_pressed="true" />--><!--</selector>-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:width="2dp"
+        android:color="#cccccc"
+        android:dashGap="6dp"
+        android:dashWidth="10dp" />
+    <padding
+        android:bottom="7dp"
+        android:left="7dp"
+        android:right="7dp"
+        android:top="7dp" />
+    <corners android:radius="2dp" />
+    <gradient
+        android:endColor="@color/primary"
+        android:startColor="@color/black" />
+</shape>

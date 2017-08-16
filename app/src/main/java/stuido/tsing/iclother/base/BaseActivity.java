@@ -50,7 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initToolbar();
         initTabIndicator();
-        initEvent();
+        initFragment();
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected abstract void initEvent();
+    protected abstract void initFragment();
 
     private void resetOtherTabs() {
         for (int i = 0; i < mTabIndicator.size(); i++) {

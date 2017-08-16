@@ -28,7 +28,7 @@ public class MyActivity extends BaseActivity {
 //    }
 
     @Override
-    protected void initEvent() {
+    protected void initFragment() {
 
     }
 

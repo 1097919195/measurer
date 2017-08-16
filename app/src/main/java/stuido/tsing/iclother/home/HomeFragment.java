@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,34 +15,72 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.data.measure.Measurement;
 import stuido.tsing.iclother.data.measure.UserSex;
 import stuido.tsing.iclother.measure.MeasureActivity;
 import stuido.tsing.iclother.measurementdetail.MeasurementDetailActivity;
 
+import static android.content.ContentValues.TAG;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class HomeFragment extends Fragment implements HomeContract.View {
+    @BindView(R.id.measurements_list)
+    ListView measurementsList;
+    @BindView(R.id.measurementsLL)
+    LinearLayout measurementsLL;
+    @BindView(R.id.noMeasurementsIcon)
+    ImageView noMeasurementsIcon;
+    @BindView(R.id.noMeasurementsMain)
+    TextView noMeasurementsMain;
+    @BindView(R.id.noMeasurementsAdd)
+    TextView noMeasurementsAdd;
+    @BindView(R.id.noMeasurements)
+    LinearLayout noMeasurements;
+    Unbinder unbinder;
+    @BindView(R.id.measurementsContainer)
+    RelativeLayout measurementsContainer;
+    @BindView(R.id.refresh_layout)
+    ScrollChildSwipeRefreshLayout refreshLayout;
     private HomeContract.Presenter mPresenter;
     private MeasurementAdapter measurementAdapter;
-    private View mNoMeasurementView;
-    private ImageView mNoMeasurementIcon;
-    private TextView mNoMeasurementMainView;
-    private TextView mNoMeasurementAddView;
-    private LinearLayout mMeasurementView;
-    private ListView listview;
 
     public HomeFragment() {
     }
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.measurement_list_frag, container, false);
+        unbinder = ButterKnife.bind(this, root);
+        //set up measurement view
+        measurementsList.setAdapter(measurementAdapter);
+        //set up no measurement view
+        noMeasurements.setOnClickListener(__ -> showScanButton());
+        // Set up progress indicator
+        refreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+                ContextCompat.getColor(getActivity(), R.color.colorAccent),
+                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
+        );
+        // Set the scrolling view in the custom SwipeRefreshLayout.
+        refreshLayout.setScrollUpChild(measurementsList);
+        refreshLayout.setOnRefreshListener(() -> mPresenter.loadMeasurements(false));
+
+        return root;
     }
 
     @Override
@@ -67,37 +106,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         mPresenter.result(requestCode, resultCode);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.measurement_list_frag, container, false);
-        //set up measurement view
-        listview = root.findViewById(R.id.measurements_list);
-        listview.setAdapter(measurementAdapter);
-        mMeasurementView = root.findViewById(R.id.measurementsLL);
-
-        //set up no measurement view
-        mNoMeasurementView = root.findViewById(R.id.noMeasurements);
-        mNoMeasurementMainView = root.findViewById(R.id.noMeasurementsMain);
-        mNoMeasurementIcon = root.findViewById(R.id.noMeasurementsIcon);
-        mNoMeasurementAddView = root.findViewById(R.id.noMeasurementsAdd);
-        mNoMeasurementAddView.setOnClickListener(__ -> showScanView());
-
-        // Set up progress indicator
-        final ScrollChildSwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
-                ContextCompat.getColor(getActivity(), R.color.colorAccent),
-                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
-        );
-        // Set the scrolling view in the custom SwipeRefreshLayout.
-        swipeRefreshLayout.setScrollUpChild(listview);
-
-        swipeRefreshLayout.setOnRefreshListener(() -> mPresenter.loadMeasurements(false));
-
-        return root;
-    }
-
     @Override
     public void setLoadingIndicator(boolean active) {
         if (getView() == null) {
@@ -110,44 +118,42 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void showMeasurementList(List<Measurement> measureList) {
         measurementAdapter.replaceData(measureList);
-        measurementAdapter = new MeasurementAdapter(measureList, __ -> mPresenter.openMeasurementDetails(__));
-        measurementAdapter.setData(measureList);
-        listview.setAdapter(measurementAdapter);
-        mNoMeasurementView.setVisibility(View.GONE);
-        mMeasurementView.setVisibility(View.VISIBLE);
+
+        measurementsLL.setVisibility(View.VISIBLE);
+        noMeasurements.setVisibility(View.GONE);
     }
 
     @Override
-    public void showScanView() {
+    public void showScanButton() {
         Intent intent = new Intent(getActivity(), MeasureActivity.class);
         startActivityForResult(intent, MeasureActivity.REQUEST_ADD_MEASUREMENT);
     }
 
     @Override
-    public void showMeasurementDetailsUi(String measurementId) {
+    public void showMeasurementDetail(String measurementId) {
         Intent intent = new Intent(getActivity(), MeasurementDetailActivity.class);
         intent.putExtra(MeasurementDetailActivity.EXTRA_MEASUREMENT_ID, measurementId);
         startActivity(intent);
     }
 
     @Override
-    public void showLoadingMeasurementError() {
+    public void showLoadingMeasurementError(Throwable e) {
         setLoadingIndicator(false);
         showMessage(getString(R.string.loading_measurement_error));
+        Log.e(TAG, "测量数据加载错误：" + e.getMessage());
     }
 
     @Override
-    public void showNoMeasurementView() {
+    public void showNoMeasurementView(boolean showAddView) {
         String mainText = getString(R.string.no_measurements_all);
         int iconRes = R.drawable.ic_assignment_turned_in_24dp;
-        boolean showAddView = true;
 
-        mMeasurementView.setVisibility(View.GONE);
-        mNoMeasurementView.setVisibility(View.VISIBLE);
+        measurementsLL.setVisibility(View.GONE);
+        noMeasurements.setVisibility(View.VISIBLE);
 
-        mNoMeasurementMainView.setText(mainText);
-        mNoMeasurementIcon.setImageDrawable(getResources().getDrawable(iconRes));
-        mNoMeasurementAddView.setVisibility(showAddView ? View.VISIBLE : View.GONE);
+        noMeasurementsMain.setText(mainText);
+        noMeasurementsIcon.setImageDrawable(getResources().getDrawable(iconRes));
+        noMeasurementsAdd.setVisibility(showAddView ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -164,12 +170,18 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     private static class MeasurementAdapter extends BaseAdapter {
         private List<Measurement> measurementList;
         private MeasurementItemListener measurementItemListener;
 
-        public MeasurementAdapter(List<Measurement> list, MeasurementItemListener listener) {
-            setData(list);
+        private MeasurementAdapter(List<Measurement> list, MeasurementItemListener listener) {
+            setList(list);
             measurementItemListener = listener;
         }
 
@@ -188,12 +200,12 @@ public class HomeFragment extends Fragment implements HomeContract.View {
             return i;
         }
 
-        public void replaceData(List<Measurement> list) {
-            setData(list);
+        private void replaceData(List<Measurement> list) {
+            setList(list);
             notifyDataSetChanged();
         }
 
-        private void setData(List<Measurement> list) {
+        private void setList(List<Measurement> list) {
             measurementList = checkNotNull(list);
         }
 
@@ -208,14 +220,15 @@ public class HomeFragment extends Fragment implements HomeContract.View {
             final Measurement measurement = getItem(i);
 
             ((TextView) rowView.findViewById(R.id.measurement_item_user_name)).setText(measurement.getUser().getNickname());
+            TextView gender = rowView.findViewById(R.id.measurement_item_user_gender);
             if (measurement.getUser().getSex() == UserSex.MALE) {
-                ((TextView) rowView.findViewById(R.id.measurement_item_user_gender)).setText("男");
+                gender.setText("男");
             } else {
-                ((TextView) rowView.findViewById(R.id.measurement_item_user_gender)).setText("女");
+                gender.setText("女");
             }
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurement.getmData().getXiongWei().toString());
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurement.getmData().getYaoWei().toString());
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurement.getmData().getTunWei().toString());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurement.getmData().getXiongWei().getValue());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurement.getmData().getYaoWei().getValue());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurement.getmData().getTunWei().getValue());
 
             rowView.setOnClickListener(__ -> measurementItemListener.onMeasurementClick(measurement));
 
@@ -223,7 +236,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         }
     }
 
-    public interface MeasurementItemListener {
+    private interface MeasurementItemListener {
         void onMeasurementClick(Measurement clickMeasurement);
     }
 }

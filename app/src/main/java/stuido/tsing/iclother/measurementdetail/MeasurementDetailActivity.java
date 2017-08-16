@@ -16,7 +16,7 @@ public class MeasurementDetailActivity extends BaseActivity {
 
 
     @Override
-    protected void initEvent() {
+    protected void initFragment() {
 
     }
 
