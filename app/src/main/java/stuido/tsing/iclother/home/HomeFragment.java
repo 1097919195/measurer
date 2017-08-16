@@ -2,6 +2,7 @@ package stuido.tsing.iclother.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -51,6 +53,8 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     RelativeLayout measurementsContainer;
     @BindView(R.id.refresh_layout)
     ScrollChildSwipeRefreshLayout refreshLayout;
+    @BindView(R.id.today_measurement)
+    TextView today_measurement;
     private HomeContract.Presenter mPresenter;
     private MeasurementAdapter measurementAdapter;
 
@@ -68,6 +72,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         unbinder = ButterKnife.bind(this, root);
         //set up measurement view
         measurementsList.setAdapter(measurementAdapter);
+        today_measurement.setText(getString(R.string.today_measurement) + ": (" + getDate() + ")");
         //set up no measurement view
         noMeasurements.setOnClickListener(__ -> showScanButton());
         // Set up progress indicator
@@ -81,6 +86,15 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         refreshLayout.setOnRefreshListener(() -> mPresenter.loadMeasurements(false));
 
         return root;
+    }
+
+    @NonNull
+    private String getDate() {
+        Calendar ca = Calendar.getInstance();
+        int year = ca.get(Calendar.YEAR);//获取年份
+        int month = ca.get(Calendar.MONTH) + 1;//获取月份
+        int day = ca.get(Calendar.DATE);//获取日
+        return year + "年" + month + "月" + day + "日";
     }
 
     @Override

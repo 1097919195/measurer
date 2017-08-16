@@ -43,4 +43,5 @@
     <color name="ff5001">#ff5001</color>
     <color name="table_title">#48f59c</color>
     <color name="blue_2196f3">#2196f3</color>
+    <color name="measurement_list_bg">#ddd</color>
 </resources>

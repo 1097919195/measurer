@@ -90,6 +90,8 @@
     <string name="scan_finished">扫描完成</string>
     <string name="measuring">正在测量...</string>
     <string name="scanning">正在扫描...</string>
+    <string name="today_measurement">今天测量记录</string>
+    <string name="more_measurement">查看更多</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>

@@ -15,12 +15,40 @@
             android:id="@+id/measurementsLL"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:id="@+id/today_measurement"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/today_measurement"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/ff5001" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/more_measurement"
+                    android:textAlignment="viewEnd"
+                    android:textColor="@color/ff5001" />
+            </LinearLayout>
 
             <ListView
                 android:id="@+id/measurements_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@color/measurement_list_bg"
+                android:padding="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -28,8 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:background="@drawable/dash_border"
             android:orientation="vertical">
-            <!--android:background="@drawable/layout_border"-->
 
             <ImageView
                 android:id="@+id/noMeasurementsIcon"
@@ -52,7 +80,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                android:background="@drawable/touch_feedback"
                 android:gravity="center"
                 android:text="@string/no_measurements_add"
                 android:textColor="@color/black" />
