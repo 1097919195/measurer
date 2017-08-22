@@ -181,7 +181,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         int a1 = length ^ code;
         int a2 = angle ^ code;
         int a3 = battery ^ code;
-        Log.e(getClass().toString() + "测量结果: ", "length:" + a1 + "mm;angle:" + a2 + ";battery:" + a3);
         measurementView.updateMeasureData((float) a1 / 10, a2, a3);
     }
 

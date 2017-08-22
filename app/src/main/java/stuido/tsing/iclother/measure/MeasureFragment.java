@@ -154,6 +154,12 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         mPresenter.unsubscribe();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        speechSynthesizer = null;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -518,10 +524,8 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         if (TextUtils.isEmpty(editText.getText().toString())) {
             String tag = (String) editText.getTag();
             String cn;
-            Class<?> itemSubclass;
             try {
-                itemSubclass = Class.forName(PART_PACKAGE + "." + tag);
-                Part part = (Part) itemSubclass.newInstance();
+                Part part = (Part) Class.forName(PART_PACKAGE + "." + tag).newInstance();
                 cn = part.getCn();
                 String value;
                 if (angleList.contains(tag)) {
@@ -533,6 +537,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                 }
                 if (speechSynthesizer != null) {
                     speechSynthesizer.playText("测量部位" + cn + "，结果为" + value);
+                    // TODO: 2017/8/22 接着播放下一个部位
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -548,6 +553,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     @Override
     public void bleDeviceMeasuring() {
+        speechSynthesizer.playText("蓝牙连接成功，请按顺序测量");
         measureButton.setText(getString(R.string.measuring));
         measureButton.setTextColor(getResources().getColor(R.color.measuring));
     }
