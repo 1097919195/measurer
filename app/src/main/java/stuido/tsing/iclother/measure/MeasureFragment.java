@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baidu.tts.client.SpeechError;
-import com.baidu.tts.client.SpeechSynthesizer;
-import com.baidu.tts.client.SpeechSynthesizerListener;
-import com.baidu.tts.client.TtsMode;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleDeviceServices;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
+import com.unisound.client.SpeechConstants;
+import com.unisound.client.SpeechSynthesizer;
+import com.unisound.client.SpeechSynthesizerListener;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -62,9 +60,6 @@ import stuido.tsing.iclother.data.measure.item.parts.Part;
 import stuido.tsing.iclother.data.wuser.WeiXinUser;
 import stuido.tsing.iclother.utils.DensityUtil;
 
-import static com.baidu.tts.client.SpeechSynthesizer.AUDIO_BITRATE_AMR_15K85;
-import static com.baidu.tts.client.SpeechSynthesizer.AUDIO_ENCODE_AMR;
-import static com.baidu.tts.client.SpeechSynthesizer.MIX_MODE_DEFAULT;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasureFragment extends Fragment implements MeasureContract.View {
@@ -105,10 +100,10 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private List<TableRow> femaleRows = new ArrayList<>();
     private String[] angleItems = new String[5];
     private SpeechSynthesizer speechSynthesizer;
-    private static final String TEXT_MODEL_FILE_FULL_PATH_NAME = "bd_etts_text.dat";
-    private static final String SPEECH_MODEL_FILE_FULL_PATH_NAME = "bd_etts_speech_female.dat";
     private String PART_PACKAGE = Part.class.getPackage().getName();
     private String ITEM_PACKAGE = MeasurementItem.class.getPackage().getName();
+    private String APPKEY = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
+    private String APPSECRET = "29aa998c451d64d9334269546a4021b8";
 
     public MeasureFragment() {
     }
@@ -137,74 +132,20 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     private void initSpeech() {
-        // 获取 tts 实例
-        speechSynthesizer = SpeechSynthesizer.getInstance();
-// 设置 app 上下文（必需参数）
-        speechSynthesizer.setContext(getActivity());
-// 设置 tts 监听器
-        speechSynthesizer.setSpeechSynthesizerListener(new SpeechSynthesizerListener() {
+        speechSynthesizer = new SpeechSynthesizer(getActivity(), APPKEY, APPSECRET);
+        speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
+        speechSynthesizer.setTTSListener(new SpeechSynthesizerListener() {
             @Override
-            public void onSynthesizeStart(String s) {
+            public void onEvent(int i) {
 
             }
 
             @Override
-            public void onSynthesizeDataArrived(String s, byte[] bytes, int i) {
-
-            }
-
-            @Override
-            public void onSynthesizeFinish(String s) {
-
-            }
-
-            @Override
-            public void onSpeechStart(String s) {
-
-            }
-
-            @Override
-            public void onSpeechProgressChanged(String s, int i) {
-
-            }
-
-            @Override
-            public void onSpeechFinish(String s) {
-
-            }
-
-            @Override
-            public void onError(String s, SpeechError speechError) {
+            public void onError(int i, String s) {
 
             }
         });
-// 文本模型文件路径，文件的绝对路径 (离线引擎使用)
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE,
-                TEXT_MODEL_FILE_FULL_PATH_NAME);
-// 声学模型文件路径，文件的绝对路径 (离线引擎使用)
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
-                SPEECH_MODEL_FILE_FULL_PATH_NAME);
-        // 本 地 授 权 文 件 路 径 , 如 未 设 置 将 使 用 默 认 路 径 . 设 置 临 时 授 权 文 件 路 径 ，
-        //        LICENCE_FILE_NAME 请替换成临时授权文件的实际路径，仅在使用临时 license 文件时需要进行
-        //        设置，如果在[应用管理] 中开通了离线授权，不需要设置该参数，建议将该行代码删除（离线引擎）
-//        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_TTS_LICENCE_FILE, LICENSE_FILE_FULL_PATH_NAME);
-        // 请替换为语音开发者平台上注册应用得到的 App ID (离线授权)
-        //App ID: 9975769
-//        API Key: 8DNe2XqRDGO37cCejoeQ87si
-//        Secret Key: 7fa383e70cc976d0c60c38c3799e1b09
-        speechSynthesizer.setAppId("10005093");
-        // 请替换为语音开发者平台注册应用得到的 apikey 和 secretkey (在线授权)
-        speechSynthesizer.setApiKey("c5hQF421nKrdfN2HNuu4SPcm", "0f17945de7f8482860915ea9376dbe95");
-        // 引擎初始化接口
-        speechSynthesizer.initTts(TtsMode.MIX);
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_VOLUME, "5");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEED, "5");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_PITCH, "5");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_MIX_MODE, MIX_MODE_DEFAULT);
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_AUDIO_ENCODE, AUDIO_ENCODE_AMR);
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_AUDIO_RATE, AUDIO_BITRATE_AMR_15K85);
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_VOCODER_OPTIM_LEVEL, "0");
+        speechSynthesizer.init(null);
     }
 
     @Override
@@ -550,7 +491,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     @Override
-    public void updateMeasureData(int length, int battery, int angle) {
+    public void updateMeasureData(float length, int angle, int battery) {
         rulerBattery.setText(battery + "%");
         rulerState.setTextColor(getResources().getColor(R.color.green));
         // TODO: 017/8/3 更新当前焦点输入的框的结果
@@ -572,20 +513,33 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
      * @param row    行
      * @return boolean
      */
-    private boolean assignValue(int length, float angle, TableRow row) {
+    private boolean assignValue(float length, float angle, TableRow row) {
         EditText editText = (EditText) row.getChildAt(1);
         if (TextUtils.isEmpty(editText.getText().toString())) {
             String tag = (String) editText.getTag();
-            Log.e(getClass().toString() + "_tag", tag);
-            if (speechSynthesizer != null) {
-                int speak = speechSynthesizer.speak(length + "");
-                Log.e(getClass().toString(), speak + "");
-            }
-            if (angleList.contains(tag)) {
-                Log.e(getClass().toString() + "_in_angle", tag);
-                editText.setText(angle + "");
-            } else {
-                editText.setText(length + "");
+            String cn;
+            Class<?> itemSubclass;
+            try {
+                itemSubclass = Class.forName(PART_PACKAGE + "." + tag);
+                Part part = (Part) itemSubclass.newInstance();
+                cn = part.getCn();
+                String value;
+                if (angleList.contains(tag)) {
+                    editText.setText(angle + "");
+                    value = angle + "";
+                } else {
+                    editText.setText(length + "");
+                    value = length + "";
+                }
+                if (speechSynthesizer != null) {
+                    speechSynthesizer.playText("测量部位" + cn + "，结果为" + value);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (java.lang.InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
             return true;
         }

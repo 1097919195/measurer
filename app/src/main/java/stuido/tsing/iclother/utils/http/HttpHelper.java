@@ -14,7 +14,7 @@ import stuido.tsing.iclother.utils.ApiException;
  */
 
 public class HttpHelper {
-    private static final String BASE_URL = "http://liutsing.io/api/";
+    private static final String BASE_URL = "http://tsing.ngrok.cc/api/";
     private static final int DEFAULT_TIMEOUT = 600;
     protected Retrofit retrofit;
 

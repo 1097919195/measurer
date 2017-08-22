@@ -33,7 +33,7 @@ public interface MeasureContract {
 
         void showBleDisconnectHint();
 
-        void updateMeasureData(int length, int battery, int angle);
+        void updateMeasureData(float length, int battery, int angle);
 
         void showAlreadyConnectedError();
 

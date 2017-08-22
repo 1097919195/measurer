@@ -1,6 +1,7 @@
 package stuido.tsing.iclother.measure;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -97,7 +98,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                     .subscribe(scanResult -> {
                         // TODO: 2017/8/14 若设备已扫描到，就不再添加该结果
                         String name = scanResult.getBleDevice().getName();
-                        if (name.equals(BLE_NAME)) {
+                        if (!TextUtils.isEmpty(name) && name.equals(BLE_NAME)) {
                             measurementView.showScanResult(scanResult);
                             scanSubscription.unsubscribe();
                         }
@@ -181,7 +182,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         int a2 = angle ^ code;
         int a3 = battery ^ code;
         Log.e(getClass().toString() + "测量结果: ", "length:" + a1 + "mm;angle:" + a2 + ";battery:" + a3);
-        measurementView.updateMeasureData(a1, a2, a3);
+        measurementView.updateMeasureData((float) a1 / 10, a2, a3);
     }
 
     private Observable<RxBleConnection> prepareConnectionObservable() {
