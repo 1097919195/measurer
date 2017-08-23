@@ -55,7 +55,7 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
 //        int gender = Integer.parseInt(c.getString(c.getColumnIndexOrThrow(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER)));
 //        WeiXinUser weiXinUser = new WeiXinUser();
 //        weiXinUser.setSex(gender)
-//                .setWid(userId);
+//                .setOpenId(userId);
 //        return new Measurement(weiXinUser, data, itemId);
 //    }
 //

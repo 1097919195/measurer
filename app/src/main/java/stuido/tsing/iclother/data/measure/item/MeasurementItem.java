@@ -1,27 +1,27 @@
 package stuido.tsing.iclother.data.measure.item;
 
-import stuido.tsing.iclother.data.measure.item.parts.AoYao;
-import stuido.tsing.iclother.data.measure.item.parts.BiChang;
-import stuido.tsing.iclother.data.measure.item.parts.BiWei;
-import stuido.tsing.iclother.data.measure.item.parts.DaTuiWei;
-import stuido.tsing.iclother.data.measure.item.parts.DuWei;
-import stuido.tsing.iclother.data.measure.item.parts.JianKuan;
-import stuido.tsing.iclother.data.measure.item.parts.JiaoHuaiWei;
-import stuido.tsing.iclother.data.measure.item.parts.JingWei;
-import stuido.tsing.iclother.data.measure.item.parts.QiaGuHeight;
-import stuido.tsing.iclother.data.measure.item.parts.ShangTuDu;
-import stuido.tsing.iclother.data.measure.item.parts.ShouWanWei;
-import stuido.tsing.iclother.data.measure.item.parts.TongDang;
-import stuido.tsing.iclother.data.measure.item.parts.TouWei;
-import stuido.tsing.iclother.data.measure.item.parts.TunWei;
-import stuido.tsing.iclother.data.measure.item.parts.WanBeiAngle;
-import stuido.tsing.iclother.data.measure.item.parts.XiWei;
-import stuido.tsing.iclother.data.measure.item.parts.XiaTuDu;
-import stuido.tsing.iclother.data.measure.item.parts.XiaoTuiWei;
-import stuido.tsing.iclother.data.measure.item.parts.XiongWei;
-import stuido.tsing.iclother.data.measure.item.parts.YaoWei;
-import stuido.tsing.iclother.data.measure.item.parts.YouJianXie;
-import stuido.tsing.iclother.data.measure.item.parts.ZuoJianXie;
+import stuido.tsing.iclother.data.measure.item.parts.Item9;
+import stuido.tsing.iclother.data.measure.item.parts.Item13;
+import stuido.tsing.iclother.data.measure.item.parts.Item14;
+import stuido.tsing.iclother.data.measure.item.parts.Item15;
+import stuido.tsing.iclother.data.measure.item.parts.Item16;
+import stuido.tsing.iclother.data.measure.item.parts.Item17;
+import stuido.tsing.iclother.data.measure.item.parts.Item18;
+import stuido.tsing.iclother.data.measure.item.parts.Item19;
+import stuido.tsing.iclother.data.measure.item.parts.Item20;
+import stuido.tsing.iclother.data.measure.item.parts.Item21;
+import stuido.tsing.iclother.data.measure.item.parts.Item22;
+import stuido.tsing.iclother.data.measure.item.parts.Item23;
+import stuido.tsing.iclother.data.measure.item.parts.Item7;
+import stuido.tsing.iclother.data.measure.item.parts.Item1;
+import stuido.tsing.iclother.data.measure.item.parts.Item2;
+import stuido.tsing.iclother.data.measure.item.parts.Item3;
+import stuido.tsing.iclother.data.measure.item.parts.Item6;
+import stuido.tsing.iclother.data.measure.item.parts.Item8;
+import stuido.tsing.iclother.data.measure.item.parts.Item12;
+import stuido.tsing.iclother.data.measure.item.parts.Item10;
+import stuido.tsing.iclother.data.measure.item.parts.Item5;
+import stuido.tsing.iclother.data.measure.item.parts.Item4;
 
 //            头围
 //    颈围
@@ -46,224 +46,224 @@ import stuido.tsing.iclother.data.measure.item.parts.ZuoJianXie;
 //            下凸肚角度
 //    凹腰角度
 public class MeasurementItem {
-    protected TouWei TouWei;
-    protected JingWei JingWei;
-    protected JianKuan JianKuan;
-    protected BiWei BiWei;
-    protected ShouWanWei ShouWanWei;
-    protected BiChang BiChang;
-    protected XiongWei XiongWei;
-    protected DuWei DuWei;
-    protected YaoWei YaoWei;
-    protected TunWei TunWei;
-    protected DaTuiWei DaTuiWei;
-    protected XiWei XiWei;
-    protected XiaoTuiWei XiaoTuiWei;
-    protected JiaoHuaiWei JiaoHuaiWei;
-    protected TongDang TongDang;
-    protected QiaGuHeight QiaGuHeight;
-    protected ZuoJianXie ZuoJianXie;
-    protected YouJianXie YouJianXie;
-    protected WanBeiAngle WanBeiAngle;
-    protected ShangTuDu ShangTuDu;
-    protected XiaTuDu XiaTuDu;
-    protected AoYao AoYao;
+    protected Item1 Item1;
+    protected Item2 Item2;
+    protected Item3 Item3;
+    protected Item4 Item4;
+    protected Item5 Item5;
+    protected Item6 Item6;
+    protected Item7 Item7;
+    protected Item8 Item8;
+    protected Item9 Item9;
+    protected Item10 Item10;
+    protected Item12 Item12;
+    protected Item13 Item13;
+    protected Item14 Item14;
+    protected Item15 Item15;
+    protected Item16 Item16;
+    protected Item17 Item17;
+    protected Item18 Item18;
+    protected Item19 Item19;
+    protected Item20 Item20;
+    protected Item21 Item21;
+    protected Item22 Item22;
+    protected Item23 Item23;
 
-    public TouWei getTouWei() {
-        return TouWei;
+    public Item1 getItem1() {
+        return Item1;
     }
 
-    public MeasurementItem setTouWei(TouWei touWei) {
-        TouWei = touWei;
+    public MeasurementItem setItem1(Item1 item1) {
+        Item1 = item1;
         return this;
     }
 
-    public JingWei getJingWei() {
-        return JingWei;
+    public Item2 getItem2() {
+        return Item2;
     }
 
-    public MeasurementItem setJingWei(JingWei jingWei) {
-        JingWei = jingWei;
+    public MeasurementItem setItem2(Item2 item2) {
+        Item2 = item2;
         return this;
     }
 
-    public JianKuan getJianKuan() {
-        return JianKuan;
+    public Item3 getItem3() {
+        return Item3;
     }
 
-    public MeasurementItem setJianKuan(JianKuan jianKuan) {
-        JianKuan = jianKuan;
+    public MeasurementItem setItem3(Item3 item3) {
+        Item3 = item3;
         return this;
     }
 
-    public BiWei getBiWei() {
-        return BiWei;
+    public Item7 getItem7() {
+        return Item7;
     }
 
-    public MeasurementItem setBiWei(BiWei biWei) {
-        BiWei = biWei;
+    public MeasurementItem setItem7(Item7 item7) {
+        Item7 = item7;
         return this;
     }
 
-    public ShouWanWei getShouWanWei() {
-        return ShouWanWei;
+    public Item8 getItem8() {
+        return Item8;
     }
 
-    public MeasurementItem setShouWanWei(ShouWanWei shouWanWei) {
-        ShouWanWei = shouWanWei;
+    public MeasurementItem setItem8(Item8 item8) {
+        Item8 = item8;
         return this;
     }
 
-    public BiChang getBiChang() {
-        return BiChang;
+    public Item9 getItem9() {
+        return Item9;
     }
 
-    public MeasurementItem setBiChang(BiChang biChang) {
-        BiChang = biChang;
+    public MeasurementItem setItem9(Item9 item9) {
+        Item9 = item9;
         return this;
     }
 
-    public XiongWei getXiongWei() {
-        return XiongWei;
+    public Item10 getItem10() {
+        return Item10;
     }
 
-    public MeasurementItem setXiongWei(XiongWei xiongWei) {
-        XiongWei = xiongWei;
+    public MeasurementItem setItem10(Item10 item10) {
+        Item10 = item10;
         return this;
     }
 
-    public DuWei getDuWei() {
-        return DuWei;
+    public Item14 getItem14() {
+        return Item14;
     }
 
-    public MeasurementItem setDuWei(DuWei duWei) {
-        DuWei = duWei;
+    public MeasurementItem setItem14(Item14 item14) {
+        Item14 = item14;
         return this;
     }
 
-    public YaoWei getYaoWei() {
-        return YaoWei;
+    public Item15 getItem15() {
+        return Item15;
     }
 
-    public MeasurementItem setYaoWei(YaoWei yaoWei) {
-        YaoWei = yaoWei;
+    public MeasurementItem setItem15(Item15 item15) {
+        Item15 = item15;
         return this;
     }
 
-    public TunWei getTunWei() {
-        return TunWei;
+    public Item16 getItem16() {
+        return Item16;
     }
 
-    public MeasurementItem setTunWei(TunWei tunWei) {
-        TunWei = tunWei;
+    public MeasurementItem setItem16(Item16 item16) {
+        Item16 = item16;
         return this;
     }
 
-    public DaTuiWei getDaTuiWei() {
-        return DaTuiWei;
+    public Item17 getItem17() {
+        return Item17;
     }
 
-    public MeasurementItem setDaTuiWei(DaTuiWei daTuiWei) {
-        DaTuiWei = daTuiWei;
+    public MeasurementItem setItem17(Item17 item17) {
+        Item17 = item17;
         return this;
     }
 
-    public XiWei getXiWei() {
-        return XiWei;
+    public Item13 getItem13() {
+        return Item13;
     }
 
-    public MeasurementItem setXiWei(XiWei xiWei) {
-        XiWei = xiWei;
+    public MeasurementItem setItem13(Item13 item13) {
+        Item13 = item13;
         return this;
     }
 
-    public XiaoTuiWei getXiaoTuiWei() {
-        return XiaoTuiWei;
+    public Item12 getItem12() {
+        return Item12;
     }
 
-    public MeasurementItem setXiaoTuiWei(XiaoTuiWei xiaoTuiWei) {
-        XiaoTuiWei = xiaoTuiWei;
+    public MeasurementItem setItem12(Item12 item12) {
+        Item12 = item12;
         return this;
     }
 
-    public JiaoHuaiWei getJiaoHuaiWei() {
-        return JiaoHuaiWei;
+    public Item18 getItem18() {
+        return Item18;
     }
 
-    public MeasurementItem setJiaoHuaiWei(JiaoHuaiWei jiaoHuaiWei) {
-        JiaoHuaiWei = jiaoHuaiWei;
+    public MeasurementItem setItem18(Item18 item18) {
+        Item18 = item18;
         return this;
     }
 
-    public TongDang getTongDang() {
-        return TongDang;
+    public Item19 getItem19() {
+        return Item19;
     }
 
-    public MeasurementItem setTongDang(TongDang tongDang) {
-        TongDang = tongDang;
+    public MeasurementItem setItem19(Item19 item19) {
+        Item19 = item19;
         return this;
     }
 
-    public QiaGuHeight getQiaGuHeight() {
-        return QiaGuHeight;
+    public Item20 getItem20() {
+        return Item20;
     }
 
-    public MeasurementItem setQiaGuHeight(QiaGuHeight qiaGuHeight) {
-        QiaGuHeight = qiaGuHeight;
+    public MeasurementItem setItem20(Item20 item20) {
+        Item20 = item20;
         return this;
     }
 
-    public ZuoJianXie getZuoJianXie() {
-        return ZuoJianXie;
+    public Item21 getItem21() {
+        return Item21;
     }
 
-    public MeasurementItem setZuoJianXie(ZuoJianXie zuoJianXie) {
-        ZuoJianXie = zuoJianXie;
+    public MeasurementItem setItem21(Item21 item21) {
+        Item21 = item21;
         return this;
     }
 
-    public YouJianXie getYouJianXie() {
-        return YouJianXie;
+    public Item22 getItem22() {
+        return Item22;
     }
 
-    public MeasurementItem setYouJianXie(YouJianXie youJianXie) {
-        YouJianXie = youJianXie;
+    public MeasurementItem setItem22(Item22 item22) {
+        Item22 = item22;
         return this;
     }
 
-    public WanBeiAngle getWanBeiAngle() {
-        return WanBeiAngle;
+    public Item23 getItem23() {
+        return Item23;
     }
 
-    public MeasurementItem setWanBeiAngle(WanBeiAngle wanBeiAngle) {
-        WanBeiAngle = wanBeiAngle;
+    public MeasurementItem setItem23(Item23 item23) {
+        Item23 = item23;
         return this;
     }
 
-    public ShangTuDu getShangTuDu() {
-        return ShangTuDu;
+    public Item4 getItem4() {
+        return Item4;
     }
 
-    public MeasurementItem setShangTuDu(ShangTuDu shangTuDu) {
-        ShangTuDu = shangTuDu;
+    public MeasurementItem setItem4(Item4 item4) {
+        Item4 = item4;
         return this;
     }
 
-    public XiaTuDu getXiaTuDu() {
-        return XiaTuDu;
+    public Item5 getItem5() {
+        return Item5;
     }
 
-    public MeasurementItem setXiaTuDu(XiaTuDu xiaTuDu) {
-        XiaTuDu = xiaTuDu;
+    public MeasurementItem setItem5(Item5 item5) {
+        Item5 = item5;
         return this;
     }
 
-    public AoYao getAoYao() {
-        return AoYao;
+    public Item6 getItem6() {
+        return Item6;
     }
 
-    public MeasurementItem setAoYao(AoYao aoYao) {
-        AoYao = aoYao;
+    public MeasurementItem setItem6(Item6 item6) {
+        Item6 = item6;
         return this;
     }
 }

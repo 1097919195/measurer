@@ -95,6 +95,8 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private MaterialDialog.Builder scanResutlDialog;
     private ScanResultsAdapter scanResultsAdapter;
     private boolean showDialogLabel = true;
+    private String[] maleMeasureSequence;
+    private String[] femaleMeasureSequence;
 
     public MeasureFragment() {
     }
@@ -145,7 +147,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public void onPause() {
         super.onPause();
         mPresenter.unsubscribe();
-//        if (mPresenter.isScanning()) mPresenter.unsubscribe();
     }
 
     @Override
@@ -175,14 +176,16 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             } else {
                 item = (MeasurementFemaleItem) Class.forName(ITEM_PACKAGE + ".MeasurementFemaleItem").newInstance();
             }
-            for (Field field : item.getClass().getDeclaredFields()) {
+            Field[] declaredFields = item.getClass().getDeclaredFields();
+            Arrays.sort(declaredFields);
+            for (Field field : declaredFields) {
                 String name = field.getName();
                 Class<?> itemSubclass = Class.forName(PART_PACKAGE + "." + name);
                 Part part = (Part) itemSubclass.newInstance();
                 TableRow tableRow = getTableRow(part.getCn(), part.getEn());
                 rows.add(tableRow);
             }
-            for (Field field : item.getClass().getSuperclass().getDeclaredFields()) {
+            for (Field field : declaredFields) {
                 String name = field.getName();
                 Class<?> itemSubclass = Class.forName(PART_PACKAGE + "." + name);
                 Part part = (Part) itemSubclass.newInstance();
@@ -305,7 +308,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         item = getMeasurementItem(sex, iterator);
         WeiXinUser weiXinUser = new WeiXinUser();
         // TODO: 2017/8/15 微信接口
-        weiXinUser.setHeight(height).setWeight(weight).setSex(sex).setWid("123123").setNickname("test");
+        weiXinUser.setHeight(height).setWeight(weight).setSex(sex).setOpenId("123123").setNickname("test");
         Measurement measurement = new Measurement(weiXinUser, item);
         mPresenter.saveMeasurement(measurement);
     }
@@ -368,16 +371,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public void setLoadingIndicator(boolean b) {
         showDialogLabel = true;
     }
-
-//    @Override
-//    public void showAlreadyConnectedError() {
-//        Snackbar.make(getView(), "重复连接", Snackbar.LENGTH_SHORT).show();
-//    }
-
-//    @Override
-//    public void showConnecting() {
-//        scanToggleBtn.setText(getString(R.string.connecting));
-//    }
 
     private void checkInputValid(String v, String field) {
         if (TextUtils.isEmpty(v)) showInputError(field);
@@ -563,7 +556,8 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     @Override
     public void bleDeviceMeasuring() {
-        speechSynthesizer.playText("请按顺序测量");
+        maleMeasureSequence = getResources().getStringArray(R.array.male_items_sequence);
+        speechSynthesizer.playText("请先选择待测人员性别，首先测量部位" + maleMeasureSequence[0]);
         measureButton.setText(getString(R.string.measuring));
         measureButton.setTextColor(getResources().getColor(R.color.measuring));
     }

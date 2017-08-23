@@ -1,20 +1,16 @@
 package stuido.tsing.iclother.data.measure.item;
 
-import stuido.tsing.iclother.data.measure.item.parts.XiaXiongWei;
-
-/**
- * Created by Endless on 2017/8/1.
- */
+import stuido.tsing.iclother.data.measure.item.parts.Item11;
 
 public class MeasurementFemaleItem extends MeasurementItem {
-    private XiaXiongWei XiaXiongWei;
+    private Item11 Item11;
 
-    public XiaXiongWei getXiaXiongWei() {
-        return XiaXiongWei;
+    public Item11 getItem11() {
+        return Item11;
     }
 
-    public MeasurementFemaleItem setXiaXiongWei(XiaXiongWei xiaXiongWei) {
-        XiaXiongWei = xiaXiongWei;
+    public MeasurementFemaleItem setItem11(Item11 item11) {
+        Item11 = item11;
         return this;
     }
 }

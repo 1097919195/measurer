@@ -14,7 +14,7 @@ public class WeiXinUser {
     @Nullable
     private String weight;
     @Nullable
-    private String wid;
+    private String openId;
 
     public int getSex() {
         return sex;
@@ -34,6 +34,7 @@ public class WeiXinUser {
         return this;
     }
 
+    @Nullable
     public String getHeight() {
         return height;
     }
@@ -43,6 +44,7 @@ public class WeiXinUser {
         return this;
     }
 
+    @Nullable
     public String getWeight() {
         return weight;
     }
@@ -53,12 +55,12 @@ public class WeiXinUser {
     }
 
     @Nullable
-    public String getWid() {
-        return wid;
+    public String getOpenId() {
+        return openId;
     }
 
-    public WeiXinUser setWid(@Nullable String wid) {
-        this.wid = wid;
+    public WeiXinUser setOpenId(@Nullable String openId) {
+        this.openId = openId;
         return this;
     }
 }
