@@ -96,7 +96,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     private ScanResultsAdapter scanResultsAdapter;
     private boolean showDialogLabel = true;
     private String[] maleMeasureSequence;
-    private String[] femaleMeasureSequence;
 
     public MeasureFragment() {
     }
@@ -140,7 +139,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
             }
         });
-        speechSynthesizer.init(null);
+        speechSynthesizer.init(null);// FIXME: 2017/8/24 语音播报需要联网
     }
 
     @Override
@@ -383,7 +382,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     private void showInputError(String field) {
         Toast.makeText(getActivity(), field + "不能为空", Toast.LENGTH_SHORT).show();
-        return;
     }
 
     @Override
@@ -435,7 +433,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     @Override
     public void showStartReceiveData() {
-        Snackbar.make(getView(), "Notifications has been set up", Snackbar.LENGTH_SHORT).show();
+//        Snackbar.make(getView(), "Notifications has been set up", Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -544,8 +542,20 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                     value = length + "";
                 }
                 if (speechSynthesizer != null) {
-                    speechSynthesizer.playText("测量部位" + cn + "，结果为" + value);
+                    String result = cn + "，结果为" + value;
                     // TODO: 2017/8/22 接着播放下一个部位
+                    String[] nextString;
+
+                    if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
+                        maleMeasureSequence = getResources().getStringArray(R.array.male_items_sequence);
+                        nextString = getNextString(cn, maleMeasureSequence);
+                    } else {
+                        nextString = getNextString(cn, getResources().getStringArray(R.array.female_items_sequence));
+                    }
+                    if (!TextUtils.isEmpty(nextString[0]))
+                        speechSynthesizer.playText(result + "      下一个测量部位" + nextString[0]);
+                    if (!TextUtils.isEmpty(nextString[1]))
+                        speechSynthesizer.playText(result + nextString[1]);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -557,6 +567,24 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             return true;
         }
         return false;
+    }
+
+    private String[] getNextString(String cn, String[] arrays) {
+        String last = null;
+        String next = null;
+        String[] strings = new String[2];
+        for (int m = 0, l = arrays.length; m < l; m++) {
+            if (arrays[m].equals(cn)) {
+                if (m == l - 1) {
+                    last = "所有部位测量完成";
+                } else {
+                    next = arrays[m + 1];
+                }
+            }
+        }
+        strings[0] = next;
+        strings[1] = last;
+        return strings;
     }
 
     @Override

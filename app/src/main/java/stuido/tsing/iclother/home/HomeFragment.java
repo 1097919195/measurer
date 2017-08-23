@@ -230,9 +230,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 rowView = inflater.inflate(R.layout.measurement_list_item, viewGroup, false);
             }
-
             final Measurement measurement = getItem(i);
-
             ((TextView) rowView.findViewById(R.id.measurement_item_user_name)).setText(measurement.getUser().getNickname());
             TextView gender = rowView.findViewById(R.id.measurement_item_user_gender);
             if (measurement.getUser().getSex() == UserSex.MALE) {
