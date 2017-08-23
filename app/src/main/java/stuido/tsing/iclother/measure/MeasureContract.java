@@ -1,8 +1,5 @@
 package stuido.tsing.iclother.measure;
 
-import android.bluetooth.BluetoothGattCharacteristic;
-
-import com.polidea.rxandroidble.RxBleDeviceServices;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
 
@@ -25,27 +22,21 @@ public interface MeasureContract {
 
         void handleBleScanException(BleScanException e);
 
-        void showScanResult(ScanResult scanResult);
+        void handleScanResult(ScanResult scanResult);
 
         void updateButtonUIState();
-
-        void showServiceChoiceView(BluetoothGattCharacteristic characteristic);
 
         void showBleDisconnectHint();
 
         void updateMeasureData(float length, int battery, int angle);
 
-        void showAlreadyConnectedError();
-
-        void showConnecting();
+//        void showAlreadyConnectedError();
+//
+//        void showConnecting();
 
         void showStartReceiveData();
 
-        void showBleServicesDiscoveryView();
-
         void showUnknownError();
-
-        void showServiceListView(RxBleDeviceServices deviceServices);
 
         void showUnknownError(String s);
 
@@ -56,6 +47,7 @@ public interface MeasureContract {
         void bleDeviceMeasuring();
 
         void showScanning();
+
     }
 
     interface Presenter extends BasePresenter {
@@ -65,14 +57,10 @@ public interface MeasureContract {
 
         boolean isScanning();
 
-        void connectDevice();
-
         boolean isConnected();
 
         void startMeasure();
 
-        void discoveryServices(String s);
-
-        void chooseCharacteristic(String uuid);
+        void connectDevice(String s);
     }
 }

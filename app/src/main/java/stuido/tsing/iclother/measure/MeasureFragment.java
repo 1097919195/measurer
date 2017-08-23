@@ -1,7 +1,5 @@
 package stuido.tsing.iclother.measure;
 
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.polidea.rxandroidble.RxBleDevice;
-import com.polidea.rxandroidble.RxBleDeviceServices;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
 import com.unisound.client.SpeechConstants;
@@ -48,9 +45,7 @@ import butterknife.Unbinder;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import stuido.tsing.iclother.R;
-import stuido.tsing.iclother.data.ble.BleCharacter;
 import stuido.tsing.iclother.data.ble.BleDevice;
-import stuido.tsing.iclother.data.ble.BleService;
 import stuido.tsing.iclother.data.measure.Measurement;
 import stuido.tsing.iclother.data.measure.UserSex;
 import stuido.tsing.iclother.data.measure.item.MeasurementFemaleItem;
@@ -88,22 +83,18 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     TableLayout measureTableLayout;
     Unbinder unbinder;
     private MeasureContract.Presenter mPresenter;
-    private List<BleService> bleServiceList = new ArrayList<>();
-    private List<BleDevice> bleDevices = new ArrayList<>();
-    private List<BleCharacter> bleCharacters = new ArrayList<>();
-    private Map<String, BluetoothGattService> bleServiceMap = new LinkedHashMap<>();
-    private MaterialDialog serviceListDialog;
-    private MaterialDialog characteristicListDialog;
+    private List<BleDevice> bleDeviceList = new ArrayList<>();
+    private List<String> rxBleDeviceAddressList = new ArrayList<>();
     private MaterialDialog scanningDialog;
     private static final float TEXT_VIEW_HEIGHT = 30;
     private List<TableRow> maleRows = new ArrayList<>();
     private List<TableRow> femaleRows = new ArrayList<>();
-    private String[] angleItems = new String[5];
     private SpeechSynthesizer speechSynthesizer;
     private String PART_PACKAGE = Part.class.getPackage().getName();
     private String ITEM_PACKAGE = MeasurementItem.class.getPackage().getName();
-    private String APPKEY = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
-    private String APPSECRET = "29aa998c451d64d9334269546a4021b8";
+    private MaterialDialog.Builder scanResutlDialog;
+    private ScanResultsAdapter scanResultsAdapter;
+    private boolean showDialogLabel = true;
 
     public MeasureFragment() {
     }
@@ -125,13 +116,15 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        angleItems = getResources().getStringArray(R.array.angle_items);
+        String[] angleItems = getResources().getStringArray(R.array.angle_items);
         angleList = Arrays.asList(angleItems);
         initSpeech();
         mPresenter.subscribe();
     }
 
     private void initSpeech() {
+        String APPKEY = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
+        String APPSECRET = "29aa998c451d64d9334269546a4021b8";
         speechSynthesizer = new SpeechSynthesizer(getActivity(), APPKEY, APPSECRET);
         speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
         speechSynthesizer.setTTSListener(new SpeechSynthesizerListener() {
@@ -152,6 +145,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public void onPause() {
         super.onPause();
         mPresenter.unsubscribe();
+//        if (mPresenter.isScanning()) mPresenter.unsubscribe();
     }
 
     @Override
@@ -372,18 +366,18 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     @Override
     public void setLoadingIndicator(boolean b) {
-
+        showDialogLabel = true;
     }
 
-    @Override
-    public void showAlreadyConnectedError() {
-        Snackbar.make(getView(), "重复连接", Snackbar.LENGTH_SHORT).show();
-    }
+//    @Override
+//    public void showAlreadyConnectedError() {
+//        Snackbar.make(getView(), "重复连接", Snackbar.LENGTH_SHORT).show();
+//    }
 
-    @Override
-    public void showConnecting() {
-        scanToggleBtn.setText(getString(R.string.connecting));
-    }
+//    @Override
+//    public void showConnecting() {
+//        scanToggleBtn.setText(getString(R.string.connecting));
+//    }
 
     private void checkInputValid(String v, String field) {
         if (TextUtils.isEmpty(v)) showInputError(field);
@@ -446,25 +440,50 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         Snackbar.make(getView(), "Notifications has been set up", Snackbar.LENGTH_SHORT).show();
     }
 
+    /**
+     * 显示蓝牙扫描到的所有结果
+     *
+     * @param result
+     */
     @Override
-    public void showScanResult(ScanResult result) {
+    public void handleScanResult(ScanResult result) {
         scanningDialog.dismiss();
         RxBleDevice device = result.getBleDevice();
-        bleDevices.clear();
-        bleDevices.add(new BleDevice(device.getName(), device.getMacAddress(), result.getRssi()));
-        ScanResultsAdapter adapter = new ScanResultsAdapter(this, bleDevices);
-        new MaterialDialog.Builder(getActivity())
-                .title(R.string.choose_device_prompt)
-                .adapter(adapter, null)
-                .backgroundColor(getResources().getColor(R.color.white))
-                .titleColor(getResources().getColor(R.color.scan_result_list_title))
-                .dividerColor(getResources().getColor(R.color.divider))
-                .show();
-        adapter.setOnAdapterItemClickListener(v ->
-                mPresenter.discoveryServices(((TextView) v.findViewById(R.id.txt_mac)).getText().toString())
+        scanResultsAdapter = new ScanResultsAdapter(this, bleDeviceList);
+
+        if (showDialogLabel) {
+            showScanDialog();
+            showDialogLabel = false;
+        }
+
+        if (!rxBleDeviceAddressList.contains(device.getMacAddress())) {
+            rxBleDeviceAddressList.add(device.getMacAddress());
+            bleDeviceList.add(new BleDevice(device.getName(), device.getMacAddress(), result.getRssi()));
+            scanResultsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void showScanDialog() {
+        if (scanResutlDialog == null) {
+            scanResutlDialog = new MaterialDialog.Builder(getActivity())
+                    .title(R.string.choose_device_prompt)
+                    .backgroundColor(getResources().getColor(R.color.white))
+                    .titleColor(getResources().getColor(R.color.scan_result_list_title))
+                    .dividerColor(getResources().getColor(R.color.divider));
+        }
+        scanResutlDialog.adapter(scanResultsAdapter, null).show();
+        //选择目的蓝牙设备
+        scanResultsAdapter.setOnAdapterItemClickListener(v -> {
+//                    scanResutlDialog =null; // FIXME: 2017/8/23 点击所选择的蓝牙设备后，蓝牙设备对话框关闭
+                    mPresenter.connectDevice(((TextView) v.findViewById(R.id.txt_mac)).getText().toString());
+                }
         );
     }
 
+    /**
+     * 扫描结束，显示扫描结果
+     * TODO 扫描不停止
+     */
     @Override
     public void finishScan() {
         scanToggleBtn.setText(getString(R.string.scan_finished));
@@ -475,15 +494,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public void updateButtonUIState() {
 //        resultsAdapter.clearScanResults();
         scanToggleBtn.setText(mPresenter.isScanning() ? getString(R.string.stop_scan) : getString(R.string.start_scan));
-    }
-
-    @Override
-    public void showServiceChoiceView(BluetoothGattCharacteristic characteristic) {
-        int properties = characteristic.getProperties();
-    }
-
-    @Override
-    public void showBleServicesDiscoveryView() {
     }
 
     @Override
@@ -553,93 +563,15 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     @Override
     public void bleDeviceMeasuring() {
-        speechSynthesizer.playText("蓝牙连接成功，请按顺序测量");
+        speechSynthesizer.playText("请按顺序测量");
         measureButton.setText(getString(R.string.measuring));
         measureButton.setTextColor(getResources().getColor(R.color.measuring));
     }
 
     @Override
     public void showConnected() {
+        speechSynthesizer.playText("蓝牙连接成功，点击开始测量按钮启动测量");
         rulerState.setText(mPresenter.isConnected() ? getString(R.string.connected) : getString(R.string.disconnected));
         rulerState.setTextColor(getResources().getColor(R.color.ble_connected));
-    }
-
-    /**
-     * 显示设备的可用服务
-     * 事件：点击条目选中某个服务下的具体特性
-     *
-     * @param deviceServices
-     */
-    @Override
-    public void showServiceListView(RxBleDeviceServices deviceServices) {
-        bleServiceList.clear();
-        bleServiceMap.clear();
-        for (BluetoothGattService service : deviceServices.getBluetoothGattServices()) {
-            // Add service
-            bleServiceList.add(new BleService(getServiceType(service), service.getUuid().toString()));
-            bleServiceMap.put(service.getUuid().toString(), service);
-        }
-        ServiceListAdapter adapter = new ServiceListAdapter(this, bleServiceList);
-        serviceListDialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.choose_service_prompt)
-                // second parameter is an optional layout manager. Must be a LinearLayoutManager or GridLayoutManager.
-                .adapter(adapter, null)
-                .titleColor(getResources().getColor(R.color.scan_result_list_title))
-                .backgroundColor(getResources().getColor(R.color.white))
-                .dividerColor(getResources().getColor(R.color.divider))
-                .show();
-        adapter.setOnAdapterItemClickListener(this::showCharacteristicListView);
-    }
-
-    private void showCharacteristicListView(String uuid) {
-        checkNotNull(bleServiceMap);
-        checkNotNull(serviceListDialog);
-        serviceListDialog.dismiss();
-        BluetoothGattService service = bleServiceMap.get(uuid);
-        for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-            bleCharacters.add(new BleCharacter(describeProperties(characteristic), characteristic.getUuid().toString()));
-        }
-        CharacterListAdapter adapter = new CharacterListAdapter(this, bleCharacters);
-        characteristicListDialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.choose_character_prompt)
-                .adapter(adapter, null)
-                .titleColor(getResources().getColor(R.color.battery_color))
-                .backgroundColor(getResources().getColor(R.color.white))
-                .titleColor(getResources().getColor(R.color.primary))
-                .dividerColor(getResources().getColor(R.color.divider))
-                .show();
-        adapter.setOnAdapterItemClickListener(this::onCharacteristicItemClick);
-    }
-
-    private void onCharacteristicItemClick(String uuid) {
-        checkNotNull(characteristicListDialog);
-        characteristicListDialog.dismiss();
-        mPresenter.chooseCharacteristic(uuid);
-    }
-
-    private String getServiceType(BluetoothGattService service) {
-        return service.getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY ? getString(R.string.service_primary)
-                : getString(R.string.service_secondary);
-    }
-
-    private String describeProperties(BluetoothGattCharacteristic characteristic) {
-        List<String> properties = new ArrayList<>();
-        if (isCharacteristicReadable(characteristic)) properties.add("可读");
-        if (isCharacteristicWritable(characteristic)) properties.add("可写");
-        if (isCharacteristicNotifiable(characteristic)) properties.add("通知");
-        return TextUtils.join(" ", properties);
-    }
-
-    private boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
-        return (characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0;
-    }
-
-    private boolean isCharacteristicReadable(BluetoothGattCharacteristic characteristic) {
-        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_READ) != 0);
-    }
-
-    private boolean isCharacteristicWritable(BluetoothGattCharacteristic characteristic) {
-        return (characteristic.getProperties() & (BluetoothGattCharacteristic.PROPERTY_WRITE
-                | BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0;
     }
 }

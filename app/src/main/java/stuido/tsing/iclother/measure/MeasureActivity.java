@@ -18,9 +18,6 @@ import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 public class MeasureActivity extends BaseActivity {
     public static final int REQUEST_ADD_MEASUREMENT = 1;
 
-    private RxBleClient rxBleClient;
-    private MeasurePresenter mPresenter;
-
     @Override
     protected CharSequence getToolbarTitle() {
         return getString(R.string.measure_act_title);
@@ -28,7 +25,7 @@ public class MeasureActivity extends BaseActivity {
 
     @Override
     protected void initFragment() {
-        rxBleClient = BleClientHelper.getInstance(MeasureActivity.this);
+        RxBleClient rxBleClient = BleClientHelper.getInstance(MeasureActivity.this);
         MeasureFragment measure_fragment = (MeasureFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.act_content_view);
 
@@ -37,7 +34,7 @@ public class MeasureActivity extends BaseActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), measure_fragment, R.id.act_content_view);
         }
 
-        mPresenter = new MeasurePresenter(rxBleClient, measure_fragment, SchedulerProvider.getInstance());
+        MeasurePresenter mPresenter = new MeasurePresenter(rxBleClient, measure_fragment, SchedulerProvider.getInstance());
         PermissionGen.with(MeasureActivity.this)
                 .addRequestCode(100)
                 .permissions(

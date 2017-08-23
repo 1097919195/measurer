@@ -1,7 +1,8 @@
 package stuido.tsing.iclother.measure;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -29,7 +30,6 @@ import stuido.tsing.iclother.utils.schedulers.BaseSchedulerProvider;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasurePresenter implements MeasureContract.Presenter {
-    private static final String BLE_NAME = "BLE_Ruler";
     @NonNull
     private RxBleClient rxBleClient;
     @NonNull
@@ -86,8 +86,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
             scanSubscription.unsubscribe();
         } else {
             measurementView.setLoadingIndicator(true);
-            scanSubscription = rxBleClient.scanBleDevices(
-                    new ScanSettings.Builder()
+            scanSubscription = rxBleClient.scanBleDevices(new ScanSettings.Builder()
                             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                             .build(),
@@ -96,15 +95,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                     .observeOn(mSchedulerProvider.ui())
                     .doOnUnsubscribe(this::clearSubscription)
                     .subscribe(scanResult -> {
-                        // TODO: 2017/8/14 若设备已扫描到，就不再添加该结果
-                        String name = scanResult.getBleDevice().getName();
-                        if (!TextUtils.isEmpty(name) && name.equals(BLE_NAME)) {
-                            measurementView.showScanResult(scanResult);
-                            scanSubscription.unsubscribe();
-                        }
+                        Log.e("扫描", "结果1");
+                        measurementView.handleScanResult(scanResult);
                     }, this::handleError, () -> measurementView.finishScan());
-//            scanSubscription.unsubscribe();
-//            measurementView.updateButtonUIState();
         }
     }
 
@@ -118,8 +111,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         return scanSubscription != null;
     }
 
-    @Override
-    public void connectDevice() {
+    private void connectDevice() {
         if (isConnected()) {
             triggerDisconnect();
         } else {
@@ -135,26 +127,35 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         }
     }
 
+    /**
+     * 选择设备后，选择服务，再选择通知特性
+     *
+     * @param s
+     */
     @Override
-    public void discoveryServices(String s) {
+    public void connectDevice(String s) {
         bleDevice = rxBleClient.getBleDevice(s);
         bleDevice.establishConnection(false)
                 .flatMap(RxBleConnection::discoverServices)
                 .first() // Disconnect automatically after discovery
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(deviceServices -> measurementView.showServiceListView(deviceServices), this::handleError);
+                .subscribe(deviceServices -> {
+                    for (BluetoothGattService service : deviceServices.getBluetoothGattServices()) {
+                        for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                            if (isCharacteristicNotifiable(characteristic)) {
+                                characteristicUUID = characteristic.getUuid();
+                                connectionObservable = prepareConnectionObservable();
+                                connectDevice();
+                                break;
+                            }
+                        }
+                    }
+                }, this::handleError);
     }
 
     public boolean isConnected() {
         checkNotNull(bleDevice);
         return bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
-    }
-
-    @Override
-    public void chooseCharacteristic(String uuid) {
-        characteristicUUID = UUID.fromString(checkNotNull(uuid));
-        connectionObservable = prepareConnectionObservable();
-        connectDevice();
     }
 
     @Override
@@ -204,5 +205,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     private void triggerDisconnect() {
         disconnectTriggerSubject.onNext(null);
+    }
+
+    private boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
+        return (characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0;
     }
 }
