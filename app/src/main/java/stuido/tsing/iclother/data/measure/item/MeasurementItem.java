@@ -1,27 +1,27 @@
 package stuido.tsing.iclother.data.measure.item;
 
-import stuido.tsing.iclother.data.measure.item.parts.Item9;
-import stuido.tsing.iclother.data.measure.item.parts.Item13;
-import stuido.tsing.iclother.data.measure.item.parts.Item14;
-import stuido.tsing.iclother.data.measure.item.parts.Item15;
-import stuido.tsing.iclother.data.measure.item.parts.Item16;
-import stuido.tsing.iclother.data.measure.item.parts.Item17;
-import stuido.tsing.iclother.data.measure.item.parts.Item18;
-import stuido.tsing.iclother.data.measure.item.parts.Item19;
-import stuido.tsing.iclother.data.measure.item.parts.Item20;
-import stuido.tsing.iclother.data.measure.item.parts.Item21;
-import stuido.tsing.iclother.data.measure.item.parts.Item22;
-import stuido.tsing.iclother.data.measure.item.parts.Item23;
-import stuido.tsing.iclother.data.measure.item.parts.Item7;
-import stuido.tsing.iclother.data.measure.item.parts.Item1;
-import stuido.tsing.iclother.data.measure.item.parts.Item2;
-import stuido.tsing.iclother.data.measure.item.parts.Item3;
-import stuido.tsing.iclother.data.measure.item.parts.Item6;
-import stuido.tsing.iclother.data.measure.item.parts.Item8;
-import stuido.tsing.iclother.data.measure.item.parts.Item12;
-import stuido.tsing.iclother.data.measure.item.parts.Item10;
-import stuido.tsing.iclother.data.measure.item.parts.Item5;
-import stuido.tsing.iclother.data.measure.item.parts.Item4;
+import stuido.tsing.iclother.data.measure.item.parts.ItemI;
+import stuido.tsing.iclother.data.measure.item.parts.ItemJ;
+import stuido.tsing.iclother.data.measure.item.parts.ItemM;
+import stuido.tsing.iclother.data.measure.item.parts.ItemN;
+import stuido.tsing.iclother.data.measure.item.parts.ItemO;
+import stuido.tsing.iclother.data.measure.item.parts.ItemP;
+import stuido.tsing.iclother.data.measure.item.parts.ItemQ;
+import stuido.tsing.iclother.data.measure.item.parts.ItemR;
+import stuido.tsing.iclother.data.measure.item.parts.ItemS;
+import stuido.tsing.iclother.data.measure.item.parts.ItemT;
+import stuido.tsing.iclother.data.measure.item.parts.ItemU;
+import stuido.tsing.iclother.data.measure.item.parts.ItemV;
+import stuido.tsing.iclother.data.measure.item.parts.ItemW;
+import stuido.tsing.iclother.data.measure.item.parts.ItemG;
+import stuido.tsing.iclother.data.measure.item.parts.ItemA;
+import stuido.tsing.iclother.data.measure.item.parts.ItemB;
+import stuido.tsing.iclother.data.measure.item.parts.ItemC;
+import stuido.tsing.iclother.data.measure.item.parts.ItemF;
+import stuido.tsing.iclother.data.measure.item.parts.ItemH;
+import stuido.tsing.iclother.data.measure.item.parts.ItemL;
+import stuido.tsing.iclother.data.measure.item.parts.ItemE;
+import stuido.tsing.iclother.data.measure.item.parts.ItemD;
 
 //            头围
 //    颈围
@@ -46,224 +46,224 @@ import stuido.tsing.iclother.data.measure.item.parts.Item4;
 //            下凸肚角度
 //    凹腰角度
 public class MeasurementItem {
-    protected Item1 Item1;
-    protected Item2 Item2;
-    protected Item3 Item3;
-    protected Item4 Item4;
-    protected Item5 Item5;
-    protected Item6 Item6;
-    protected Item7 Item7;
-    protected Item8 Item8;
-    protected Item9 Item9;
-    protected Item10 Item10;
-    protected Item12 Item12;
-    protected Item13 Item13;
-    protected Item14 Item14;
-    protected Item15 Item15;
-    protected Item16 Item16;
-    protected Item17 Item17;
-    protected Item18 Item18;
-    protected Item19 Item19;
-    protected Item20 Item20;
-    protected Item21 Item21;
-    protected Item22 Item22;
-    protected Item23 Item23;
+    protected ItemA ItemA;
+    protected ItemB ItemB;
+    protected ItemC ItemC;
+    protected ItemD ItemD;
+    protected ItemE ItemE;
+    protected ItemF ItemF;
+    protected ItemG ItemG;
+    protected ItemH ItemH;
+    protected ItemI ItemI;
+    protected ItemJ ItemJ;
+    protected ItemL ItemL;
+    protected ItemM ItemM;
+    protected ItemN ItemN;
+    protected ItemO ItemO;
+    protected ItemP ItemP;
+    protected ItemQ ItemQ;
+    protected ItemR ItemR;
+    protected ItemS ItemS;
+    protected ItemT ItemT;
+    protected ItemU ItemU;
+    protected ItemV ItemV;
+    protected ItemW ItemW;
 
-    public Item1 getItem1() {
-        return Item1;
+    public ItemA getItemA() {
+        return ItemA;
     }
 
-    public MeasurementItem setItem1(Item1 item1) {
-        Item1 = item1;
+    public MeasurementItem setItemA(ItemA itemA) {
+        ItemA = itemA;
         return this;
     }
 
-    public Item2 getItem2() {
-        return Item2;
+    public ItemB getItemB() {
+        return ItemB;
     }
 
-    public MeasurementItem setItem2(Item2 item2) {
-        Item2 = item2;
+    public MeasurementItem setItemB(ItemB itemB) {
+        ItemB = itemB;
         return this;
     }
 
-    public Item3 getItem3() {
-        return Item3;
+    public ItemC getItemC() {
+        return ItemC;
     }
 
-    public MeasurementItem setItem3(Item3 item3) {
-        Item3 = item3;
+    public MeasurementItem setItemC(ItemC itemC) {
+        ItemC = itemC;
         return this;
     }
 
-    public Item7 getItem7() {
-        return Item7;
+    public ItemG getItemG() {
+        return ItemG;
     }
 
-    public MeasurementItem setItem7(Item7 item7) {
-        Item7 = item7;
+    public MeasurementItem setItemG(ItemG itemG) {
+        ItemG = itemG;
         return this;
     }
 
-    public Item8 getItem8() {
-        return Item8;
+    public ItemH getItemH() {
+        return ItemH;
     }
 
-    public MeasurementItem setItem8(Item8 item8) {
-        Item8 = item8;
+    public MeasurementItem setItemH(ItemH itemH) {
+        ItemH = itemH;
         return this;
     }
 
-    public Item9 getItem9() {
-        return Item9;
+    public ItemI getItemI() {
+        return ItemI;
     }
 
-    public MeasurementItem setItem9(Item9 item9) {
-        Item9 = item9;
+    public MeasurementItem setItemI(ItemI itemI) {
+        ItemI = itemI;
         return this;
     }
 
-    public Item10 getItem10() {
-        return Item10;
+    public ItemJ getItemJ() {
+        return ItemJ;
     }
 
-    public MeasurementItem setItem10(Item10 item10) {
-        Item10 = item10;
+    public MeasurementItem setItemJ(ItemJ itemJ) {
+        ItemJ = itemJ;
         return this;
     }
 
-    public Item14 getItem14() {
-        return Item14;
+    public ItemN getItemN() {
+        return ItemN;
     }
 
-    public MeasurementItem setItem14(Item14 item14) {
-        Item14 = item14;
+    public MeasurementItem setItemN(ItemN itemN) {
+        ItemN = itemN;
         return this;
     }
 
-    public Item15 getItem15() {
-        return Item15;
+    public ItemO getItemO() {
+        return ItemO;
     }
 
-    public MeasurementItem setItem15(Item15 item15) {
-        Item15 = item15;
+    public MeasurementItem setItemO(ItemO itemO) {
+        ItemO = itemO;
         return this;
     }
 
-    public Item16 getItem16() {
-        return Item16;
+    public ItemP getItemP() {
+        return ItemP;
     }
 
-    public MeasurementItem setItem16(Item16 item16) {
-        Item16 = item16;
+    public MeasurementItem setItemP(ItemP itemP) {
+        ItemP = itemP;
         return this;
     }
 
-    public Item17 getItem17() {
-        return Item17;
+    public ItemQ getItemQ() {
+        return ItemQ;
     }
 
-    public MeasurementItem setItem17(Item17 item17) {
-        Item17 = item17;
+    public MeasurementItem setItemQ(ItemQ itemQ) {
+        ItemQ = itemQ;
         return this;
     }
 
-    public Item13 getItem13() {
-        return Item13;
+    public ItemM getItemM() {
+        return ItemM;
     }
 
-    public MeasurementItem setItem13(Item13 item13) {
-        Item13 = item13;
+    public MeasurementItem setItemM(ItemM itemM) {
+        ItemM = itemM;
         return this;
     }
 
-    public Item12 getItem12() {
-        return Item12;
+    public ItemL getItemL() {
+        return ItemL;
     }
 
-    public MeasurementItem setItem12(Item12 item12) {
-        Item12 = item12;
+    public MeasurementItem setItemL(ItemL itemL) {
+        ItemL = itemL;
         return this;
     }
 
-    public Item18 getItem18() {
-        return Item18;
+    public ItemR getItemR() {
+        return ItemR;
     }
 
-    public MeasurementItem setItem18(Item18 item18) {
-        Item18 = item18;
+    public MeasurementItem setItemR(ItemR itemR) {
+        ItemR = itemR;
         return this;
     }
 
-    public Item19 getItem19() {
-        return Item19;
+    public ItemS getItemS() {
+        return ItemS;
     }
 
-    public MeasurementItem setItem19(Item19 item19) {
-        Item19 = item19;
+    public MeasurementItem setItemS(ItemS itemS) {
+        ItemS = itemS;
         return this;
     }
 
-    public Item20 getItem20() {
-        return Item20;
+    public ItemT getItemT() {
+        return ItemT;
     }
 
-    public MeasurementItem setItem20(Item20 item20) {
-        Item20 = item20;
+    public MeasurementItem setItemT(ItemT itemT) {
+        ItemT = itemT;
         return this;
     }
 
-    public Item21 getItem21() {
-        return Item21;
+    public ItemU getItemU() {
+        return ItemU;
     }
 
-    public MeasurementItem setItem21(Item21 item21) {
-        Item21 = item21;
+    public MeasurementItem setItemU(ItemU itemU) {
+        ItemU = itemU;
         return this;
     }
 
-    public Item22 getItem22() {
-        return Item22;
+    public ItemV getItemV() {
+        return ItemV;
     }
 
-    public MeasurementItem setItem22(Item22 item22) {
-        Item22 = item22;
+    public MeasurementItem setItemV(ItemV itemV) {
+        ItemV = itemV;
         return this;
     }
 
-    public Item23 getItem23() {
-        return Item23;
+    public ItemW getItemW() {
+        return ItemW;
     }
 
-    public MeasurementItem setItem23(Item23 item23) {
-        Item23 = item23;
+    public MeasurementItem setItemW(ItemW itemW) {
+        ItemW = itemW;
         return this;
     }
 
-    public Item4 getItem4() {
-        return Item4;
+    public ItemD getItemD() {
+        return ItemD;
     }
 
-    public MeasurementItem setItem4(Item4 item4) {
-        Item4 = item4;
+    public MeasurementItem setItemD(ItemD itemD) {
+        ItemD = itemD;
         return this;
     }
 
-    public Item5 getItem5() {
-        return Item5;
+    public ItemE getItemE() {
+        return ItemE;
     }
 
-    public MeasurementItem setItem5(Item5 item5) {
-        Item5 = item5;
+    public MeasurementItem setItemE(ItemE itemE) {
+        ItemE = itemE;
         return this;
     }
 
-    public Item6 getItem6() {
-        return Item6;
+    public ItemF getItemF() {
+        return ItemF;
     }
 
-    public MeasurementItem setItem6(Item6 item6) {
-        Item6 = item6;
+    public MeasurementItem setItemF(ItemF itemF) {
+        ItemF = itemF;
         return this;
     }
 }

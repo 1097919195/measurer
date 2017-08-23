@@ -240,9 +240,9 @@ public class HomeFragment extends Fragment implements HomeContract.View {
             } else {
                 gender.setText("女");
             }
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurement.getmData().getItem10().getValue());
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurement.getmData().getItem13().getValue());
-            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurement.getmData().getItem17().getValue());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_xw)).setText(measurement.getmData().getItemJ().getValue());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_yw)).setText(measurement.getmData().getItemM().getValue());
+            ((TextView) rowView.findViewById(R.id.measurement_item_user_tw)).setText(measurement.getmData().getItemQ().getValue());
 
             rowView.setOnClickListener(__ -> measurementItemListener.onMeasurementClick(measurement));
 

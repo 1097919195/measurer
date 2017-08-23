@@ -4,7 +4,7 @@ package stuido.tsing.iclother.data.measure.item.parts;
  * Created by Endless on 2017/8/5.
  */
 
-public class Item5 extends Part {
+public class ItemE extends Part {
 
     public String getCn() {
         return "右肩斜";
@@ -12,6 +12,6 @@ public class Item5 extends Part {
 
     @Override
     public String getEn() {
-        return "Item5";
+        return "ItemE";
     }
 }

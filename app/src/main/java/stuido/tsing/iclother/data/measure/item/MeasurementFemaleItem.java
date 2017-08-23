@@ -1,16 +1,16 @@
 package stuido.tsing.iclother.data.measure.item;
 
-import stuido.tsing.iclother.data.measure.item.parts.Item11;
+import stuido.tsing.iclother.data.measure.item.parts.ItemK;
 
 public class MeasurementFemaleItem extends MeasurementItem {
-    private Item11 Item11;
+    private ItemK ItemK;
 
-    public Item11 getItem11() {
-        return Item11;
+    public ItemK getItemK() {
+        return ItemK;
     }
 
-    public MeasurementFemaleItem setItem11(Item11 item11) {
-        Item11 = item11;
+    public MeasurementFemaleItem setItemK(ItemK itemK) {
+        ItemK = itemK;
         return this;
     }
 }

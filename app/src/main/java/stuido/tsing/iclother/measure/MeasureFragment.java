@@ -177,16 +177,21 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                 item = (MeasurementFemaleItem) Class.forName(ITEM_PACKAGE + ".MeasurementFemaleItem").newInstance();
             }
             Field[] declaredFields = item.getClass().getDeclaredFields();
-            Arrays.sort(declaredFields);
+            List<String> nameList = new ArrayList<>();
             for (Field field : declaredFields) {
                 String name = field.getName();
-                Class<?> itemSubclass = Class.forName(PART_PACKAGE + "." + name);
-                Part part = (Part) itemSubclass.newInstance();
-                TableRow tableRow = getTableRow(part.getCn(), part.getEn());
-                rows.add(tableRow);
+                nameList.add(name);
             }
-            for (Field field : declaredFields) {
+            Field[] declaredFields2 = item.getClass().getSuperclass().getDeclaredFields();
+            for (Field field : declaredFields2) {
                 String name = field.getName();
+                nameList.add(name);
+            }
+
+            String[] objects = new String[nameList.size()];
+            String[] strings = nameList.toArray(objects);
+            Arrays.sort(strings);
+            for (String name : strings) {
                 Class<?> itemSubclass = Class.forName(PART_PACKAGE + "." + name);
                 Part part = (Part) itemSubclass.newInstance();
                 TableRow tableRow = getTableRow(part.getCn(), part.getEn());

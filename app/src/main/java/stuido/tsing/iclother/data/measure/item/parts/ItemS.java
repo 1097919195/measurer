@@ -4,14 +4,14 @@ package stuido.tsing.iclother.data.measure.item.parts;
  * Created by Endless on 2017/8/5.
  */
 
-public class Item8 extends Part {
+public class ItemS extends Part {
 
     public String getCn() {
-        return "手腕围";
+        return "膝围";
     }
 
     @Override
     public String getEn() {
-        return "Item8";
+        return "ItemS";
     }
 }
