@@ -527,7 +527,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
      */
     private boolean assignValue(float length, float angle, TableRow row) {
         EditText editText = (EditText) row.getChildAt(1);
-        if (TextUtils.isEmpty(editText.getText().toString())) {
+        if (TextUtils.isEmpty(editText.getText().toString())) {// TODO: 2017/8/24 修改赋值
             String tag = (String) editText.getTag();
             String cn;
             try {
@@ -543,7 +543,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
                 }
                 if (speechSynthesizer != null) {
                     String result = cn + "，结果为" + value;
-                    // TODO: 2017/8/22 接着播放下一个部位
                     String[] nextString;
 
                     if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
@@ -569,6 +568,13 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         return false;
     }
 
+    /**
+     * 获取下一个测量字段
+     *
+     * @param cn     当前字段
+     * @param arrays 字段数组
+     * @return 包含结果的数组
+     */
     private String[] getNextString(String cn, String[] arrays) {
         String last = null;
         String next = null;
