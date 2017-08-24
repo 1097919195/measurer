@@ -20,8 +20,8 @@ import butterknife.OnClick;
 import stuido.tsing.iclother.R;
 import stuido.tsing.iclother.account.AccountActivity;
 import stuido.tsing.iclother.home.HomeActivity;
-import stuido.tsing.iclother.me.MyActivity;
 import stuido.tsing.iclother.measure.MeasureActivity;
+import stuido.tsing.iclother.user.UserActivity;
 import stuido.tsing.iclother.utils.view.ChangeColorIconWithTextView;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -123,7 +123,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case R.id.btn_about:
                 mTabIndicator.get(3).setIconAlpha(1.0f);
-                if (!(this instanceof MyActivity)) nav(MyActivity.class);
+                if (!(this instanceof UserActivity)) nav(UserActivity.class);
                 break;
         }
     }

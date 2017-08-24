@@ -96,7 +96,7 @@ public class MeasurementRepository implements MeasurementDataSource {
                 .getMeasurement(id)
                 .doOnNext(m -> {
                     measurementLocalDataSource.saveMeasurement(m);
-                    mCachedMeasurement.put(m.getcId(), m);
+                    mCachedMeasurement.put(m.get_id(), m);
                 });
 
         return Observable.concat(localMeasurement, remoteMeasurement).first()
@@ -118,7 +118,7 @@ public class MeasurementRepository implements MeasurementDataSource {
         if (mCachedMeasurement == null) {
             mCachedMeasurement = new LinkedHashMap<>();
         }
-        mCachedMeasurement.put(measurement.getcId(), measurement);
+        mCachedMeasurement.put(measurement.get_id(), measurement);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class MeasurementRepository implements MeasurementDataSource {
                     public Observable<List<Measurement>> call(List<Measurement> Measurements) {
                         return Observable.from(Measurements).doOnNext(measurement -> {
                             measurementLocalDataSource.saveMeasurement(measurement);
-                            mCachedMeasurement.put(measurement.getcId(), measurement);
+                            mCachedMeasurement.put(measurement.get_id(), measurement);
                         }).toList();
                     }
                 })

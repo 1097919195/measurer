@@ -7,9 +7,9 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--<uses-permission-->
-    <!--android:name="android.permission.ACCESS_COARSE_LOCATION"-->
-    <!--android:maxSdkVersion="22" />-->
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="22" />
 
     <application
         android:name=".base.BaseApplication"
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".account.AccountActivity" />
-        <activity android:name=".me.MyActivity" />
+        <activity android:name=".user.UserActivity" />
         <activity
             android:name=".measure.MeasureActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />

@@ -3,33 +3,34 @@ package stuido.tsing.iclother.data.measure;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.UUID;
-
 import stuido.tsing.iclother.data.measure.item.MeasurementItem;
 import stuido.tsing.iclother.data.wuser.WeiXinUser;
 
 public class Measurement {
     public Measurement(@Nullable WeiXinUser weiXinUser, @Nullable MeasurementItem data,
                        @NonNull String id) {
-        cId = id;
+        _id = id;
         mData = data;
         user = weiXinUser;
     }
 
     public Measurement(@Nullable WeiXinUser user, @Nullable MeasurementItem data) {
-        this(user, data, UUID.randomUUID().toString());
+        this(user, data, "");
     }
 
-    private String cId;
+    @Nullable
+    private String _id;
     private MeasurementItem mData;
     private WeiXinUser user;
 
-    public String getcId() {
-        return cId;
+    @Nullable
+    public String get_id() {
+        return _id;
     }
 
-    public void setcId(String cId) {
-        this.cId = cId;
+
+    public void set_id(@Nullable String _id) {
+        this._id = _id;
     }
 
     public MeasurementItem getmData() {

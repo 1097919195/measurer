@@ -102,7 +102,7 @@ public class MeasurementLocalDataSource implements MeasurementDataSource {
 //    public void saveMeasurement(@NonNull Measurement measurement) {
 //        checkNotNull(measurement);
 //        ContentValues values = new ContentValues();
-//        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_ENTRY_ID, measurement.getcId());
+//        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_ENTRY_ID, measurement.get_id());
 //        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_DATA, measurement.getmData());
 //        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_USER_ID, measurement.getUser().getNickname());
 //        values.put(MeasurementsPersistenceContract.MeasurementEntry.COLUMN_NAME_GENDER, measurement.getUser().getSex());

@@ -288,7 +288,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     }
 
     private void saveMeasurement() {
-        Map<String, String> mData = new LinkedHashMap<>();
+        Map<String, String[]> mData = new LinkedHashMap<>();
         String height = measureHeightInput.getText().toString();
         checkInputValid(height, "身高");
         String weight = measureWeightInput.getText().toString();
@@ -300,12 +300,25 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             String tag = (String) editText.getTag();
             if (!TextUtils.isEmpty(editText.getText().toString())) {
                 String v = editText.getText().toString();
-                mData.put(tag, v);
+                String[] strings = new String[2];
+                strings[0] = v;
+                try {
+                    Class<?> aClass = Class.forName(PART_PACKAGE + "." + tag);
+                    Part part = (Part) aClass.newInstance();
+                    strings[1] = part.getCn();
+                    mData.put(tag, strings);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (java.lang.InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
         MeasurementItem item;
         int sex = UserSex.MALE;
-        Iterator<Map.Entry<String, String>> iterator = mData.entrySet().iterator();
+        Iterator<Map.Entry<String, String[]>> iterator = mData.entrySet().iterator();
         if (sexRadioGroup.getCheckedRadioButtonId() == radioFemale.getId()) {
             sex = UserSex.FEMALE;
         }
@@ -317,7 +330,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         mPresenter.saveMeasurement(measurement);
     }
 
-    private MeasurementItem getMeasurementItem(int type, Iterator<Map.Entry<String, String>> iterator) {
+    private MeasurementItem getMeasurementItem(int type, Iterator<Map.Entry<String, String[]>> iterator) {
         MeasurementItem item = null;
         Class<?> Class2 = null;
         try {
@@ -336,14 +349,15 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             e.printStackTrace();
         }
         while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
+            Map.Entry<String, String[]> entry = iterator.next();
             String key = entry.getKey();
-            String value = entry.getValue();
+            String[] value = entry.getValue();
             try {
                 Class<?> aClass = Class.forName(PART_PACKAGE + "." + key);
                 Part part = (Part) aClass.newInstance();
-                part.setValue(value);
+                part.setValue(value[0]);
                 part.setEn(key);
+                part.setCn(value[1]);
                 Method method = Class2.getMethod("set" + key, aClass);
                 method.invoke(item, part);
             } catch (ClassNotFoundException e) {
@@ -506,7 +520,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public void updateMeasureData(float length, int angle, int battery) {
         rulerBattery.setText(battery + "%");
         rulerState.setTextColor(getResources().getColor(R.color.green));
-        // TODO: 017/8/3 更新当前焦点输入的框的结果
         if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
             for (TableRow row : maleRows) {
                 if (assignValue(length, angle, row)) break;

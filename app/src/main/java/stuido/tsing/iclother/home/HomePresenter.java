@@ -69,7 +69,7 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void openMeasurementDetails(@NonNull Measurement measurement) {
         checkNotNull(measurement);
-        homeView.showMeasurementDetail(measurement.getcId());
+        homeView.showMeasurementDetail(measurement.get_id());
     }
 
     /**
