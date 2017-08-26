@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -382,7 +383,7 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     @Override
     public void showSaveError() {
-
+        Log.e("tag", "测量结果保存出错");
     }
 
     @Override

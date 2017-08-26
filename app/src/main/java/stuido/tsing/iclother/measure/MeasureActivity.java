@@ -1,7 +1,9 @@
 package stuido.tsing.iclother.measure;
 
 import android.Manifest;
+import android.content.Intent;
 
+import com.google.zxing.client.android.decode.CaptureActivity;
 import com.polidea.rxandroidble.RxBleClient;
 
 import kr.co.namee.permissiongen.PermissionGen;
@@ -17,6 +19,7 @@ import stuido.tsing.iclother.utils.schedulers.SchedulerProvider;
 
 public class MeasureActivity extends BaseActivity {
     public static final int REQUEST_ADD_MEASUREMENT = 1;
+    private static final int REQUEST_CODE = 1001;
     private MeasurePresenter mPresenter;
     private RxBleClient rxBleClient;
 
@@ -49,11 +52,12 @@ public class MeasureActivity extends BaseActivity {
 
     @Override
     protected void actionMenuClickEvent() {
-
+        Intent intent = new Intent(MeasureActivity.this, CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
     protected CharSequence getActionMenuTitle() {
-        return null;
+        return getString(R.string.scan_qrcode);
     }
 }
