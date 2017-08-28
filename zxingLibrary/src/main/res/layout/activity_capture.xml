@@ -1,27 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".decode.CaptureActivity">
 
     <SurfaceView
         android:id="@+id/preview_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.google.zxing.client.android.view.ViewfinderView
         android:id="@+id/viewfinderView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="0dp"
         app:corner_color="@color/corner_color"
         app:frame_color="@color/viewfinder_frame"
-        app:label_text="二维码扫描"
-        app:label_text_color="@color/colorAccent"
+        app:label_text="@string/scan_qrcode_prompt"
+        app:label_text_color="@color/scan_label_color"
+        app:label_text_size="14"
         app:laser_color="@color/laser_color"
         app:mask_color="@color/viewfinder_mask"
         app:result_color="@color/result_view"
         app:result_point_color="@color/result_point_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/qrcode_input_label"
+            android:layout_above="@+id/textView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="15dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="34dp"
+            android:textSize="19sp"
+            android:layout_alignParentStart="true"
+            android:text="@string/scan_input_prompt"
+            android:textAlignment="center"
+            android:id="@+id/textView" />
+    </RelativeLayout>
+
 </FrameLayout>

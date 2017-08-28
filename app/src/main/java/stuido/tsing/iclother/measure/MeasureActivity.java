@@ -2,9 +2,15 @@ package stuido.tsing.iclother.measure;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Toast;
 
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.client.android.decode.CaptureActivity;
 import com.polidea.rxandroidble.RxBleClient;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import kr.co.namee.permissiongen.PermissionGen;
 import stuido.tsing.iclother.R;
@@ -59,5 +65,17 @@ public class MeasureActivity extends BaseActivity {
     @Override
     protected CharSequence getActionMenuTitle() {
         return getString(R.string.scan_qrcode);
+    }
+
+    public final Map<DecodeHintType, Object> HINTS = new EnumMap<>(DecodeHintType.class);
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) { //RESULT_OK = -1
+            Bundle bundle = data.getExtras();
+            String scanResult = bundle.getString("result");
+            Toast.makeText(MeasureActivity.this, scanResult, Toast.LENGTH_LONG).show();
+        }
     }
 }

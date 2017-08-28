@@ -93,15 +93,13 @@ public final class ViewfinderView extends View {
         resultColor = array.getColor(R.styleable.ViewfinderView_result_color, 0xB0000000);
         labelTextColor = array.getColor(R.styleable.ViewfinderView_label_text_color, 0x90FFFFFF);
         labelText = array.getString(R.styleable.ViewfinderView_label_text);
-        labelTextSize = array.getFloat(R.styleable.ViewfinderView_label_text_size, 36f);
-
+        labelTextSize = array.getFloat(R.styleable.ViewfinderView_label_text_size, 36f);//FIXME: 2017/8/26
         // Initialize these once for performance rather than calling them every time in onDraw().
         paint = new Paint();
         paint.setAntiAlias(true);
         scannerAlpha = 0;
-        possibleResultPoints = new HashSet<ResultPoint>(5);
-
-
+        possibleResultPoints = new HashSet<>(5);
+        array.recycle();
     }
 
     public void setCameraManager(com.google.zxing.client.android.camera.CameraManager cameraManager) {
@@ -136,6 +134,7 @@ public final class ViewfinderView extends View {
             drawCorner(canvas, frame);
             //绘制提示信息
             drawTextInfo(canvas, frame);
+            //绘制输入二维码编号
             // Draw a red "laser scanner" line through the middle to show decoding is active
             drawLaserScanner(canvas, frame);
 
@@ -144,7 +143,7 @@ public final class ViewfinderView extends View {
             if (currentPossible.isEmpty()) {
                 lastPossibleResultPoints = null;
             } else {
-                possibleResultPoints = new HashSet<ResultPoint>(5);
+                possibleResultPoints = new HashSet<>(5);
                 lastPossibleResultPoints = currentPossible;
                 paint.setAlpha(OPAQUE);
                 paint.setColor(resultPointColor);
@@ -167,12 +166,19 @@ public final class ViewfinderView extends View {
         }
     }
 
-    //绘制文本
+    /**
+     * 绘制文本 文字放置在扫描区域下方
+     * 主要是调文字高度
+     *
+     * @param canvas
+     * @param frame
+     */
     private void drawTextInfo(Canvas canvas, Rect frame) {
         paint.setColor(labelTextColor);
         paint.setTextSize(labelTextSize);
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(labelText, frame.left + frame.width() / 2, frame.top - CORNER_RECT_HEIGHT, paint);
+        canvas.drawText(labelText, frame.left + frame.width() / 2, frame.top + CORNER_RECT_HEIGHT * 2 + frame.height(), paint);
+
     }
 
     //绘制边角

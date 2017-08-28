@@ -63,7 +63,6 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     protected void onResume() {
         super.onResume();
 
-
         // CameraManager must be initialized here, not in onCreate(). This is necessary because we don't
         // want to open the camera driver and measure the screen size if we're going to show the help on
         // first launch. That led to bugs where the scanning rectangle was the wrong size and partially
@@ -78,7 +77,6 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         ambientLightManager.start(cameraManager);
 
         inactivityTimer.onResume();
-
 
         decodeFormats = null;
         characterSet = null;
