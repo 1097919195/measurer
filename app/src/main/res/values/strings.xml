@@ -7,12 +7,13 @@
     <string name="action_login">登录</string>
     <string name="register_hint">没有账号？去注册</string>
     <string name="title_activity_login">Sign in</string>
-
+    <string name="scan_qrcode_prompt">请对准二维码进行扫描</string>
+    <string name="scan_input_prompt">手动输入二维码编号</string>
     <!-- Strings related to signIn -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">登录</string>
+    <string name="signup_prompt">立即注册</string>
     <string name="error_invalid_email">用户名无效</string>
     <string name="error_invalid_password">输入密码格式不正确</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -95,6 +96,9 @@
     <string name="user_center">用户中心</string>
     <string name="call_camera">扫码二维码</string>
     <string name="scan_qrcode">扫码</string>
+    <string name="img_logo">logo</string>
+    <string name="remember_pwd">记住密码</string>
+    <string name="third_login_prompt">第三方登录</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>

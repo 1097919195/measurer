@@ -6,39 +6,4 @@
     android:background="@drawable/tabbg"
     android:orientation="horizontal">
 
-    <stuido.tsing.iclother.utils.view.ChangeColorIconWithTextView
-        android:id="@+id/btn_main"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        imeasure:icon="@drawable/main"
-        imeasure:text="@string/btn_text_main"
-        imeasure:text_size="12sp" />
-
-    <stuido.tsing.iclother.utils.view.ChangeColorIconWithTextView
-        android:id="@+id/btn_measure"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        imeasure:icon="@drawable/measure"
-        imeasure:text="@string/btn_text_measure"
-        imeasure:text_size="12sp" />
-
-    <stuido.tsing.iclother.utils.view.ChangeColorIconWithTextView
-        android:id="@+id/btn_help"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        imeasure:icon="@drawable/help"
-        imeasure:text="@string/btn_text_help"
-        imeasure:text_size="12sp" />
-
-    <stuido.tsing.iclother.utils.view.ChangeColorIconWithTextView
-        android:id="@+id/btn_about"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        imeasure:icon="@drawable/me"
-        imeasure:text="@string/btn_text_about"
-        imeasure:text_size="12sp" />
 </LinearLayout>

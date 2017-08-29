@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin_0"
     android:paddingRight="@dimen/activity_horizontal_margin_0"
     android:paddingTop="@dimen/activity_vertical_margin_0"
-    tools:context=".home.HomeActivity">
+    tools:context="com.npclo.imeasurer.home.HomeActivity">
 
     <LinearLayout
         android:id="@+id/toolbar_wrapper"
