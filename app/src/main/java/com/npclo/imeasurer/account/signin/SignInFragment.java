@@ -146,7 +146,7 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
             case R.id.action_sign_in:
                 actionSignIn.setOnClickListener(__ -> {
                     if (!validate()) return;
-                    signinPresenter.signIn(name, password); // FIXME: 2017/7/26 若用户名或密码输入错误，无法再次输入
+                    signinPresenter.signIn(name, password);
                 });
                 break;
             case R.id.forget_pwd_tv:

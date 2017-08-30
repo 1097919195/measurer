@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sign_up_frag"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/bgcolorLogin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:background="@mipmap/background"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <ImageView
             android:id="@+id/logo"
@@ -73,55 +72,65 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="21dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@mipmap/yanzhengma" />
-
-                <EditText
-                    android:id="@+id/input_valid_code"
-                    android:layout_width="220dp"
-                    android:layout_height="19dp"
-                    android:layout_gravity="top"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@null"
-                    android:hint="@string/valid_code_prompt"
-                    android:inputType="number"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="220dp"
-                android:layout_height="4dp"
-                android:layout_marginTop="4dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/white" />
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="21dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@mipmap/yanzhengma" />
+
+                    <EditText
+                        android:id="@+id/input_valid_code"
+                        android:layout_width="220dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="top"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@null"
+                        android:hint="@string/valid_code_prompt"
+                        android:inputType="number"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="220dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="4dp"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/white" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="88dp"
-                android:layout_height="match_parent"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="19dp"
                 android:background="@drawable/btn_radius_shape_4p"
                 android:text="@string/get_valid_prompt"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
+
         </LinearLayout>
         <!--设置密码-->
         <LinearLayout
@@ -187,22 +196,25 @@
             android:textSize="20sp" />
 
         <LinearLayout
+            android:id="@+id/to_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:orientation="horizontal">
-
+            <!--todo 文字居中-->
             <TextView
-                android:id="@+id/link_login"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="100dp"
+                android:layout_marginStart="100dp"
                 android:text="@string/have_account"
                 android:textSize="20sp" />
 
             <ImageView
                 android:layout_width="11dp"
                 android:layout_height="18dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="9dp"
                 android:src="@mipmap/right" />
         </LinearLayout>

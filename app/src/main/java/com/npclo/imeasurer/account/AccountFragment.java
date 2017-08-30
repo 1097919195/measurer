@@ -1,11 +1,8 @@
 package com.npclo.imeasurer.account;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,23 +46,23 @@ public abstract class AccountFragment extends BaseBackFragment {
         Snackbar.make(checkNotNull(getView()), text, Snackbar.LENGTH_SHORT).show();
     }
 
-    public void switchContent(@NonNull Fragment from, @NonNull Fragment to, int id) {
-        checkNotNull(from);
-        checkNotNull(to);
-
-//        if (mContent != to) {
-//            mContent = to;
-        FragmentTransaction transaction = getActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-        if (!to.isAdded()) {    // 先判断是否被add过
-            transaction.hide(from).add(id, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
-        } else {
-            transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
-        }
+//    public void switchContent(@NonNull Fragment from, @NonNull Fragment to, int id) {
+//        checkNotNull(from);
+//        checkNotNull(to);
+//
+////        if (mContent != to) {
+////            mContent = to;
+//        FragmentTransaction transaction = getActivity()
+//                .getSupportFragmentManager()
+//                .beginTransaction()
+//                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+//        if (!to.isAdded()) {    // 先判断是否被add过
+//            transaction.hide(from).add(id, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
+//        } else {
+//            transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
 //        }
-    }
+////        }
+//    }
 
 //    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
 //                                             @NonNull Fragment fragment, int frameId) {

@@ -1,15 +1,12 @@
 package com.npclo.imeasurer.account.signup;
 
-import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountFragment;
-import com.npclo.imeasurer.account.signin.SignInFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +19,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  */
 
 public class SignUpFragment extends AccountFragment implements SignUpContract.View {
-    private static SignUpFragment instance;
     @BindView(R.id.input_mobile)
     EditText inputName;
     @BindView(R.id.input_password)
@@ -31,8 +27,6 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
 //    EditText inputReEnterPassword;
 //    @BindView(R.id.btn_signup)
     AppCompatButton btnSignup;
-    @BindView(R.id.link_login)
-    TextView linkLogin;
     //    @BindView(R.id.sign_up_nav)
     Toolbar toolbar;
 
@@ -40,10 +34,7 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
     private Unbinder bind;
 
     public static SignUpFragment newInstance() {
-        if (instance == null) {
-            instance = new SignUpFragment();
-        }
-        return instance;
+        return new SignUpFragment();
     }
 
     @Override
@@ -56,9 +47,9 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
         bind = ButterKnife.bind(this, this.mRootView);
         //注册页面返回导航栏
 //        toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setNavigationOnClickListener(__ ->
-                switchContent(instance, SignInFragment.newInstance(), R.id.content_frame)
-        );
+//        toolbar.setNavigationOnClickListener(__ ->
+//                switchContent(instance, SignInFragment.newInstance(), R.id.content_frame)
+//        );
     }
 
 
@@ -121,8 +112,8 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
         bind.unbind();
     }
 
-    @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+//    @Override
+//    protected void afterCreate(Bundle savedInstanceState) {
 //        userProgressSubscriber = new ProgressSubscriber(__ -> {
 //            showToast(getResources().getString(R.string.register_success_hint));
 //            Intent intent = new Intent(getActivity(), HomeActivity.class);
@@ -135,5 +126,5 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
 //            edit.apply();
 //            getActivity().finish();
 //        }, getActivity());
-    }
+//    }
 }
