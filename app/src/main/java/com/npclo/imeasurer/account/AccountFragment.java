@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ public abstract class AccountFragment extends BaseBackFragment {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
         initView(mRootView);
-        initEvent();
         return mRootView;
     }
 
@@ -39,8 +37,6 @@ public abstract class AccountFragment extends BaseBackFragment {
     protected abstract int getLayoutId();
 
     protected abstract void initView(View mRootView);
-
-    protected abstract void initEvent();
 
     protected void afterCreate(Bundle savedInstanceState) {
     }
@@ -71,18 +67,17 @@ public abstract class AccountFragment extends BaseBackFragment {
 //        }
     }
 
-    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
-                                             @NonNull Fragment fragment, int frameId) {
-        checkNotNull(fragmentManager);
-        checkNotNull(fragment);
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        //判断fragment是否已添加到activity中 // FIXME: 2017/7/24 is it right?
-        if (!fragment.isAdded()) {
-            transaction.add(frameId, fragment);
-        } else {
-            transaction.show(fragment);
-        }
-        transaction.commit();
-    }
-
+//    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
+//                                             @NonNull Fragment fragment, int frameId) {
+//        checkNotNull(fragmentManager);
+//        checkNotNull(fragment);
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        //判断fragment是否已添加到activity中 // FIXME: 2017/8/28不再使用这种方法了
+//        if (!fragment.isAdded()) {
+//            transaction.add(frameId, fragment);
+//        } else {
+//            transaction.show(fragment);
+//        }
+//        transaction.commit();
+//    }
 }

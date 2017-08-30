@@ -2,11 +2,9 @@ package com.npclo.imeasurer.account.signin;
 
 import android.support.annotation.NonNull;
 
-import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
@@ -18,13 +16,13 @@ public class SignInPresenter implements SignInContract.Presenter {
     @NonNull
     private CompositeSubscription mSubscriptions;
 
-    public SignInPresenter(@NonNull SignInContract.View loginView,
+    public SignInPresenter(@NonNull SignInContract.View signinView,
                            @NonNull BaseSchedulerProvider schedulerProvider) {
-        loginView = checkNotNull(loginView);
+        signinView = checkNotNull(signinView);
         mSchedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
-        mView = (SignInFragment) loginView;
-        loginView.setPresenter(this);
+        mView = (SignInFragment) signinView;
+        signinView.setPresenter(this);
     }
 
     @Override
@@ -39,12 +37,12 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     @Override
     public void signIn(Subscriber o) {
-        Subscription subscribe = new UserRepository()
-                .signIn(mView._nameText.getText().toString(), mView._passwordText.getText().toString())
-                .map(__ -> __.get_id())
-                .subscribeOn(mSchedulerProvider.computation())
-                .observeOn(mSchedulerProvider.ui())
-                .subscribe(o);
-        mSubscriptions.add(subscribe);
+//        Subscription subscribe = new UserRepository()
+//                .signIn(mView._nameText.getText().toString(), mView._passwordText.getText().toString())
+//                .map(__ -> __.get_id())
+//                .subscribeOn(mSchedulerProvider.computation())
+//                .observeOn(mSchedulerProvider.ui())
+//                .subscribe(o);
+//        mSubscriptions.add(subscribe);
     }
 }

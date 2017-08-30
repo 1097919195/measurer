@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,13 +32,13 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
     EditText inputName;
     @BindView(R.id.input_password)
     EditText inputPassword;
-    @BindView(R.id.input_reEnterPassword)
-    EditText inputReEnterPassword;
-    @BindView(R.id.btn_signup)
+    //    @BindView(R.id.input_reEnterPassword)
+//    EditText inputReEnterPassword;
+//    @BindView(R.id.btn_signup)
     AppCompatButton btnSignup;
     @BindView(R.id.link_login)
     TextView linkLogin;
-    @BindView(R.id.sign_up_nav)
+    //    @BindView(R.id.sign_up_nav)
     Toolbar toolbar;
 
     private SignUpContract.Presenter signUpPresenter;
@@ -68,46 +67,44 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
         );
     }
 
-    @Override
-    protected void initEvent() {
-        linkLogin.setOnClickListener(__ ->
-                switchContent(instance, new SignInFragment(), R.id.content_frame)
-        );
-        btnSignup.setOnClickListener(__ -> {
-            if (!checkInputValid()) {
-                return;
-            }
-            signUpPresenter.signUp(userProgressSubscriber);
-        });
-    }
 
-    private boolean checkInputValid() {
-        Boolean flag = true;
-        String name = inputName.getText().toString();
-        String pwd1 = inputPassword.getText().toString();
-        String pwd2 = inputReEnterPassword.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            inputName.setError(getActivity().getString(R.string.name_enter_valid));
-            flag = false;
-        } else {
-            inputName.setError(null);
-        }
+//        linkLogin.setOnClickListener(__ ->
+//                switchContent(instance, new SignInFragment(), R.id.content_frame)
+//        );
+//        btnSignup.setOnClickListener(__ -> {
+//            if (!checkInputValid()) {
+//                return;
+//            }
+//            signUpPresenter.signUp(userProgressSubscriber);
+//        });
 
-        checkPwdInputValid(inputPassword, flag);
-        checkPwdInputValid(inputReEnterPassword, flag);
-        if (!pwd1.equals(pwd2)) inputReEnterPassword.setError(getString(R.string.pwd_not_same));
-        return flag;
-    }
+//    private boolean checkInputValid() {
+//        Boolean flag = true;
+//        String name = inputName.getText().toString();
+//        String pwd1 = inputPassword.getText().toString();
+//        String pwd2 = inputReEnterPassword.getText().toString();
+//        if (TextUtils.isEmpty(name)) {
+//            inputName.setError(getActivity().getString(R.string.name_enter_valid));
+//            flag = false;
+//        } else {
+//            inputName.setError(null);
+//        }
+//
+//        checkPwdInputValid(inputPassword, flag);
+//        checkPwdInputValid(inputReEnterPassword, flag);
+//        if (!pwd1.equals(pwd2)) inputReEnterPassword.setError(getString(R.string.pwd_not_same));
+//        return flag;
+//    }
 
-    private void checkPwdInputValid(EditText text, Boolean valid) {
-        String s = text.getText().toString();
-        if (TextUtils.isEmpty(s) || s.length() < 6 || s.length() > 20) {
-            text.setError(getActivity().getString(R.string.pwd_enter_valid));
-            valid = false;
-        } else {
-            text.setError(null);
-        }
-    }
+//    private void checkPwdInputValid(EditText text, Boolean valid) {
+//        String s = text.getText().toString();
+//        if (TextUtils.isEmpty(s) || s.length() < 6 || s.length() > 20) {
+//            text.setError(getActivity().getString(R.string.pwd_enter_valid));
+//            valid = false;
+//        } else {
+//            text.setError(null);
+//        }
+//    }
 
     @Override
     public void showSignUpSuccess() {
