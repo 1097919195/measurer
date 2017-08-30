@@ -36,10 +36,30 @@ public class User {
     }
 
     private String name;
-    private
     @Nullable
-    String pwd;
-    private
+    private String pwd;
     @Nullable
-    String _id;
+    private String _id;
+    @Nullable
+    private int currTimes;
+    @Nullable
+    private int totalTimes;
+
+    @Nullable
+    public int getCurrTimes() {
+        return currTimes;
+    }
+
+    public void setCurrTimes(@Nullable int currTimes) {
+        this.currTimes = currTimes;
+    }
+
+    @Nullable
+    public int getTotalTimes() {
+        return totalTimes;
+    }
+
+    public void setTotalTimes(@Nullable int totalTimes) {
+        this.totalTimes = totalTimes;
+    }
 }

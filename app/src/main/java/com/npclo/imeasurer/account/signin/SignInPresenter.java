@@ -2,9 +2,10 @@ package com.npclo.imeasurer.account.signin;
 
 import android.support.annotation.NonNull;
 
+import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 
-import rx.Subscriber;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
@@ -27,6 +28,7 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     @Override
     public void subscribe() {
+        // TODO: 2017/8/30 maybe have bug
     }
 
     @Override
@@ -34,15 +36,15 @@ public class SignInPresenter implements SignInContract.Presenter {
         mSubscriptions.clear();
     }
 
-
     @Override
-    public void signIn(Subscriber o) {
-//        Subscription subscribe = new UserRepository()
-//                .signIn(mView._nameText.getText().toString(), mView._passwordText.getText().toString())
-//                .map(__ -> __.get_id())
-//                .subscribeOn(mSchedulerProvider.computation())
-//                .observeOn(mSchedulerProvider.ui())
-//                .subscribe(o);
-//        mSubscriptions.add(subscribe);
+    public void signIn(String name, String pwd) {
+        Subscription subscribe = new UserRepository().signIn(name, pwd)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(() -> mView.showLoading(true))
+                .subscribe(user -> mView.showSignInSuccess(user),
+                        e -> mView.showSignInError(e),
+                        () -> mView.completeSignIn());
+        mSubscriptions.add(subscribe);
     }
 }

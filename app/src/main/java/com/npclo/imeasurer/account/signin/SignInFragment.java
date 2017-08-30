@@ -3,10 +3,10 @@ package com.npclo.imeasurer.account.signin;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatButton;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -14,16 +14,23 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountFragment;
 import com.npclo.imeasurer.account.signup.SignUpFragment;
+import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.home.HomeActivity;
-import com.npclo.imeasurer.utils.suscriber.ProgressSubscriber;
+import com.npclo.imeasurer.utils.ApiException;
+
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import retrofit2.HttpException;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -51,9 +58,12 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
     ScrollView signInFrag;
 
     private SignInContract.Presenter signinPresenter;
-    private ProgressSubscriber progressSubscriber;
     private static final String TAG = SignInFragment.class.getSimpleName();
     private boolean pwd_label = true;
+    private Boolean isUserRememberPwd;
+    private String name;
+    private String password;
+    private MaterialDialog signInLoadingDialog;
 
     public static SignInFragment newInstance() {
         return new SignInFragment();
@@ -63,44 +73,12 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
     public void onResume() {
         super.onResume();
         signinPresenter.subscribe();
-        progressSubscriber = new ProgressSubscriber(__ -> {
-            showToast(getResources().getString(R.string.login_success_hint));
-            Intent intent = new Intent(getActivity(), HomeActivity.class);
-            startActivity(intent);
-            SharedPreferences sharedPreferences = getActivity()
-                    .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
-            SharedPreferences.Editor edit = sharedPreferences.edit();
-            edit.putBoolean("loginState", true);
-            edit.putString("id", __.toString());
-            edit.apply();
-            getActivity().finish();
-        }, getActivity());
     }
 
     @Override
     public void onPause() {
         super.onPause();
         signinPresenter.unsubscribe();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        progressSubscriber.dismissProgressDialog();
-    }
-
-    @Override
-    public void showSignInSuccess() {
-        showToast(getResources().getString(R.string.login_success_hint));
-    }
-
-    @Override
-    public void showSignInError() {
-        //因为某些原因登录失败，再次尝试登陆
-        Snackbar.make(getView(), getString(R.string.login_error_message), Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_login_again, measure ->
-                        signinPresenter.signIn(progressSubscriber)
-                ).setActionTextColor(getResources().getColor(R.color.snackbar_color)).show();
     }
 
     @Override
@@ -121,22 +99,22 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
     private boolean validate() {
         boolean valid = true;
 
-//        String name = _nameText.getText().toString();
-//        String password = _passwordText.getText().toString();
-//
-//        if (name.isEmpty()) {
-//            _nameText.setError(getActivity().getString(R.string.name_enter_valid));
-//            valid = false;
-//        } else {
-//            _nameText.setError(null);
-//        }
-//
-//        if (password.isEmpty() || password.length() < 6 || password.length() > 20) {
-//            _passwordText.setError(getActivity().getString(R.string.pwd_enter_valid));
-//            valid = false;
-//        } else {
-//            _passwordText.setError(null);
-//        }
+        name = inputName.getText().toString();
+        password = inputPassword.getText().toString();
+
+        if (name.isEmpty()) {
+            inputName.setError(getActivity().getString(R.string.name_enter_valid));
+            valid = false;
+        } else {
+            inputName.setError(null);
+        }
+
+        if (password.isEmpty() || password.length() < 6 || password.length() > 20) {
+            inputPassword.setError(getActivity().getString(R.string.pwd_enter_valid));
+            valid = false;
+        } else {
+            inputPassword.setError(null);
+        }
 
         return valid;
     }
@@ -151,6 +129,7 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.logo:
+                // TODO: 2017/8/30 link to the website
                 break;
             case R.id.input_eye:
                 if (pwd_label) {
@@ -162,14 +141,12 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
                 }
                 break;
             case R.id.action_remember_pwd:
+                RxCompoundButton.checkedChanges(actionRememberPwd).subscribe(bool -> isUserRememberPwd = bool);
                 break;
             case R.id.action_sign_in:
                 actionSignIn.setOnClickListener(__ -> {
-                    if (!validate()) {
-                        return;
-                    }
-                    signinPresenter.signIn(progressSubscriber);
-//                    // FIXME: 2017/7/26 若用户名或密码输入错误，无法再次输入
+                    if (!validate()) return;
+                    signinPresenter.signIn(name, password); // FIXME: 2017/7/26 若用户名或密码输入错误，无法再次输入
                 });
                 break;
             case R.id.forget_pwd_tv:
@@ -188,5 +165,55 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
     public void onSupportInvisible() {
         super.onSupportInvisible();
         hideSoftInput();
+    }
+
+    @Override
+    public void showSignInSuccess(User user) {
+        showToast(getResources().getString(R.string.login_success_hint));
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(intent);
+        SharedPreferences sharedPreferences = getActivity()
+                .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        if (isUserRememberPwd) edit.putBoolean("loginState", true);//att 是否记住密码
+        edit.putString("id", user.get_id());
+        edit.putString("name", user.getName());
+        edit.putString("curr_times", user.getCurrTimes() + "");
+        edit.putString("total_times", user.getTotalTimes() + "");
+        edit.apply();
+    }
+
+    @Override
+    public void showSignInError(Throwable e) {
+        signInLoadingDialog.dismiss();
+        if (e instanceof SocketTimeoutException) {
+            showToast(getString(R.string.net_connect_timeout));
+        } else if (e instanceof ConnectException) {
+            showToast(getString(R.string.net_connect_out));
+        } else if (e instanceof HttpException) {
+            showToast(getString(R.string.service_down));
+        } else if (e instanceof ApiException) {
+            showToast(e.getMessage());
+        } else {
+            showToast(getString(R.string.something_error));
+        }
+        Log.e(TAG, e.getMessage());
+    }
+
+    @Override
+    public void completeSignIn() {
+        showLoading(false);
+    }
+
+    @Override
+    public void showLoading(boolean bool) {
+        if (bool) {
+            signInLoadingDialog = new MaterialDialog.Builder(getActivity())
+                    .progress(true, 100)
+                    .backgroundColor(getResources().getColor(R.color.white))
+                    .show();
+        } else {
+            signInLoadingDialog.dismiss();
+        }
     }
 }

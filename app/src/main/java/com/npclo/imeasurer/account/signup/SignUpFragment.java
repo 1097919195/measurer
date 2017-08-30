@@ -1,8 +1,5 @@
 package com.npclo.imeasurer.account.signup;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +10,6 @@ import android.widget.TextView;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountFragment;
 import com.npclo.imeasurer.account.signin.SignInFragment;
-import com.npclo.imeasurer.home.HomeActivity;
-import com.npclo.imeasurer.utils.suscriber.ProgressSubscriber;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +38,6 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
 
     private SignUpContract.Presenter signUpPresenter;
     private Unbinder bind;
-    private ProgressSubscriber userProgressSubscriber;
 
     public static SignUpFragment newInstance() {
         if (instance == null) {
@@ -129,23 +123,17 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        userProgressSubscriber = new ProgressSubscriber(__ -> {
-            showToast(getResources().getString(R.string.register_success_hint));
-            Intent intent = new Intent(getActivity(), HomeActivity.class);
-            startActivity(intent);
-            SharedPreferences sharedPreferences = getActivity()
-                    .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
-            SharedPreferences.Editor edit = sharedPreferences.edit();
-            edit.putBoolean("loginState", true);
-            edit.putString("id", __.toString());
-            edit.apply();
-            getActivity().finish();
-        }, getActivity());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        userProgressSubscriber.dismissProgressDialog();
+//        userProgressSubscriber = new ProgressSubscriber(__ -> {
+//            showToast(getResources().getString(R.string.register_success_hint));
+//            Intent intent = new Intent(getActivity(), HomeActivity.class);
+//            startActivity(intent);
+//            SharedPreferences sharedPreferences = getActivity()
+//                    .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+//            SharedPreferences.Editor edit = sharedPreferences.edit();
+//            edit.putBoolean("loginState", true);
+//            edit.putString("id", __.toString());
+//            edit.apply();
+//            getActivity().finish();
+//        }, getActivity());
     }
 }

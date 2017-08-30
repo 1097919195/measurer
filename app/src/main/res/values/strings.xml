@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">IMeasurer</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="login_hint">请输入用户名</string>
     <string name="pwd">请输入密码</string>
     <string name="action_login">登录</string>
@@ -10,8 +8,6 @@
     <string name="scan_qrcode_prompt">请对准二维码进行扫描</string>
     <string name="scan_input_prompt">手动输入二维码编号</string>
     <!-- Strings related to signIn -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">登录</string>
     <string name="signup_prompt">立即注册</string>
     <string name="error_invalid_email">用户名无效</string>
@@ -21,8 +17,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="login_error_message">login failed</string>
-    <string name="action_login_again">Login Agagin?</string>
     <string name="name_enter_valid">用户名输入无效</string>
     <string name="pwd_enter_valid">请输入6-20位长度的密码</string>
     <string name="login_success_hint">登录成功！</string>
@@ -102,6 +96,11 @@
     <string name="valid_code_prompt">请输入验证码</string>
     <string name="get_valid_prompt">获取验证码</string>
     <string name="press_again_exit">再按一次退出</string>
+    <string name="signining">登录中...</string>
+    <string name="net_connect_out">网络中断，请检查您的网络状态</string>
+    <string name="service_down">当前服务不可用</string>
+    <string name="something_error">出错啦</string>
+    <string name="net_connect_timeout">网络连接超时，请检查您的网络</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>

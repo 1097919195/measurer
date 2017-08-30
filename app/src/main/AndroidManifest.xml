@@ -29,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".home.HomeActivity" />
         <activity android:name="com.npclo.imeasurer.user.UserActivity" />
         <activity
             android:name="com.npclo.imeasurer.measure.MeasureActivity"

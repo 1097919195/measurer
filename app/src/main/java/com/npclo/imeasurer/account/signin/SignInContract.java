@@ -1,10 +1,8 @@
 package com.npclo.imeasurer.account.signin;
 
 import com.npclo.imeasurer.base.BasePresenter;
-
-import rx.Subscriber;
-
 import com.npclo.imeasurer.base.BaseView;
+import com.npclo.imeasurer.data.user.User;
 
 /**
  * Created by Endless on 2017/7/20.
@@ -12,12 +10,16 @@ import com.npclo.imeasurer.base.BaseView;
 
 public interface SignInContract {
     interface View extends BaseView<Presenter> {
-        void showSignInSuccess();
+        void showSignInSuccess(User __);
 
-        void showSignInError();
+        void showSignInError(Throwable e);
+
+        void completeSignIn();
+
+        void showLoading(boolean bool);
     }
 
     interface Presenter extends BasePresenter {
-        void signIn(Subscriber o);
+        void signIn(String name, String pwd);
     }
 }
