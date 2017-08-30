@@ -2,8 +2,8 @@ package com.npclo.imeasurer.account.signup;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
-
-import rx.Subscriber;
+import com.npclo.imeasurer.data.user.User;
+import com.npclo.imeasurer.data.user.ValidCode;
 
 /**
  * Created by Endless on 2017/7/24.
@@ -11,12 +11,24 @@ import rx.Subscriber;
 
 public interface SignUpContract {
     interface View extends BaseView<Presenter> {
-        void showSignUpSuccess();
+        void showSignUpSuccess(User result);
 
-        void showSignUpError();
+        void showSignUpError(Throwable e);
+
+        void completeSignUp();
+
+        void showLoading(boolean bool);
+
+        void showValidCodeSendSuccess(ValidCode code);
+
+        void showValidCodeSendError(Throwable e);
+
+        void showCompleteGetValidCode();
     }
 
     interface Presenter extends BasePresenter {
-        void signUp(Subscriber o);
+        void signUp(String name, String pwd, String code);
+
+        void getValidCode(String mobile);
     }
 }

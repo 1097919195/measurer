@@ -9,5 +9,7 @@ import rx.Observable;
 public interface UserDataSource {
     Observable<User> signIn(String name, String pwd);
 
-    Observable<User> signUp(String name, String pwd);
+    Observable<User> signUp(String name, String pwd, String code);
+
+    Observable<ValidCode> getValidCode(String name);
 }

@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.utils.http.account;
 
 import com.npclo.imeasurer.data.user.User;
+import com.npclo.imeasurer.data.user.ValidCode;
 import com.npclo.imeasurer.utils.http.HttpHelper;
 
 import rx.Observable;
@@ -14,11 +15,17 @@ public class UserHttpHelper extends HttpHelper {
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<User> signUp(String name, String pwd) {
+    public Observable<User> signUp(String name, String pwd, String code) {
         User user = new User();
-        user.setName(name).setPwd(pwd);
+        user.setName(name).setPwd(pwd).setCode(Integer.parseInt(code));
         return retrofit.create(UserService.class)
                 .signUp(user)
+                .map(new HttpResponseFunc<>());
+    }
+
+    public Observable<ValidCode> getValidCode(String name) {
+        return retrofit.create(UserService.class)
+                .getValidCode(name)
                 .map(new HttpResponseFunc<>());
     }
 }

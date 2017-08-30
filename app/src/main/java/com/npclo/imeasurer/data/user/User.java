@@ -45,6 +45,8 @@ public class User {
     @Nullable
     private int totalTimes;
 
+    private int code;
+
     @Nullable
     public int getCurrTimes() {
         return currTimes;
@@ -61,5 +63,13 @@ public class User {
 
     public void setTotalTimes(@Nullable int totalTimes) {
         this.totalTimes = totalTimes;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

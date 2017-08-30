@@ -3,18 +3,12 @@ package com.npclo.imeasurer.account.signup;
 import android.support.annotation.NonNull;
 
 import com.npclo.imeasurer.data.user.UserRepository;
+import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 
-import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
-
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
-
-/**
- * Created by Endless on 2017/7/24.
- */
 
 public class SignUpPresenter implements SignUpContract.Presenter {
     private SignUpFragment mView;
@@ -33,22 +27,40 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     @Override
-    public void signUp(Subscriber o) {
+    public void signUp(String name, String pwd, String code) {
         Subscription subscribe = new UserRepository()
-                .signUp(mView.inputName.getText().toString(), mView.inputPassword.getText().toString())
-                .map(__ -> __.get_id())
+                .signUp(name, pwd, code)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(o);
+                .doOnSubscribe(() -> mView.showLoading(true))
+                .subscribe(
+                        result -> mView.showSignUpSuccess(result),
+                        e -> mView.showSignUpError(e),
+                        () -> mView.completeSignUp());
         mSubscriptions.add(subscribe);
     }
 
     @Override
     public void subscribe() {
+        // TODO: 2017/8/30
     }
 
     @Override
     public void unsubscribe() {
         mSubscriptions.clear();
+    }
+
+    @Override
+    public void getValidCode(String mobile) {
+        Subscription subscribe = new UserRepository()
+                .getValidCode(mobile)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(() -> mView.showLoading(true))
+                .subscribe(
+                        code -> mView.showValidCodeSendSuccess(code),
+                        e -> mView.showValidCodeSendError(e),
+                        () -> mView.showCompleteGetValidCode());
+        mSubscriptions.add(subscribe);
     }
 }

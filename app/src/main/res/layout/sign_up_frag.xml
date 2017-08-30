@@ -48,7 +48,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:background="@null"
-                    android:hint="@string/prompt_name"
+                    android:hint="@string/prompt_mobile"
                     android:inputType="phone"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -121,6 +121,7 @@
             </LinearLayout>
 
             <android.support.v7.widget.AppCompatButton
+                android:id="@+id/action_valid_code"
                 android:layout_width="88dp"
                 android:layout_height="32dp"
                 android:layout_gravity="bottom"
@@ -159,7 +160,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:background="@null"
-                    android:hint="@string/prompt_pwd"
+                    android:hint="@string/pwd_enter_valid"
                     android:inputType="textPassword"
                     android:textSize="16sp" />
 
@@ -186,6 +187,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton
+            android:id="@+id/action_sign_up"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="58dp"

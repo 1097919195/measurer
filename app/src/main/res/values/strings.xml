@@ -76,10 +76,6 @@
     <string name="connecting">连接中...</string>
     <string name="choose_device_prompt">请选择蓝牙设备</string>
     <string name="unKnownError">未知错误</string>
-    <string name="choose_service_prompt">请选择服务</string>
-    <string name="service_primary">主服务</string>
-    <string name="service_secondary">次服务</string>
-    <string name="choose_character_prompt">请选择蓝牙特性</string>
     <string name="bluetooth_disabled">请开启蓝牙</string>
     <string name="bluetooth_not_avavilable">蓝牙当前不可用</string>
     <string name="scan_finished">扫描完成</string>
@@ -101,6 +97,10 @@
     <string name="service_down">当前服务不可用</string>
     <string name="something_error">出错啦</string>
     <string name="net_connect_timeout">网络连接超时，请检查您的网络</string>
+    <string name="valid_code_send_success">验证码发送成功</string>
+    <string name="plz_valid_mobile">请输入正确格式的手机号</string>
+    <string name="prompt_mobile">请输入手机号</string>
+    <string name="plz_valid_code">请输入有效的验证码</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>
