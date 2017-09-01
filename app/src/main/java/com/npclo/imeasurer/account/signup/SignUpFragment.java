@@ -20,7 +20,7 @@ import com.npclo.imeasurer.account.signin.SignInPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.data.user.ValidCode;
-import com.npclo.imeasurer.home.HomeActivity;
+import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import butterknife.BindView;
@@ -93,7 +93,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     @Override
     public void showSignUpSuccess(User user) {
         showToast(getResources().getString(R.string.register_success_hint));
-        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
         SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);

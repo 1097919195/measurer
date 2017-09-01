@@ -15,5 +15,4 @@ public interface MeasurementDataSource {
 
     void saveMeasurement(@NonNull Measurement measurement);
 
-    void refreshMeasurements();
 }

@@ -15,18 +15,13 @@ public class UserActivity extends BaseActivity {
     }
 
     @Override
-    protected void initFragment() {
-        UserFragment userFragment = (UserFragment) getSupportFragmentManager().findFragmentById(R.id.act_content_view);
+    protected void init() {
+        UserFragment userFragment = (UserFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
         if (userFragment == null) {
             userFragment = UserFragment.getInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), userFragment, R.id.act_content_view);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), userFragment, R.id.content_view);
         }
         userPresenter = new UserPresenter(userFragment);
-    }
-
-    @Override
-    protected void actionMenuClickEvent() {
-
     }
 
     @Override

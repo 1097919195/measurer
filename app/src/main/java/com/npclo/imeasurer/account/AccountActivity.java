@@ -32,9 +32,9 @@ public class AccountActivity extends SupportActivity {
         setContentView(R.layout.account_act);
 
         // TODO: 2017/8/29 初始化登录fragment
-        SignInFragment signInFragment = findFragment(SignInFragment.class);
-        if (signInFragment == null) {
-            SignInFragment fragment = SignInFragment.newInstance();
+        SignInFragment fragment = findFragment(SignInFragment.class);
+        if (fragment == null) {
+            fragment = SignInFragment.newInstance();
             signInPresenter = new SignInPresenter(fragment, SchedulerProvider.getInstance());
             loadRootFragment(R.id.content_frame, fragment);
         }

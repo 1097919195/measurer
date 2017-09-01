@@ -13,4 +13,3 @@
         android:textColor="@color/white"
         android:textSize="20sp" />
 </android.support.v7.widget.Toolbar>
-

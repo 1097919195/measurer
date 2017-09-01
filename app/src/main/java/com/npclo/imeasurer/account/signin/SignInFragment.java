@@ -24,7 +24,7 @@ import com.npclo.imeasurer.account.signup.SignUpFragment;
 import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
-import com.npclo.imeasurer.home.HomeActivity;
+import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.ApiException;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
@@ -179,7 +179,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     public void showSignInSuccess(User user) {
         showToast(getResources().getString(R.string.login_success_hint));
-        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
         SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
