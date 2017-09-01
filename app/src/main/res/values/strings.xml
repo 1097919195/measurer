@@ -101,6 +101,13 @@
     <string name="plz_valid_mobile">请输入正确格式的手机号</string>
     <string name="prompt_mobile">请输入手机号</string>
     <string name="plz_valid_code">请输入有效的验证码</string>
+    <string name="prompt_valid_code">请输入验证码</string>
+    <string name="sure">确定</string>
+    <string name="forget_pwd">忘记密码</string>
+    <string name="plz_valid_new_pwd">请输入新密码</string>
+    <string name="plz_valid_new_pwd2">请再次输入密码</string>
+    <string name="plz_same_pwd">两次密码不一样，请检查</string>
+    <string name="reset_pwd_success">重置密码成功</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>

@@ -7,7 +7,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,26 +14,24 @@ import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.AccountFragment;
+import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.account.signin.SignInFragment;
+import com.npclo.imeasurer.account.signin.SignInPresenter;
+import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.data.user.ValidCode;
 import com.npclo.imeasurer.home.HomeActivity;
-import com.npclo.imeasurer.utils.ApiException;
-
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
+import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import retrofit2.HttpException;
 
 import static android.content.ContentValues.TAG;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-public class SignUpFragment extends AccountFragment implements SignUpContract.View {
+public class SignUpFragment extends BaseFragment implements SignUpContract.View {
 
     @BindView(R.id.input_mobile)
     EditText inputMobile;
@@ -111,7 +108,7 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
 
     @Override
     public void showSignUpError(Throwable e) {
-        handleError(e);
+        handleError(e, TAG);
     }
 
     @Override
@@ -138,23 +135,13 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
 
     @Override
     public void showValidCodeSendError(Throwable e) {
-        handleError(e);
+        handleError(e, TAG);
     }
 
-    private void handleError(Throwable e) {
+    @Override
+    protected void handleError(Throwable e, String TAG) {
+        super.handleError(e, TAG);
         dialog.dismiss();
-        if (e instanceof SocketTimeoutException) {
-            showToast(getString(R.string.net_connect_timeout));
-        } else if (e instanceof ConnectException) {
-            showToast(getString(R.string.net_connect_out));
-        } else if (e instanceof HttpException) {
-            showToast(getString(R.string.service_down));
-        } else if (e instanceof ApiException) {
-            showToast(e.getMessage());
-        } else {
-            showToast(getString(R.string.something_error));
-        }
-        Log.e(TAG, e.getMessage());
     }
 
     @Override
@@ -183,7 +170,7 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
                     showToast(getString(R.string.plz_valid_mobile));
                     return;
                 }
-                signUpPresenter.getValidCode(mobile);
+                signUpPresenter.getValidCode(mobile, "singup");
                 break;
             case R.id.input_eye:
                 if (pwd_label) {
@@ -200,7 +187,9 @@ public class SignUpFragment extends AccountFragment implements SignUpContract.Vi
                 break;
             case R.id.to_sign_in:
                 SignInFragment fragment = SignInFragment.newInstance();
-                showHideFragment(fragment, this);
+                start(fragment, SINGLETASK);
+                ((AccountActivity) getActivity()).setSignInPresenter(new SignInPresenter(fragment,
+                        SchedulerProvider.getInstance()));
                 break;
         }
     }

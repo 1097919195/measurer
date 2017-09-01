@@ -1,5 +1,6 @@
 package com.npclo.imeasurer.data.user;
 
+import com.npclo.imeasurer.data.HttpMsg;
 import com.npclo.imeasurer.utils.http.account.UserHttpHelper;
 
 import rx.Observable;
@@ -20,7 +21,11 @@ public class UserRepository implements UserDataSource {
     }
 
     @Override
-    public Observable<ValidCode> getValidCode(String name) {
-        return new UserHttpHelper().getValidCode(name);
+    public Observable<ValidCode> getValidCode(String name, String type) {
+        return new UserHttpHelper().getValidCode(name, type);
+    }
+
+    public Observable<HttpMsg> resetPwd(String mobile, String pwd, String code) {
+        return new UserHttpHelper().resetPwd(mobile, pwd, code);
     }
 }

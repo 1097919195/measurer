@@ -11,5 +11,5 @@ public interface UserDataSource {
 
     Observable<User> signUp(String name, String pwd, String code);
 
-    Observable<ValidCode> getValidCode(String name);
+    Observable<ValidCode> getValidCode(String name, String type);
 }

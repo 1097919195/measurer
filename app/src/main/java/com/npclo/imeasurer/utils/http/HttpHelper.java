@@ -1,5 +1,8 @@
 package com.npclo.imeasurer.utils.http;
 
+import com.npclo.imeasurer.data.HttpResponse;
+import com.npclo.imeasurer.utils.ApiException;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -7,8 +10,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.functions.Func1;
-
-import com.npclo.imeasurer.utils.ApiException;
 
 /**
  * Created by Endless on 2017/7/19.

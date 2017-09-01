@@ -29,6 +29,6 @@ public interface SignUpContract {
     interface Presenter extends BasePresenter {
         void signUp(String name, String pwd, String code);
 
-        void getValidCode(String mobile);
+        void getValidCode(String mobile, String singup);
     }
 }

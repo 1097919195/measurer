@@ -5,7 +5,9 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.signup.SignUpFragment;
+import com.npclo.imeasurer.account.forgetPwd.ForgetPwdPresenter;
+import com.npclo.imeasurer.account.signin.SignInFragment;
+import com.npclo.imeasurer.account.signin.SignInPresenter;
 import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
@@ -19,8 +21,9 @@ public class AccountActivity extends SupportActivity {
     // 再点一次退出程序时间设置
     private static final long WAIT_TIME = 2000L;
     private long TOUCH_TIME = 0;
-    //    private SignInPresenter mPresenter;
-    private SignUpPresenter mPresenter;
+    private SignInPresenter signInPresenter;
+    private SignUpPresenter signUpPresenter;
+    private ForgetPwdPresenter forgetPwdPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,25 +31,13 @@ public class AccountActivity extends SupportActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.account_act);
 
-//        SignInFragment signInFragment = (SignInFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
-//        if (signInFragment == null) {
-//            signInFragment = SignInFragment.newInstance();
-//            AccountFragment.addFragmentToActivity(getSupportFragmentManager(), signInFragment, R.id.content_frame);
-//        }
         // TODO: 2017/8/29 初始化登录fragment
-//        SignInFragment signInFragment = findFragment(SignInFragment.class);
-//        if (signInFragment == null) {
-//            SignInFragment fragment = SignInFragment.newInstance();
-//            mPresenter = new SignInPresenter(fragment, SchedulerProvider.getInstance());
-//            loadRootFragment(R.id.content_frame, fragment);
-//        }
-        SignUpFragment signUpFragment = findFragment(SignUpFragment.class);
-        if (signUpFragment == null) {
-            signUpFragment = signUpFragment.newInstance();
-            mPresenter = new SignUpPresenter(signUpFragment, SchedulerProvider.getInstance());
-            loadRootFragment(R.id.content_frame, signUpFragment);
+        SignInFragment signInFragment = findFragment(SignInFragment.class);
+        if (signInFragment == null) {
+            SignInFragment fragment = SignInFragment.newInstance();
+            signInPresenter = new SignInPresenter(fragment, SchedulerProvider.getInstance());
+            loadRootFragment(R.id.content_frame, fragment);
         }
-
     }
 
     /**
@@ -64,5 +55,17 @@ public class AccountActivity extends SupportActivity {
                 Toast.makeText(this, R.string.press_again_exit, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void setSignInPresenter(SignInPresenter signInPresenter) {
+        this.signInPresenter = signInPresenter;
+    }
+
+    public void setSignUpPresenter(SignUpPresenter signUpPresenter) {
+        this.signUpPresenter = signUpPresenter;
+    }
+
+    public void setForgetPwdPresenter(ForgetPwdPresenter forgetPwdPresenter) {
+        this.forgetPwdPresenter = forgetPwdPresenter;
     }
 }

@@ -4,10 +4,7 @@ import android.content.Intent;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
-import com.npclo.imeasurer.data.measure.remote.MeasurementRemoteDataSource;
 import com.npclo.imeasurer.measure.MeasureActivity;
-import com.npclo.imeasurer.utils.ActivityUtils;
-import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 
 public class HomeActivity extends BaseActivity {
@@ -20,19 +17,6 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initFragment() {
-        HomeFragment homeFragment =
-                (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.act_content_view);
-        if (homeFragment == null) {
-            // Create the fragment
-            homeFragment = HomeFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), homeFragment, R.id.act_content_view);
-        }
-
-        // Create the presenter
-        presenter = new HomePresenter(MeasurementRemoteDataSource.getInstance(),
-                homeFragment, SchedulerProvider.getInstance());
-        // 恢复数据，如果有的话
     }
 
     @Override

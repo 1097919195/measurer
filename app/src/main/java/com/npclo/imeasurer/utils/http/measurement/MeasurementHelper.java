@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 import rx.Observable;
 
 import com.npclo.imeasurer.data.measure.Measurement;
-import com.npclo.imeasurer.utils.http.HttpResponse;
+import com.npclo.imeasurer.data.HttpResponse;
 
 public class MeasurementHelper extends HttpHelper {
     public Observable<List<Measurement>> getMeasurements() {

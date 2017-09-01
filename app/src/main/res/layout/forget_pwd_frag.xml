@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/forget_pwd_frag"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <include layout="@layout/base_toolbar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <EditText
+                android:id="@+id/input_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/forget_pwd_et_border"
+                android:hint="@string/prompt_mobile"
+                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
+                android:textAlignment="viewStart"
+                android:textColor="@color/c333"
+                android:textColorHint="@color/dfdfdf"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/input_valid_code"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/forget_pwd_et_border"
+                    android:hint="@string/prompt_valid_code"
+                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/c333"
+                    android:textColorHint="@color/dfdfdf"
+                    android:textSize="16sp" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/action_valid_code"
+                    android:layout_width="88dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/btn_radius_border_primary"
+                    android:enabled="false"
+                    android:text="@string/get_valid_prompt"
+                    android:textAlignment="center"
+                    android:textColor="@color/primary"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/input_new_pwd1"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/forget_pwd_et_border"
+                android:hint="@string/prompt_mobile"
+                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
+                android:textAlignment="viewStart"
+                android:textColor="@color/c333"
+                android:textColorHint="@color/dfdfdf"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/input_new_pwd2"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/forget_pwd_et_border"
+                android:hint="@string/prompt_mobile"
+                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
+                android:textAlignment="viewStart"
+                android:textColor="@color/c333"
+                android:textColorHint="@color/dfdfdf"
+                android:textSize="16sp" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/action_reset_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="70dp"
+                android:background="@drawable/btn_radius_solid_primary"
+                android:text="@string/sure"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

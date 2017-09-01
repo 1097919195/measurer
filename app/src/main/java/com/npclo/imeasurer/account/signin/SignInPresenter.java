@@ -23,7 +23,7 @@ public class SignInPresenter implements SignInContract.Presenter {
         mSchedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
         mView = (SignInFragment) signinView;
-        signinView.setPresenter(this);
+        mView.setPresenter(this);
     }
 
     @Override

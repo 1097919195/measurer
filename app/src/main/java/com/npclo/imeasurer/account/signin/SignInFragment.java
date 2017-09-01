@@ -17,11 +17,16 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.AccountFragment;
+import com.npclo.imeasurer.account.AccountActivity;
+import com.npclo.imeasurer.account.forgetPwd.ForgetPwdFragment;
+import com.npclo.imeasurer.account.forgetPwd.ForgetPwdPresenter;
 import com.npclo.imeasurer.account.signup.SignUpFragment;
+import com.npclo.imeasurer.account.signup.SignUpPresenter;
+import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.home.HomeActivity;
 import com.npclo.imeasurer.utils.ApiException;
+import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -34,7 +39,7 @@ import retrofit2.HttpException;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-public class SignInFragment extends AccountFragment implements SignInContract.View {
+public class SignInFragment extends BaseFragment implements SignInContract.View {
     Unbinder unbinder;
     @BindView(R.id.logo)
     ImageView logo;
@@ -144,16 +149,20 @@ public class SignInFragment extends AccountFragment implements SignInContract.Vi
                 RxCompoundButton.checkedChanges(actionRememberPwd).subscribe(bool -> isUserRememberPwd = bool);
                 break;
             case R.id.action_sign_in:
-                actionSignIn.setOnClickListener(__ -> {
-                    if (!validate()) return;
-                    signinPresenter.signIn(name, password);
-                });
+                if (!validate()) return;
+                signinPresenter.signIn(name, password);
                 break;
             case R.id.forget_pwd_tv:
+                ForgetPwdFragment fragment = ForgetPwdFragment.newInstance();
+                start(fragment, SINGLETASK);
+                ((AccountActivity) getActivity()).setForgetPwdPresenter(new ForgetPwdPresenter(fragment,
+                        SchedulerProvider.getInstance()));
                 break;
             case R.id.signup_tv:
                 SignUpFragment signUpFragment = SignUpFragment.newInstance();
-                showHideFragment(signUpFragment, this);
+                start(signUpFragment, SINGLETASK);
+                ((AccountActivity) getActivity()).setSignUpPresenter(new SignUpPresenter(signUpFragment,
+                        SchedulerProvider.getInstance()));
                 break;
             case R.id.action_wechat_login:
                 showToast("待开放微信登录");

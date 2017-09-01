@@ -10,7 +10,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
 
-import com.npclo.imeasurer.utils.http.HttpResponse;
+import com.npclo.imeasurer.data.HttpResponse;
 
 /**
  * Created by Endless on 2017/8/1.

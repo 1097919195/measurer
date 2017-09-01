@@ -51,9 +51,9 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     @Override
-    public void getValidCode(String mobile) {
+    public void getValidCode(String mobile, String singup) {
         Subscription subscribe = new UserRepository()
-                .getValidCode(mobile)
+                .getValidCode(mobile, singup)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> mView.showLoading(true))
