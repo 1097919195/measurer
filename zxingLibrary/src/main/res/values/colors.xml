@@ -13,5 +13,10 @@
     <color name="corner_color">#fff</color>
     <color name="scan_label_color">#fff</color>
     <color name="scan_input_color">#fff</color>
+    <color name="c999">#999999</color>
+    <color name="ccc">#cccccc</color>
+    <color name="primary">#3385d9</color>
+    <color name="c333">#333333</color>
+    <color name="white">#ffffff</color>
     <!--QRCode scanner color end-->
 </resources>

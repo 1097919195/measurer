@@ -79,7 +79,11 @@ public final class CameraManager {
     public synchronized void openDriver(SurfaceHolder holder) throws IOException {
         OpenCamera theCamera = camera;
         if (theCamera == null) {
-            theCamera = OpenCameraInterface.open(requestedCameraId);
+            try {
+                theCamera = OpenCameraInterface.open(requestedCameraId);
+            } catch (Exception e) {
+                e.printStackTrace();//// TODO: 2017/9/1 未授予应用摄像机权限
+            }
             if (theCamera == null) {
                 throw new IOException("Camera.open() failed to return object from driver");
             }
@@ -103,8 +107,8 @@ public final class CameraManager {
             configManager.setDesiredCameraParameters(theCamera, false);
         } catch (RuntimeException re) {
             // Driver failed
-            Log.w(TAG, "Camera rejected parameters. Setting only minimal safe-mode parameters");
-            Log.i(TAG, "Resetting to saved camera params: " + parametersFlattened);
+            Log.e(TAG, "Camera rejected parameters. Setting only minimal safe-mode parameters");
+            Log.e(TAG, "Resetting to saved camera params: " + parametersFlattened);
             // Reset:
             if (parametersFlattened != null) {
                 parameters = cameraObject.getParameters();
@@ -114,7 +118,7 @@ public final class CameraManager {
                     configManager.setDesiredCameraParameters(theCamera, true);
                 } catch (RuntimeException re2) {
                     // Well, darn. Give up
-                    Log.w(TAG, "Camera rejected even safe-mode parameters! No configuration");
+                    Log.e(TAG, "Camera rejected even safe-mode parameters! No configuration");
                 }
             }
         }

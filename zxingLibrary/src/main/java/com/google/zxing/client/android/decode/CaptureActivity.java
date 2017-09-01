@@ -6,9 +6,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.AppCompatButton;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -23,6 +28,7 @@ import java.util.Collection;
 public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
+    private static final int ENTER_OK = 2;
 
 
     private CameraManager cameraManager;
@@ -81,8 +87,40 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         decodeFormats = null;
         characterSet = null;
 
-        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+        final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        //手动输入二维码编号
+
+        final LinearLayout view_enter_qrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
+        findViewById(R.id.to_manual_enter_qrcode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                surfaceView.setVisibility(View.GONE);
+                viewfinderView.setVisibility(View.GONE);
+                view_enter_qrcode.setVisibility(View.VISIBLE);
+            }
+        });
+        AppCompatButton btnEnterCode = (AppCompatButton) findViewById(R.id.action_enter_qrcode);
+        final EditText inputQrcode = (EditText) findViewById(R.id.input_qrcode);
+        btnEnterCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String code = inputQrcode.getText().toString();
+                if (!TextUtils.isEmpty(code)) {
+                    Intent resultIntent = new Intent();
+                    Bundle bundle = new Bundle();
+                    // TODO: 2017/9/1 发起请求获取的待测用户信息
+                    bundle.putString("result", code);
+                    resultIntent.putExtras(bundle);
+                    CaptureActivity.this.setResult(ENTER_OK, resultIntent);
+                } else {
+                    Toast.makeText(CaptureActivity.this, getString(R.string.plz_enter_qrcode), Toast.LENGTH_SHORT).show();
+                }
+                CaptureActivity.this.finish();
+            }
+        });
+
+
         if (hasSurface) {
             // The activity was paused but not stopped, so the surface still exists. Therefore
             // surfaceCreated() won't be called, so init the camera here.
@@ -159,12 +197,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             resultIntent.putExtras(bundle);
             this.setResult(RESULT_OK, resultIntent);
         } else {
-            Toast.makeText(CaptureActivity.this, "Scan failed!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CaptureActivity.this, "扫描失败，请重试", Toast.LENGTH_SHORT).show();
         }
         CaptureActivity.this.finish();
 
     }
-
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
