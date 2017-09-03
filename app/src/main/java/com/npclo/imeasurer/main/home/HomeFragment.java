@@ -3,7 +3,6 @@ package com.npclo.imeasurer.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +15,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.measure.MeasureFragment;
 import com.npclo.imeasurer.main.measure.MeasurePresenter;
+import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import butterknife.BindView;
@@ -82,7 +82,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Bundle bundle = data.getExtras();
         String result = bundle.getString("result");
-        Log.e(TAG, result);
         switch (resultCode) {
             case 1:
                 toMeasure(result);
@@ -97,9 +96,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
      * 初始化toolbar的一些默认属性
      */
     protected void initToolbar() {
-//        ((MainActivity) getActivity()).setSupportActionBar(toolbarBase);
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.toolbar_text));//设置主标题颜色
         toolbarBase.inflateMenu(R.menu.base_toolbar_menu);
+        Intent intent = new Intent(getActivity(), UserActivity.class);
+        toolbarBase.getMenu().getItem(0).setIntent(intent);
     }
 
     @Override

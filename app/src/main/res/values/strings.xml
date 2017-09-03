@@ -119,30 +119,6 @@
         <item>XiaTuDu</item>
         <item>AoYao</item>
     </string-array>
-    <string-array name="male_items_sequence">
-        <item>头围</item>
-        <item>颈围</item>
-        <item>肩宽</item>
-        <item>左肩斜</item>
-        <item>右肩斜</item>
-        <item>弯背角度</item>
-        <item>臂围</item>
-        <item>手腕围</item>
-        <item>臂长</item>
-        <item>胸围</item>
-        <item> 肚围</item>
-        <item>腰围</item>
-        <item>凹腰角度</item>
-        <item>上凸肚角度</item>
-        <item>下凸肚角度</item>
-        <item>臀围</item>
-        <item>大腿围</item>
-        <item>膝围</item>
-        <item>小腿围</item>
-        <item>脚踝围</item>
-        <item>通裆</item>
-        <item>髂骨高度</item>
-    </string-array>
     <string-array name="items_sequence">
         <item>头围</item>
         <item>颈围</item>
