@@ -33,9 +33,10 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/enter_qrcode_img"
             android:layout_width="30dp"
             android:layout_height="25dp"
-            android:layout_above="@+id/textView"
+            android:layout_above="@+id/enter_qrcode_tv"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
@@ -44,7 +45,7 @@
             android:src="@mipmap/hand_up" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/enter_qrcode_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -60,6 +61,7 @@
         android:id="@+id/view_enter_qrcode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -67,7 +69,7 @@
             android:layout_width="123dp"
             android:layout_height="91dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="80dp"
             android:src="@mipmap/logo_blue" />
 
         <EditText
@@ -80,8 +82,9 @@
             android:layout_marginTop="33dp"
             android:background="@drawable/btn_border_20_blue"
             android:hint="@string/enter_qrcode_prompt"
+            android:inputType="number"
             android:textAlignment="center"
-            android:textColor="@color/c333"
+            android:textColor="@color/c999"
             android:textColorHint="@color/ccc" />
 
         <TextView
@@ -100,10 +103,26 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/btn_solid_4_blue"
             android:text="@string/btn_sure"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
+    <!--toolbar-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/primary">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </android.support.v7.widget.Toolbar>
 </FrameLayout>

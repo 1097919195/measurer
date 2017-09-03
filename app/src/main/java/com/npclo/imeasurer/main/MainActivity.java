@@ -1,15 +1,18 @@
 package com.npclo.imeasurer.main;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.annotation.Nullable;
 
-import com.google.zxing.client.android.decode.CaptureActivity;
+import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
+import com.npclo.imeasurer.main.home.HomeFragment;
+import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.BleClientHelper;
+import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
 
+import butterknife.ButterKnife;
 import kr.co.namee.permissiongen.PermissionGen;
 
 /**
@@ -17,16 +20,19 @@ import kr.co.namee.permissiongen.PermissionGen;
  */
 
 public class MainActivity extends BaseActivity {
-
+    private static final String TAG = MainActivity.class.getSimpleName();
     private RxBleClient bleClient;
 
-    @Override
-    protected CharSequence getToolbarTitle() {
-        return null;
-    }
 
     @Override
-    protected void init() {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        ButterKnife.bind(this);
+        init();
+    }
+
+    private void init() {
         bleClient = BleClientHelper.getInstance(this);
         PermissionGen.with(MainActivity.this)
                 .addRequestCode(100)
@@ -36,25 +42,15 @@ public class MainActivity extends BaseActivity {
                         Manifest.permission.ACCESS_FINE_LOCATION)
                 .request();
         //加载登录后的欢迎界面
-        Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    protected CharSequence getActionMenuTitle() {
-        return null;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bundle bundle = data.getExtras();
-        String result = bundle.getString("result");
-        switch (resultCode) {
-            case RESULT_OK:
-                Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
-                break;
-            case 2:
-                Toast.makeText(MainActivity.this, result + " enter", Toast.LENGTH_SHORT).show();
+        HomeFragment homeFragment = findFragment(HomeFragment.class);
+        if (homeFragment == null) {
+            homeFragment = HomeFragment.newInstance();
+            loadRootFragment(R.id.content_frame, homeFragment);
+            new HomePresenter(homeFragment, SchedulerProvider.getInstance());
         }
+    }
+
+    protected void initView() {
+        setContentView(R.layout.main_act);
     }
 }

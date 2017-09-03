@@ -1,38 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin_0"
-    android:paddingLeft="@dimen/activity_horizontal_margin_0"
-    android:paddingRight="@dimen/activity_horizontal_margin_0"
-    android:paddingTop="@dimen/activity_vertical_margin_0"
-    tools:context="com.npclo.imeasurer.home.HomeActivity">
-
-    <LinearLayout
-        android:id="@+id/toolbar_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/base_toolbar" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/content_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/base"
-        android:layout_above="@+id/bottom_wrapper"
-        android:layout_below="@+id/toolbar_wrapper">
-
-    </RelativeLayout>
-
-
-    <LinearLayout
-        android:id="@+id/bottom_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-        <include layout="@layout/common_bottom" />
-    </LinearLayout>
-</RelativeLayout>
+    android:background="@color/base" />

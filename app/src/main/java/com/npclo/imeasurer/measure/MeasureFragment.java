@@ -30,7 +30,7 @@ import com.npclo.imeasurer.data.measure.item.MeasurementFemaleItem;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.MeasurementMaleItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
-import com.npclo.imeasurer.data.wuser.WeiXinUser;
+import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.utils.DensityUtil;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
@@ -324,10 +324,10 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
             sex = UserSex.FEMALE;
         }
         item = getMeasurementItem(sex, iterator);
-        WeiXinUser weiXinUser = new WeiXinUser();
+        WechatUser wechatUser = new WechatUser();
         // TODO: 2017/8/15 微信接口
-        weiXinUser.setHeight(height).setWeight(weight).setSex(sex).setOpenId("123123").setNickname("test");
-        Measurement measurement = new Measurement(weiXinUser, item);
+        wechatUser.setHeight(height).setWeight(weight).setSex(sex).setOpenID("123123").setNickname("test");
+        Measurement measurement = new Measurement(wechatUser, item);
         mPresenter.saveMeasurement(measurement);
     }
 

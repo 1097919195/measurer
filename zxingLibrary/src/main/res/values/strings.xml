@@ -6,4 +6,5 @@
     <string name="valid_qrcode_prompt">请确认您输入的二维码编号是正确的</string>
     <string name="btn_sure">确认</string>
     <string name="plz_enter_qrcode">请输入二维码</string>
+    <string name="menu_action">操作</string>
 </resources>

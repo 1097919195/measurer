@@ -7,13 +7,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -40,6 +44,10 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     private InactivityTimer inactivityTimer;
     private BeepManager beepManager;
     private AmbientLightManager ambientLightManager;
+    private TextView toolbarTitle;
+    private LinearLayout view_enter_qrcode;
+    private RelativeLayout to_manual_enter_qrcode;
+    private SurfaceView surfaceView;
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -63,7 +71,32 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         ambientLightManager = new AmbientLightManager(this);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        initToolBar();
     }
+
+    private void initToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(getDrawable(R.mipmap.left));
+        toolbar.inflateMenu(R.menu.base_toolbar_menu);
+        MenuItem item = toolbar.getMenu().getItem(0);
+        toolbarTitle = ((TextView) findViewById(R.id.toolbar_title));
+        toolbarTitle.setText("扫描二维码");
+        item.setTitle("帮助");
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast.makeText(CaptureActivity.this, "前往帮助界面", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2017/9/3 返回到上一个界面 ，把这个库整合到项目中
+            }
+        });
+    }
+
 
     @Override
     protected void onResume() {
@@ -87,17 +120,22 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         decodeFormats = null;
         characterSet = null;
 
-        final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+        surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         //手动输入二维码编号
 
-        final LinearLayout view_enter_qrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
-        findViewById(R.id.to_manual_enter_qrcode).setOnClickListener(new View.OnClickListener() {
+        view_enter_qrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
+        to_manual_enter_qrcode = (RelativeLayout) findViewById(R.id.to_manual_enter_qrcode);
+        findViewById(R.id.enter_qrcode_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                surfaceView.setVisibility(View.GONE);
-                viewfinderView.setVisibility(View.GONE);
-                view_enter_qrcode.setVisibility(View.VISIBLE);
+                showEnterCodeView();
+            }
+        });
+        findViewById(R.id.enter_qrcode_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEnterCodeView();
             }
         });
         AppCompatButton btnEnterCode = (AppCompatButton) findViewById(R.id.action_enter_qrcode);
@@ -120,7 +158,6 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             }
         });
 
-
         if (hasSurface) {
             // The activity was paused but not stopped, so the surface still exists. Therefore
             // surfaceCreated() won't be called, so init the camera here.
@@ -129,6 +166,14 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             // Install the callback and wait for surfaceCreated() to init the camera.
             surfaceHolder.addCallback(this);
         }
+    }
+
+    private void showEnterCodeView() {
+        surfaceView.setVisibility(View.GONE);
+        viewfinderView.setVisibility(View.GONE);
+        view_enter_qrcode.setVisibility(View.VISIBLE);
+        toolbarTitle.setText("输入二维码编号");
+        to_manual_enter_qrcode.setVisibility(View.GONE);
     }
 
     @Override
@@ -195,7 +240,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             Bundle bundle = new Bundle();
             bundle.putString("result", resultString);
             resultIntent.putExtras(bundle);
-            this.setResult(RESULT_OK, resultIntent);
+            this.setResult(1, resultIntent);
         } else {
             Toast.makeText(CaptureActivity.this, "扫描失败，请重试", Toast.LENGTH_SHORT).show();
         }

@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.data.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
+import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.utils.http.account.UserHttpHelper;
 
 import rx.Observable;
@@ -27,5 +28,9 @@ public class UserRepository implements UserDataSource {
 
     public Observable<HttpMsg> resetPwd(String mobile, String pwd, String code) {
         return new UserHttpHelper().resetPwd(mobile, pwd, code);
+    }
+
+    public Observable<WechatUser> getUserInfoWithCode(String code) {
+        return new UserHttpHelper().getUserInfoWithCode(code);
     }
 }

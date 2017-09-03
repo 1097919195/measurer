@@ -6,5 +6,5 @@
     <dimen name="activity_horizontal_margin_16">16dp</dimen>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="activity_vertical_margin_16">16dp</dimen>
-
+    <dimen name="toolbar_height">48dp</dimen>
 </resources>

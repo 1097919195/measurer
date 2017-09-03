@@ -4,7 +4,6 @@
 
     <item
         android:id="@+id/action_menu"
-        android:icon="@mipmap/person"
         android:title="@string/menu_action"
         app:showAsAction="ifRoom" />
 </menu>

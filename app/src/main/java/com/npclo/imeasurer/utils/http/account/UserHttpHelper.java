@@ -3,6 +3,7 @@ package com.npclo.imeasurer.utils.http.account;
 import com.npclo.imeasurer.data.HttpMsg;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.data.user.ValidCode;
+import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.utils.http.HttpHelper;
 
 import rx.Observable;
@@ -33,6 +34,12 @@ public class UserHttpHelper extends HttpHelper {
     public Observable<HttpMsg> resetPwd(String mobile, String pwd, String code) {
         return retrofit.create(UserService.class)
                 .resetPwd(mobile, pwd, code)
+                .map(new HttpResponseFunc<>());
+    }
+
+    public Observable<WechatUser> getUserInfoWithCode(String code) {
+        return retrofit.create(UserService.class)
+                .getUserInfoWithCode(code)
                 .map(new HttpResponseFunc<>());
     }
 }

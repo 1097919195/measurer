@@ -108,6 +108,9 @@
     <string name="plz_valid_new_pwd2">请再次输入密码</string>
     <string name="plz_same_pwd">两次密码不一样，请检查</string>
     <string name="reset_pwd_success">重置密码成功</string>
+    <string name="scan">扫一扫</string>
+    <string name="slogan_scan">点击扫一扫，扫描微信公众号中的二维码</string>
+    <string name="ble_hint">蓝牙：</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>

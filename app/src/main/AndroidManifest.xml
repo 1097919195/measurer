@@ -35,10 +35,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.npclo.imeasurer.user.UserActivity" />
         <activity
             android:name=".account.AccountActivity"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:launchMode="singleInstance" />
     </application>
 
 </manifest>
