@@ -111,6 +111,7 @@
     <string name="scan">扫一扫</string>
     <string name="slogan_scan">点击扫一扫，扫描微信公众号中的二维码</string>
     <string name="ble_hint">蓝牙：</string>
+    <string name="user_toolbar_title">设置</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>
