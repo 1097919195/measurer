@@ -1,7 +1,17 @@
 package com.npclo.imeasurer.data.measure.item;
 
+import com.npclo.imeasurer.data.measure.item.parts.ItemA;
+import com.npclo.imeasurer.data.measure.item.parts.ItemB;
+import com.npclo.imeasurer.data.measure.item.parts.ItemC;
+import com.npclo.imeasurer.data.measure.item.parts.ItemD;
+import com.npclo.imeasurer.data.measure.item.parts.ItemE;
+import com.npclo.imeasurer.data.measure.item.parts.ItemF;
+import com.npclo.imeasurer.data.measure.item.parts.ItemG;
+import com.npclo.imeasurer.data.measure.item.parts.ItemH;
 import com.npclo.imeasurer.data.measure.item.parts.ItemI;
 import com.npclo.imeasurer.data.measure.item.parts.ItemJ;
+import com.npclo.imeasurer.data.measure.item.parts.ItemK;
+import com.npclo.imeasurer.data.measure.item.parts.ItemL;
 import com.npclo.imeasurer.data.measure.item.parts.ItemM;
 import com.npclo.imeasurer.data.measure.item.parts.ItemN;
 import com.npclo.imeasurer.data.measure.item.parts.ItemO;
@@ -13,61 +23,50 @@ import com.npclo.imeasurer.data.measure.item.parts.ItemT;
 import com.npclo.imeasurer.data.measure.item.parts.ItemU;
 import com.npclo.imeasurer.data.measure.item.parts.ItemV;
 import com.npclo.imeasurer.data.measure.item.parts.ItemW;
-import com.npclo.imeasurer.data.measure.item.parts.ItemG;
-import com.npclo.imeasurer.data.measure.item.parts.ItemA;
-import com.npclo.imeasurer.data.measure.item.parts.ItemB;
-import com.npclo.imeasurer.data.measure.item.parts.ItemC;
-import com.npclo.imeasurer.data.measure.item.parts.ItemF;
-import com.npclo.imeasurer.data.measure.item.parts.ItemH;
-import com.npclo.imeasurer.data.measure.item.parts.ItemL;
-import com.npclo.imeasurer.data.measure.item.parts.ItemE;
-import com.npclo.imeasurer.data.measure.item.parts.ItemD;
+import com.npclo.imeasurer.data.measure.item.parts.ItemX;
 
-//            头围
-//    颈围
-//            肩宽
-//    臂围
-//            手腕围
-//    臂长
-//            胸围
-//    肚围
-//            腰围
-//    臀围
-//            大腿围
-//    膝围
-//            小腿围
-//    脚踝围
-//            通裆
-//    髂骨高度
-//            左肩斜
-//    右肩斜
-//            弯背角度
-//    上凸肚角度
-//            下凸肚角度
-//    凹腰角度
 public class MeasurementItem {
-    protected ItemA ItemA;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemB ItemB;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemC ItemC;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemD ItemD;
-    protected ItemE ItemE;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemF ItemF;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemG ItemG;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemH ItemH;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemI ItemI;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemJ ItemJ;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemL ItemL;
-    protected ItemM ItemM;
-    protected ItemN ItemN;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemO ItemO;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemP ItemP;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemQ ItemQ;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemR ItemR;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemS ItemS;
-    protected ItemT ItemT;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemU ItemU;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemV ItemV;
-    protected com.npclo.imeasurer.data.measure.item.parts.ItemW ItemW;
+    private ItemA ItemA;
+    private ItemB ItemB;
+    private ItemC ItemC;
+    private ItemD ItemD;
+    private ItemE ItemE;
+    private ItemF ItemF;
+    private ItemG ItemG;
+    private ItemH ItemH;
+    private ItemI ItemI;
+    private ItemJ ItemJ;
+    private ItemK ItemK;
+    private ItemL ItemL;
+    private ItemM ItemM;
+    private ItemN ItemN;
+    private ItemO ItemO;
+    private ItemP ItemP;
+    private ItemQ ItemQ;
+    private ItemR ItemR;
+    private ItemS ItemS;
+    private ItemT ItemT;
+    private ItemU ItemU;
+    private ItemV ItemV;
+    private ItemW ItemW;
+    private ItemX ItemX;
+
+    public ItemS getItemS() {
+        return ItemS;
+    }
+
+    public void setItemS(ItemS itemS) {
+        ItemS = itemS;
+    }
+
+    public ItemK getItemK() {
+        return ItemK;
+    }
+
+    public MeasurementItem setItemK(ItemK itemK) {
+        ItemK = itemK;
+        return this;
+    }
 
     public ItemA getItemA() {
         return ItemA;
@@ -195,15 +194,6 @@ public class MeasurementItem {
         return this;
     }
 
-    public ItemS getItemS() {
-        return ItemS;
-    }
-
-    public MeasurementItem setItemS(ItemS itemS) {
-        ItemS = itemS;
-        return this;
-    }
-
     public ItemT getItemT() {
         return ItemT;
     }
@@ -237,6 +227,15 @@ public class MeasurementItem {
 
     public MeasurementItem setItemW(ItemW itemW) {
         ItemW = itemW;
+        return this;
+    }
+
+    public ItemX getItemX() {
+        return ItemX;
+    }
+
+    public MeasurementItem setItemX(ItemX itemX) {
+        ItemX = itemX;
         return this;
     }
 

@@ -5,6 +5,12 @@ package com.npclo.imeasurer.data.measure.item.parts;
  */
 
 public class ItemK extends Part {
+    public ItemK() {
+    }
+
+    public ItemK(String cn, String en) {
+        super(cn, en);
+    }
 //    private String cn = "下胸围";
 //    private String en = "ItemK";
 

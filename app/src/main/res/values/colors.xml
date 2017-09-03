@@ -48,4 +48,8 @@
     <color name="c333">#333333</color>
     <color name="ff0000">#ff0000</color>
     <color name="eee">#eeeeee</color>
+    <color name="unmeasured">#d5010e</color>
+    <color name="measured">#0d8606</color>
+    <color name="modifying">#ff9f00</color>
+    <color name="ddd">#dddddd</color>
 </resources>

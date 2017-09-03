@@ -143,7 +143,7 @@
         <item>通裆</item>
         <item>髂骨高度</item>
     </string-array>
-    <string-array name="female_items_sequence">
+    <string-array name="items_sequence">
         <item>头围</item>
         <item>颈围</item>
         <item>肩宽</item>
@@ -162,6 +162,7 @@
         <item>下凸肚角度</item>
         <item>臀围</item>
         <item>大腿围</item>
+        <item>中部大腿围</item>
         <item>膝围</item>
         <item>小腿围</item>
         <item>脚踝围</item>

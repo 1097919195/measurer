@@ -6,6 +6,13 @@ package com.npclo.imeasurer.data.measure.item.parts;
 
 public class ItemE extends Part {
 
+    public ItemE() {
+    }
+
+    public ItemE(String cn, String en) {
+        super(cn, en);
+    }
+
     public String getCn() {
         return "右肩斜";
     }

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,9 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +20,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.data.ble.BleDevice;
-import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.UserSex;
 import com.npclo.imeasurer.data.measure.item.MeasurementFemaleItem;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.MeasurementMaleItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
-import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.utils.DensityUtil;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
@@ -45,13 +39,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -60,28 +50,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasureFragment extends Fragment implements MeasureContract.View {
     private List<String> angleList;
-    @BindView(R.id.radio_male)
-    RadioButton radioMale;
-    @BindView(R.id.radio_female)
-    RadioButton radioFemale;
-    @BindView(R.id.sex_rg)
-    RadioGroup sexRadioGroup;
-    @BindView(R.id.measure_height_input)
-    EditText measureHeightInput;
-    @BindView(R.id.measure_weight_input)
-    EditText measureWeightInput;
-    @BindView(R.id.scan_toggle_btn)
-    AppCompatButton scanToggleBtn;
-    @BindView(R.id.ruler_state)
-    TextView rulerState;
-    @BindView(R.id.ruler_battery)
-    TextView rulerBattery;
-    @BindView(R.id.measure_button)
-    AppCompatButton measureButton;
-    @BindView(R.id.save_measure_result)
-    AppCompatButton saveMeasureResult;
-    @BindView(R.id.measure_table_layout)
-    TableLayout measureTableLayout;
     Unbinder unbinder;
     private MeasureContract.Presenter mPresenter;
     private List<BleDevice> bleDeviceList = new ArrayList<>();
@@ -158,13 +126,13 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.measure_frag, container, false);
-        unbinder = ButterKnife.bind(this, root);
+//        View root = inflater.inflate(R.layout.measure_frag, container, false);
+//        unbinder = ButterKnife.bind(this, root);
         if (maleRows.size() == 0) {
             maleRows = initMeasureItemList(UserSex.MALE);
         }
-        appendTableRows(maleRows);
-        return root;
+//        appendTableRows(maleRows);
+        return null;
     }
 
     private List<TableRow> initMeasureItemList(int type) {
@@ -206,7 +174,6 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         }
         return rows;
     }
-
     @NonNull
     private TableRow getTableRow(String cn, String en) {
 // TODO: 2017/8/5 布局对齐
@@ -255,80 +222,72 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
         Snackbar.make(getView(), getString(R.string.device_disconnected), Snackbar.LENGTH_SHORT).show();
     }
 
-    @OnClick({R.id.scan_toggle_btn, R.id.measure_button, R.id.save_measure_result, R.id.radio_male, R.id.radio_female})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.scan_toggle_btn:
-                mPresenter.scanToggle();
-                break;
-            case R.id.measure_button:
-                mPresenter.startMeasure();
-                break;
-            case R.id.save_measure_result:
-                saveMeasurement();
-                break;
-            case R.id.radio_male:
-                appendTableRows(maleRows);
-                break;
-            case R.id.radio_female:
-                if (femaleRows.size() == 0) {
-                    femaleRows = initMeasureItemList(UserSex.FEMALE);
-                }
-                appendTableRows(femaleRows);
-                break;
-        }
-    }
+//    @OnClick({R.id.scan_toggle_btn, R.id.measure_button, R.id.save_measure_result, R.id.radio_male, R.id.radio_female})
+//    public void onViewClicked(View view) {
+//        switch (view.getId()) {
+//            case R.id.scan_toggle_btn:
+//                mPresenter.scanToggle();
+//                break;
+//            case R.id.measure_button:
+//                mPresenter.startMeasure();
+//                break;
+//            case R.id.save_measure_result:
+//                saveMeasurement();
+//                break;
+//            case R.id.radio_male:
+//                appendTableRows(maleRows);
+//                break;
+//            case R.id.radio_female:
+//                if (femaleRows.size() == 0) {
+//                    femaleRows = initMeasureItemList(UserSex.FEMALE);
+//                }
+//                appendTableRows(femaleRows);
+//                break;
+//        }
+//    }
 
-    void appendTableRows(List<TableRow> list) {
-        TableRow tableTitle = (TableRow) measureTableLayout.getChildAt(0);
-        measureTableLayout.removeAllViews();
-        measureTableLayout.addView(tableTitle);
-        for (TableRow row : list) {
-            measureTableLayout.addView(row);
-        }
-    }
 
     private void saveMeasurement() {
-        Map<String, String[]> mData = new LinkedHashMap<>();
-        String height = measureHeightInput.getText().toString();
-        checkInputValid(height, "身高");
-        String weight = measureWeightInput.getText().toString();
-        checkInputValid(weight, "体重");
-        int count = measureTableLayout.getChildCount();
-        for (int i = 1; i < count; i++) {
-            TableRow row = (TableRow) measureTableLayout.getChildAt(i);
-            EditText editText = (EditText) row.getChildAt(1);
-            String tag = (String) editText.getTag();
-            if (!TextUtils.isEmpty(editText.getText().toString())) {
-                String v = editText.getText().toString();
-                String[] strings = new String[2];
-                strings[0] = v;
-                try {
-                    Class<?> aClass = Class.forName(PART_PACKAGE + "." + tag);
-                    Part part = (Part) aClass.newInstance();
-                    strings[1] = part.getCn();
-                    mData.put(tag, strings);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (java.lang.InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        MeasurementItem item;
-        int sex = UserSex.MALE;
-        Iterator<Map.Entry<String, String[]>> iterator = mData.entrySet().iterator();
-        if (sexRadioGroup.getCheckedRadioButtonId() == radioFemale.getId()) {
-            sex = UserSex.FEMALE;
-        }
-        item = getMeasurementItem(sex, iterator);
-        WechatUser wechatUser = new WechatUser();
-        // TODO: 2017/8/15 微信接口
-        wechatUser.setHeight(height).setWeight(weight).setSex(sex).setOpenID("123123").setNickname("test");
-        Measurement measurement = new Measurement(wechatUser, item);
-        mPresenter.saveMeasurement(measurement);
+//        Map<String, String[]> mData = new LinkedHashMap<>();
+//        String height = measureHeightInput.getText().toString();
+//        checkInputValid(height, "身高");
+//        String weight = measureWeightInput.getText().toString();
+//        checkInputValid(weight, "体重");
+//        int count = measureTableLayout.getChildCount();
+//        for (int i = 1; i < count; i++) {
+//            TableRow row = (TableRow) measureTableLayout.getChildAt(i);
+//            EditText editText = (EditText) row.getChildAt(1);
+//            String tag = (String) editText.getTag();
+//            if (!TextUtils.isEmpty(editText.getText().toString())) {
+//                String v = editText.getText().toString();
+//                String[] strings = new String[2];
+//                strings[0] = v;
+//                try {
+//                    Class<?> aClass = Class.forName(PART_PACKAGE + "." + tag);
+//                    Part part = (Part) aClass.newInstance();
+//                    strings[1] = part.getCn();
+//                    mData.put(tag, strings);
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (java.lang.InstantiationException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        MeasurementItem item;
+//        int sex = UserSex.MALE;
+//        Iterator<Map.Entry<String, String[]>> iterator = mData.entrySet().iterator();
+//        if (sexRadioGroup.getCheckedRadioButtonId() == radioFemale.getId()) {
+//            sex = UserSex.FEMALE;
+//        }
+//        item = getMeasurementItem(sex, iterator);
+//        WechatUser wechatUser = new WechatUser();
+//        // TODO: 2017/8/15 微信接口
+//        wechatUser.setHeight(height).setWeight(weight).setSex(sex).setOpenID("123123").setNickname("test");
+//        Measurement measurement = new Measurement(wechatUser, item);
+//        mPresenter.saveMeasurement(measurement);
     }
 
     private MeasurementItem getMeasurementItem(int type, Iterator<Map.Entry<String, String[]>> iterator) {
@@ -497,14 +456,14 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
      */
     @Override
     public void finishScan() {
-        scanToggleBtn.setText(getString(R.string.scan_finished));
-        scanToggleBtn.setEnabled(false);
+//        scanToggleBtn.setText(getString(R.string.scan_finished));
+//        scanToggleBtn.setEnabled(false);
     }
 
     @Override
     public void updateButtonUIState() {
 //        resultsAdapter.clearScanResults();
-        scanToggleBtn.setText(mPresenter.isScanning() ? getString(R.string.stop_scan) : getString(R.string.start_scan));
+//        scanToggleBtn.setText(mPresenter.isScanning() ? getString(R.string.stop_scan) : getString(R.string.start_scan));
     }
 
     @Override
@@ -519,17 +478,17 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
 
     @Override
     public void updateMeasureData(float length, int angle, int battery) {
-        rulerBattery.setText(battery + "%");
-        rulerState.setTextColor(getResources().getColor(R.color.green));
-        if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
-            for (TableRow row : maleRows) {
-                if (assignValue(length, angle, row)) break;
-            }
-        } else {
-            for (TableRow row : femaleRows) {
-                if (assignValue(length, angle, row)) break;
-            }
-        }
+//        rulerBattery.setText(battery + "%");
+//        rulerState.setTextColor(getResources().getColor(R.color.green));
+//        if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
+//            for (TableRow row : maleRows) {
+//                if (assignValue(length, angle, row)) break;
+//            }
+//        } else {
+//            for (TableRow row : femaleRows) {
+//                if (assignValue(length, angle, row)) break;
+//            }
+//        }
     }
 
     /**
@@ -540,45 +499,45 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
      * @return boolean
      */
     private boolean assignValue(float length, float angle, TableRow row) {
-        EditText editText = (EditText) row.getChildAt(1);
-        if (TextUtils.isEmpty(editText.getText().toString())) {// TODO: 2017/8/24 修改赋值
-            String tag = (String) editText.getTag();
-            String cn;
-            try {
-                Part part = (Part) Class.forName(PART_PACKAGE + "." + tag).newInstance();
-                cn = part.getCn();
-                String value;
-                if (angleList.contains(tag)) {
-                    editText.setText(angle + "");
-                    value = angle + "";
-                } else {
-                    editText.setText(length + "");
-                    value = length + "";
-                }
-                if (speechSynthesizer != null) {
-                    String result = cn + "，结果为" + value;
-                    String[] nextString;
-
-                    if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
-                        maleMeasureSequence = getResources().getStringArray(R.array.male_items_sequence);
-                        nextString = getNextString(cn, maleMeasureSequence);
-                    } else {
-                        nextString = getNextString(cn, getResources().getStringArray(R.array.female_items_sequence));
-                    }
-                    if (!TextUtils.isEmpty(nextString[0]))
-                        speechSynthesizer.playText(result + "      下一个测量部位" + nextString[0]);
-                    if (!TextUtils.isEmpty(nextString[1]))
-                        speechSynthesizer.playText(result + nextString[1]);
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (java.lang.InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            return true;
-        }
+//        EditText editText = (EditText) row.getChildAt(1);
+//        if (TextUtils.isEmpty(editText.getText().toString())) {// TODO: 2017/8/24 修改赋值
+//            String tag = (String) editText.getTag();
+//            String cn;
+//            try {
+//                Part part = (Part) Class.forName(PART_PACKAGE + "." + tag).newInstance();
+//                cn = part.getCn();
+//                String value;
+//                if (angleList.contains(tag)) {
+//                    editText.setText(angle + "");
+//                    value = angle + "";
+//                } else {
+//                    editText.setText(length + "");
+//                    value = length + "";
+//                }
+//                if (speechSynthesizer != null) {
+//                    String result = cn + "，结果为" + value;
+//                    String[] nextString;
+//
+//                    if (sexRadioGroup.getCheckedRadioButtonId() == radioMale.getId()) {
+//                        maleMeasureSequence = getResources().getStringArray(R.array.male_items_sequence);
+//                        nextString = getNextString(cn, maleMeasureSequence);
+//                    } else {
+//                        nextString = getNextString(cn, getResources().getStringArray(R.array.items_sequence));
+//                    }
+//                    if (!TextUtils.isEmpty(nextString[0]))
+//                        speechSynthesizer.playText(result + "      下一个测量部位" + nextString[0]);
+//                    if (!TextUtils.isEmpty(nextString[1]))
+//                        speechSynthesizer.playText(result + nextString[1]);
+//                }
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (java.lang.InstantiationException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//            return true;
+//        }
         return false;
     }
 
@@ -611,14 +570,14 @@ public class MeasureFragment extends Fragment implements MeasureContract.View {
     public void bleDeviceMeasuring() {
         maleMeasureSequence = getResources().getStringArray(R.array.male_items_sequence);
         speechSynthesizer.playText("请先选择待测人员性别，首先测量部位" + maleMeasureSequence[0]);
-        measureButton.setText(getString(R.string.measuring));
-        measureButton.setTextColor(getResources().getColor(R.color.measuring));
+//        measureButton.setText(getString(R.string.measuring));
+//        measureButton.setTextColor(getResources().getColor(R.color.measuring));
     }
 
     @Override
     public void showConnected() {
         speechSynthesizer.playText("蓝牙连接成功，点击开始测量按钮启动测量");
-        rulerState.setText(mPresenter.isConnected() ? getString(R.string.connected) : getString(R.string.disconnected));
-        rulerState.setTextColor(getResources().getColor(R.color.ble_connected));
+//        rulerState.setText(mPresenter.isConnected() ? getString(R.string.connected) : getString(R.string.disconnected));
+//        rulerState.setTextColor(getResources().getColor(R.color.ble_connected));
     }
 }

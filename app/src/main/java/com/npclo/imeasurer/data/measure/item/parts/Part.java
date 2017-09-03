@@ -9,6 +9,14 @@ public class Part {
     protected String en;
     protected String value;
 
+    public Part() {
+    }
+
+    public Part(String cn, String en) {
+        this.cn = cn;
+        this.en = en;
+    }
+
     public String getValue() {
         return value;
     }

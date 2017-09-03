@@ -6,6 +6,13 @@ package com.npclo.imeasurer.data.measure.item.parts;
 
 public class ItemQ extends Part {
 
+    public ItemQ() {
+    }
+
+    public ItemQ(String cn, String en) {
+        super(cn, en);
+    }
+
     public String getCn() {
         return "臀围";
     }

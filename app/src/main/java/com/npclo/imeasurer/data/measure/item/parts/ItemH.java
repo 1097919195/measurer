@@ -6,6 +6,13 @@ package com.npclo.imeasurer.data.measure.item.parts;
 
 public class ItemH extends Part {
 
+    public ItemH() {
+    }
+
+    public ItemH(String cn, String en) {
+        super(cn, en);
+    }
+
     public String getCn() {
         return "手腕围";
     }

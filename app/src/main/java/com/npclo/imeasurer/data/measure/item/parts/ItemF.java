@@ -5,6 +5,12 @@ package com.npclo.imeasurer.data.measure.item.parts;
  */
 
 public class ItemF extends Part {
+    public ItemF() {
+    }
+
+    public ItemF(String cn, String en) {
+        super(cn, en);
+    }
 
     public String getCn() {
         return "弯背角度";

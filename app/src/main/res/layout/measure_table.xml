@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/measure_table_layout"
+    android:layout_width="match_parent"
+    android:layout_height="504dp"
+    android:layout_marginTop="17dp"
+    android:background="@color/ddd"
+    android:columnWidth="187dp"
+    android:horizontalSpacing="1dp"
+    android:numColumns="2"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="1dp" />

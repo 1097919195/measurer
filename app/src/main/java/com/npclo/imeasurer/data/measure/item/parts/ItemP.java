@@ -6,6 +6,13 @@ package com.npclo.imeasurer.data.measure.item.parts;
 
 public class ItemP extends Part {
 
+    public ItemP() {
+    }
+
+    public ItemP(String cn, String en) {
+        super(cn, en);
+    }
+
     public String getCn() {
         return "下凸肚角度";
     }

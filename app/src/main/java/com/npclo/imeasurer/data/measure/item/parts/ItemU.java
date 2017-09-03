@@ -5,11 +5,16 @@ package com.npclo.imeasurer.data.measure.item.parts;
  */
 
 public class ItemU extends Part {
-//    private String cn = "脚踝围";
-//    private String en = "ItemU";
+
+    public ItemU() {
+    }
+
+    public ItemU(String cn, String en) {
+        super(cn, en);
+    }
 
     public String getCn() {
-        return "脚踝围";
+        return "小腿围";
     }
 
     @Override

@@ -4,20 +4,21 @@ package com.npclo.imeasurer.data.measure.item.parts;
  * Created by Endless on 2017/8/5.
  */
 
-public class ItemB extends Part {
-    public ItemB() {
-    }
+public class ItemX extends Part {
 
-    public ItemB(String cn, String en) {
+    public ItemX(String cn, String en) {
         super(cn, en);
     }
 
+    public ItemX() {
+    }
+
     public String getCn() {
-        return "颈围";
+        return "髂骨高度";
     }
 
     @Override
     public String getEn() {
-        return "ItemB";
+        return "ItemX";
     }
 }

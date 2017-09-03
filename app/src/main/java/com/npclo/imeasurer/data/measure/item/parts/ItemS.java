@@ -6,12 +6,19 @@ package com.npclo.imeasurer.data.measure.item.parts;
 
 public class ItemS extends Part {
 
+    public ItemS() {
+    }
+
+    public ItemS(String cn, String en) {
+        super(cn, en);
+    }
+
     public String getCn() {
-        return "膝围";
+        return "中部大腿围";
     }
 
     @Override
     public String getEn() {
-        return "ItemS";
+        return "ItemT";
     }
 }
