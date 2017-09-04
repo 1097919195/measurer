@@ -97,7 +97,7 @@
                 android:textSize="16sp" />
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/action_reset_pwd"
+                android:id="@+id/action_submit"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="70dp"

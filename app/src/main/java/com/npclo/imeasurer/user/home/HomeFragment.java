@@ -14,6 +14,9 @@ import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.main.MainActivity;
+import com.npclo.imeasurer.user.contact.ContactFragment;
+import com.npclo.imeasurer.user.feedback.FeedbackFragment;
+import com.npclo.imeasurer.user.manage.ManageFragment;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
@@ -136,6 +139,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.action_user_manage:
+                ManageFragment manageFragment = ManageFragment.newInstance();
+                start(manageFragment, SINGLETASK);
                 break;
             case R.id.action_connect:
             case R.id.device_state:
@@ -150,9 +155,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 showToast(getString(R.string.prompt_app_help), Toast.LENGTH_LONG);
                 break;
             case R.id.action_feedback:
-
+                FeedbackFragment feedbackFragment = FeedbackFragment.newInstance();
+                start(feedbackFragment, SINGLETASK);
                 break;
             case R.id.action_contact:
+                ContactFragment contactFragment = ContactFragment.newInstance();
+                start(contactFragment, SINGLETASK);
                 break;
         }
     }

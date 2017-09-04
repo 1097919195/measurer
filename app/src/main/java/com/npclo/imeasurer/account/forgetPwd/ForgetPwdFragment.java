@@ -44,7 +44,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
     EditText inputNewPwd1;
     @BindView(R.id.input_new_pwd2)
     EditText inputNewPwd2;
-    @BindView(R.id.action_reset_pwd)
+    @BindView(R.id.action_submit)
     AppCompatButton actionResetPwd;
     Unbinder unbinder;
     private ForgetPwdContract.Presenter mPresenter;
@@ -112,14 +112,14 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
         unbinder.unbind();
     }
 
-    @OnClick({R.id.action_valid_code, R.id.action_reset_pwd})
+    @OnClick({R.id.action_valid_code, R.id.action_submit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.action_valid_code:
                 String s = inputMobile.getText().toString();
                 mPresenter.getValidCode(s);
                 break;
-            case R.id.action_reset_pwd:
+            case R.id.action_submit:
                 if (checkInput()) return;
                 mPresenter.resetPwd(mobile, pwd1, code);
                 break;
