@@ -28,7 +28,7 @@
     <string name="prompt_renter_pwd">请再次输入密码</string>
     <string name="pwd_not_same">两次密码不一样，请检查</string>
     <string name="register_success_hint">注册成功</string>
-    <string name="login_out">注销</string>
+    <string name="sign_out">退出登录</string>
     <string name="prompt_forget_pwd">忘记密码？</string>
     <string name="btn_text_main">首页</string>
     <string name="btn_text_measure">测量</string>
@@ -68,8 +68,9 @@
     <string name="tunwei_prompt">臀围</string>
     <string name="stop_scan">停止扫描</string>
     <string name="start_scan">开始扫描</string>
-    <string name="connected">已连接</string>
-    <string name="disconnected">未连接</string>
+    <string name="device_connected">蓝牙已连接</string>
+    <string name="prompt_connected">已连接</string>
+    <string name="prompt_disconnected">未连接</string>
     <string name="device_disconnected">蓝牙未连接</string>
     <string name="ble_info">蓝牙状态：</string>
     <string name="battery_unknown">N/A</string>
@@ -112,6 +113,18 @@
     <string name="slogan_scan">点击扫一扫，扫描微信公众号中的二维码</string>
     <string name="ble_hint">蓝牙：</string>
     <string name="user_toolbar_title">设置</string>
+    <string name="unit_times">人次</string>
+    <string name="total_times">累计量体：</string>
+    <string name="curr_times">本月量体：</string>
+    <string name="user_hint">某某</string>
+    <string name="prompt_user_manage">账户管理</string>
+    <string name="prompt_link_device">连接设备</string>
+    <string name="prompt_update">检查更新</string>
+    <string name="prompt_latest_version">已经最新版</string>
+    <string name="prompt_use_help">使用说明</string>
+    <string name="prompt_feedback">反馈</string>
+    <string name="prompt_contact">联系我们</string>
+    <string name="prompt_app_help">联系电话：0575-85595213</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>

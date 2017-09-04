@@ -25,7 +25,7 @@ public abstract class BaseActivity extends SupportActivity {
     }
 
     protected void beforeInit() {
-        checkLogin();
+//        checkLogin();
     }
 
     private void checkLogin() {

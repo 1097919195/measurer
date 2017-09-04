@@ -1,5 +1,6 @@
-package com.npclo.imeasurer.measure;
+package com.npclo.imeasurer.user.home;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,21 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.data.ble.BleDevice;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
+
 class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
 
     private List<BleDevice> mDatas;
+    private HomeFragment mFragment;
 
-    public ScanResultsAdapter(List<BleDevice> devices) {
-        mDatas = devices;
+    public ScanResultsAdapter(@NonNull HomeFragment fragment, @NonNull List<BleDevice> devices) {
+        mDatas = checkNotNull(devices);
+        mFragment = checkNotNull(fragment);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,12 +57,12 @@ class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHol
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BleDevice device = mDatas.get(position);
-//        holder.txtName.setText(String.format(Locale.getDefault(), "%s", device.getName()));
-//        holder.txtName.setTextColor(mFragment.getResources().getColor(R.color.ble_device_name));
-//        holder.txtMac.setText(String.format(Locale.getDefault(), "%s", device.getAddress()));
-//        holder.txtMac.setTextColor(mFragment.getResources().getColor(R.color.ble_device_address));
-//        holder.txtRssi.setText(String.format(Locale.getDefault(), "%s", device.getRssi()));
-//        holder.txtRssi.setTextColor(mFragment.getResources().getColor(R.color.black));
+        holder.txtName.setText(String.format(Locale.getDefault(), "%s", device.getName()));
+        holder.txtName.setTextColor(mFragment.getResources().getColor(R.color.ble_device_name));
+        holder.txtMac.setText(String.format(Locale.getDefault(), "%s", device.getAddress()));
+        holder.txtMac.setTextColor(mFragment.getResources().getColor(R.color.ble_device_address));
+        holder.txtRssi.setText(String.format(Locale.getDefault(), "%s", device.getRssi()));
+        holder.txtRssi.setTextColor(mFragment.getResources().getColor(R.color.black));
     }
 
     @Override

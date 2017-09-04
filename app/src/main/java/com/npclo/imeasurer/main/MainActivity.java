@@ -12,7 +12,6 @@ import com.npclo.imeasurer.utils.BleClientHelper;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
 
-import butterknife.ButterKnife;
 import kr.co.namee.permissiongen.PermissionGen;
 
 /**
@@ -28,7 +27,6 @@ public class MainActivity extends BaseActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        ButterKnife.bind(this);
         init();
     }
 

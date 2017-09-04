@@ -58,20 +58,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
-                        android:text="某某"
+                        android:text="@string/user_hint"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_marginTop="7dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
                         android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="本月量体："
+                            android:text="@string/curr_times"
                             android:textColor="@color/c999"
                             android:textSize="12sp" />
 
@@ -85,7 +85,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="人次"
+                            android:text="@string/unit_times"
                             android:textColor="@color/c999"
                             android:textSize="12sp" />
 
@@ -100,7 +100,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="累计量体："
+                            android:text="@string/total_times"
                             android:textColor="@color/c999"
                             android:textSize="12sp" />
 
@@ -114,7 +114,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="人次"
+                            android:text="@string/unit_times"
                             android:textColor="@color/c999"
                             android:textSize="12sp" />
 
@@ -122,14 +122,14 @@
 
                 </LinearLayout>
             </LinearLayout>
-
+            <!--第一块列表-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:background="@color/white"
                 android:orientation="vertical">
-
+                <!--用户管理-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -150,11 +150,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="账户管理"
+                        android:text="@string/prompt_user_manage"
                         android:textColor="@color/c393a3a"
                         android:textSize="16sp" />
 
                     <ImageView
+                        android:id="@+id/action_user_manage"
                         android:layout_width="11dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center_vertical"
@@ -165,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/ddd" />
-
+                <!--连接设备-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -186,21 +187,23 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="连接设备"
+                        android:text="@string/prompt_link_device"
                         android:textColor="@color/c393a3a"
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/device_state"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:text="未连接"
+                        android:text="@string/prompt_disconnected"
                         android:textColor="@color/c999"
                         android:textSize="14sp" />
 
                     <ImageView
+                        android:id="@+id/action_connect"
                         android:layout_width="11dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center_vertical"
@@ -211,7 +214,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/ddd" />
-
+                <!--检查更新-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -232,21 +235,23 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="检查更新"
+                        android:text="@string/prompt_update"
                         android:textColor="@color/c393a3a"
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/app_version"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:text="已经最新版"
+                        android:text="@string/prompt_latest_version"
                         android:textColor="@color/c999"
                         android:textSize="14sp" />
 
                     <ImageView
+                        android:id="@+id/action_update"
                         android:layout_width="11dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center_vertical"
@@ -260,7 +265,7 @@
                 android:layout_marginTop="18dp"
                 android:background="@color/white"
                 android:orientation="vertical">
-
+                <!--使用说明-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -281,11 +286,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="使用说明"
+                        android:text="@string/prompt_use_help"
                         android:textColor="@color/c393a3a"
                         android:textSize="16sp" />
 
                     <ImageView
+                        android:id="@+id/action_help"
                         android:layout_width="11dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center_vertical"
@@ -296,7 +302,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/ddd" />
-
+                <!--反馈-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -317,11 +323,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="反馈"
+                        android:text="@string/prompt_feedback"
                         android:textColor="@color/c393a3a"
                         android:textSize="16sp" />
 
                     <ImageView
+                        android:id="@+id/action_feedback"
                         android:layout_width="11dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center_vertical"
@@ -332,7 +339,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/ddd" />
-
+                <!--联系我们-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -353,11 +360,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="联系我们"
+                        android:text="@string/prompt_contact"
                         android:textColor="@color/c393a3a"
                         android:textSize="16sp" />
 
                     <ImageView
+                        android:id="@+id/action_contact"
                         android:layout_width="11dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center_vertical"
@@ -373,7 +381,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="102dp"
         android:background="@color/e24600"
-        android:text="@string/login_out"
+        android:text="@string/sign_out"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20sp" />

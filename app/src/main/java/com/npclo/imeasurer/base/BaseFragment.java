@@ -50,6 +50,10 @@ public abstract class BaseFragment extends SupportFragment {
         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
     }
 
+    protected void showToast(String text, int length) {
+        Toast.makeText(getActivity(), text, length).show();
+    }
+
     protected void showSnackbar(String text) {
         Snackbar.make(checkNotNull(getView()), text, Snackbar.LENGTH_SHORT).show();
     }
