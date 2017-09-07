@@ -20,6 +20,7 @@ import com.npclo.imeasurer.user.feedback.FeedbackFragment;
 import com.npclo.imeasurer.user.manage.ManageFragment;
 import com.npclo.imeasurer.user.manage.ManagePresenter;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
+import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
@@ -30,11 +31,13 @@ import com.unisound.client.SpeechSynthesizerListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import rx.Observable;
 
 import static android.content.Context.MODE_APPEND;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
@@ -276,6 +279,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         showToast(getString(R.string.device_connected));
         speechSynthesizer.playText("蓝牙连接成功");
         BaseApplication.setRxBleDevice(getActivity(), bleDevice);
+    }
+
+    @Override
+    public void setNotificationInfo(UUID characteristicUUID, Observable<RxBleConnection> connectionObservable) {
+        BaseApplication.setNotificationInfo(getActivity(), characteristicUUID, connectionObservable);
     }
 
     @Override

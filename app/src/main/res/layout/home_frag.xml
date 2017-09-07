@@ -29,7 +29,7 @@
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/ble_state"
                 android:text="@string/unconnected"
-                android:textColor="@color/ff0000"
+                android:textColor="@color/c252527"
                 android:textSize="16sp" />
             <!--TODO 图标-->
             <ImageView

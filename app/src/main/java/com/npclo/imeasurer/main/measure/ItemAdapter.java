@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,8 @@ import com.npclo.imeasurer.utils.views.MyTextView;
 
 import java.util.ArrayList;
 
-/**
- * Created by Endless on 2017/9/3.
- */
-
 public class ItemAdapter extends ArrayAdapter<Part> {
+    private static final String TAG = ItemAdapter.class.getSimpleName();
     private Context mContext;
     private int layoutResourceId;
     private ArrayList<Part> mGridData = new ArrayList<>();

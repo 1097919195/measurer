@@ -126,6 +126,7 @@ public class HomePresenter implements HomeContract.Presenter {
                             if (isCharacteristicNotifiable(characteristic)) {
                                 characteristicUUID = characteristic.getUuid();
                                 connectionObservable = prepareConnectionObservable();
+                                fragment.setNotificationInfo(characteristicUUID, connectionObservable);
                                 Log.e(TAG, "查找到符合要求的特性");
                                 connectDevice();
                                 break;

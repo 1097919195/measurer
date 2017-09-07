@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -17,11 +19,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
+import com.npclo.imeasurer.utils.views.MyTextView;
+import com.polidea.rxandroidble.RxBleConnection;
+import com.polidea.rxandroidble.RxBleDevice;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 import com.unisound.client.SpeechSynthesizerListener;
@@ -30,11 +36,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import rx.Observable;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -131,6 +139,19 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         angleList = Arrays.asList(angleItems);
         initSpeech();
         measurePresenter.subscribe();
+        RxBleDevice bleDevice = BaseApplication.getRxBleDevice(getActivity());
+        if (bleDevice != null && bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
+            Log.e(TAG, "获取到蓝牙状态" + bleDevice.toString());
+            //启动测量
+            try {
+                UUID characteristicUUID = BaseApplication.getUUID(getActivity());
+                Observable<RxBleConnection> connectionObservable = BaseApplication.getConnection(getActivity());
+                measurePresenter.startMeasure(characteristicUUID, connectionObservable);
+            } catch (Exception e) {
+                showToast("蓝牙连接异常，请重新连接！");
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -231,5 +252,101 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void handleError(Throwable e) {
+        handleError(e, TAG);
+    }
+
+    @Override
+    public void showStartReceiveData() {
+        // TODO: 2017/9/7
+    }
+
+    @Override
+    public void bleDeviceMeasuring() {
+        measureSequence = getResources().getStringArray(R.array.items_sequence);
+        speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
+    }
+
+    @Override
+    public void handleMeasureData(float length, int angle, int battery) {
+        if (battery < 20) speechSynthesizer.playText("电量低");// TODO: 2017/9/7
+        int count = gridView.getChildCount();
+        for (int i = 0; i < count; i++) {
+            if (assignValue(length, angle, (LinearLayout) gridView.getChildAt(i))) break;
+        }
+    }
+
+    /**
+     * 结果赋值，有几个字段需要的结果为角度
+     *
+     * @param length       长度
+     * @param linearLayout 行
+     * @return boolean
+     */
+    private boolean assignValue(float length, float angle, LinearLayout linearLayout) {
+        MyTextView textView = (MyTextView) linearLayout.getChildAt(0);
+        float tv_value = textView.getValue(); //att ? 有值36.0????
+        if (TextUtils.isEmpty(textView.getValue() + "")) {
+            String tag = (String) textView.getTag();
+            String cn;
+            try {
+                Part part = (Part) Class.forName(PART_PACKAGE + "." + tag).newInstance();
+                cn = part.getCn();
+                String value;//播报的测量结果
+                if (angleList.contains(tag)) {
+                    textView.setValue(angle);
+                    value = angle + "";
+                } else {
+                    textView.setValue(length);
+                    value = length + "";
+                }
+                textView.setTextColor(getResources().getColor(R.color.measured));//修改颜色
+                if (speechSynthesizer != null) {
+                    String result = cn + "，结果为" + value;
+                    String[] nextString;
+                    nextString = getNextString(cn, measureSequence);
+                    if (!TextUtils.isEmpty(nextString[0]))
+                        speechSynthesizer.playText(result + "      下一个测量部位" + nextString[0]);
+                    if (!TextUtils.isEmpty(nextString[1]))
+                        speechSynthesizer.playText(result + nextString[1]);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (java.lang.InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取下一个测量字段
+     *
+     * @param cn     当前字段
+     * @param arrays 字段数组
+     * @return 包含结果的数组
+     */
+    private String[] getNextString(String cn, String[] arrays) {
+        String last = null;
+        String next = null;
+        String[] strings = new String[2];
+        for (int m = 0, l = arrays.length; m < l; m++) {
+            if (arrays[m].equals(cn)) {
+                if (m == l - 1) {
+                    last = "所有部位测量完成";
+                } else {
+                    next = arrays[m + 1];
+                }
+            }
+        }
+        strings[0] = next;
+        strings[1] = last;
+        return strings;
     }
 }

@@ -162,15 +162,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         if (measureFragment == null) {
             measureFragment = MeasureFragment.newInstance();
             Bundle bundle = new Bundle();
-            //TODO for test
-            s = "{\"openID\":\"oaym60wV0nUG2KUmD84enwm5CAzE\",\"gender\":0,\"height\":\"170\"," +
-                    "\"weight\":\"60\",\"name\":\"MapleImage\",\"nickname\":\"MapleImage\"," +
-                    "\"avatar\":\"http:\\/\\/wx.qlogo.cn\\/mmopen\\/vi_32\\/icBY913leXwE7HP1pqlQnt7sJJwLL" +
-                    "VguLicMTvPYsDUHRtp0qNuKHrpPeUJJgNpsfxg62k5ENTl8NPhsiceWRKMSg\\/0\"}";
+//            s = "{\"openID\":\"oaym60wV0nUG2KUmD84enwm5CAzE\",\"gender\":0,\"height\":\"170\"," +
+//                    "\"weight\":\"60\",\"name\":\"MapleImage\",\"nickname\":\"MapleImage\"," +
+//                    "\"avatar\":\"http:\\/\\/wx.qlogo.cn\\/mmopen\\/vi_32\\/icBY913leXwE7HP1pqlQnt7sJJwLL" +
+//                    "VguLicMTvPYsDUHRtp0qNuKHrpPeUJJgNpsfxg62k5ENTl8NPhsiceWRKMSg\\/0\"}";
 
             bundle.putString("user", s);
             measureFragment.setArguments(bundle);
-            new MeasurePresenter(measureFragment, SchedulerProvider.getInstance());
+            measureFragment.setPresenter(new MeasurePresenter(measureFragment, SchedulerProvider.getInstance()));
             start(measureFragment, SINGLETASK);
         }
     }
