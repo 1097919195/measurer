@@ -45,6 +45,7 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
         baseToolbar.setNavigationOnClickListener(__ -> {
             HomeFragment homeFragment = HomeFragment.newInstance();
             start(homeFragment, SINGLETASK);
+            pop();
         });
     }
 

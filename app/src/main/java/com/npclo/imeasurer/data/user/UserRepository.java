@@ -33,4 +33,8 @@ public class UserRepository implements UserDataSource {
     public Observable<WechatUser> getUserInfoWithCode(String code) {
         return new UserHttpHelper().getUserInfoWithCode(code);
     }
+
+    public Observable<HttpMsg> editPwd(String id, String old, String newpwd) {
+        return new UserHttpHelper().editPwd(id, old, newpwd);
+    }
 }

@@ -42,4 +42,10 @@ public class UserHttpHelper extends HttpHelper {
                 .getUserInfoWithCode(code)
                 .map(new HttpResponseFunc<>());
     }
+
+    public Observable<HttpMsg> editPwd(String id, String old, String newpwd) {
+        return retrofit.create(UserService.class)
+                .editPwd(id, old, newpwd)
+                .map(new HttpResponseFunc<>());
+    }
 }

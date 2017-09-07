@@ -19,6 +19,7 @@
         android:background="@drawable/btn_radius_4_df"
         android:gravity="center_vertical"
         android:hint="@string/enter_old_pwd"
+        android:inputType="textWebPassword"
         android:textColor="@color/c333"
         android:textColorHint="@color/dfdfdf"
         android:textSize="18sp" />
@@ -35,6 +36,7 @@
         android:background="@drawable/btn_radius_4_df"
         android:gravity="center_vertical"
         android:hint="@string/enter_new_pwd"
+        android:inputType="textWebPassword"
         android:textColor="@color/c333"
         android:textColorHint="@color/dfdfdf"
         android:textSize="18sp" />
@@ -51,6 +53,7 @@
         android:background="@drawable/btn_radius_4_df"
         android:gravity="center_vertical"
         android:hint="@string/enter_new_pwd2"
+        android:inputType="textWebPassword"
         android:textColor="@color/c333"
         android:textColorHint="@color/dfdfdf"
         android:textSize="18sp" />

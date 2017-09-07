@@ -36,4 +36,9 @@ public interface UserService {
 
     @GET("clientUser/getInfoWithQrcode")
     Observable<HttpResponse<WechatUser>> getUserInfoWithCode(@Query("code") String code);
+
+    @FormUrlEncoded
+    @POST("clientUser/editPwd")
+    Observable<HttpResponse<HttpMsg>> editPwd(@Field("id") String id, @Field("old") String old,
+                                              @Field("new") String newpwd);
 }

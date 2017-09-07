@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.account.signin.SignInFragment;
 import com.npclo.imeasurer.account.signin.SignInPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
@@ -188,7 +187,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
             case R.id.to_sign_in:
                 SignInFragment fragment = SignInFragment.newInstance();
                 start(fragment, SINGLETASK);
-                ((AccountActivity) getActivity()).setSignInPresenter(new SignInPresenter(fragment,
+                fragment.setPresenter(new SignInPresenter(fragment,
                         SchedulerProvider.getInstance()));
                 break;
         }

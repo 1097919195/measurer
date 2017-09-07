@@ -1,16 +1,18 @@
 package com.npclo.imeasurer.main;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
-import com.npclo.imeasurer.utils.BleClientHelper;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
-import com.polidea.rxandroidble.RxBleClient;
 
 import kr.co.namee.permissiongen.PermissionGen;
 
@@ -20,18 +22,17 @@ import kr.co.namee.permissiongen.PermissionGen;
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private RxBleClient bleClient;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkLogin();
         initView();
         init();
     }
 
     private void init() {
-        bleClient = BleClientHelper.getInstance(this);
         PermissionGen.with(MainActivity.this)
                 .addRequestCode(100)
                 .permissions(
@@ -45,6 +46,17 @@ public class MainActivity extends BaseActivity {
             homeFragment = HomeFragment.newInstance();
             loadRootFragment(R.id.content_frame, homeFragment);
             new HomePresenter(homeFragment, SchedulerProvider.getInstance());
+        }
+    }
+
+    private void checkLogin() {
+        SharedPreferences loginState = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+        boolean isLogin = loginState.getBoolean("loginState", false);
+        String id = loginState.getString("id", null);
+
+        if (!isLogin && TextUtils.isEmpty(id)) {
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
         }
     }
 

@@ -3,10 +3,10 @@ package com.npclo.imeasurer.account.signin;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.account.forgetPwd.ForgetPwdFragment;
 import com.npclo.imeasurer.account.forgetPwd.ForgetPwdPresenter;
 import com.npclo.imeasurer.account.signup.SignUpFragment;
@@ -25,17 +24,12 @@ import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.main.MainActivity;
-import com.npclo.imeasurer.utils.ApiException;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
-
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import retrofit2.HttpException;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -65,7 +59,8 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     private SignInContract.Presenter signinPresenter;
     private static final String TAG = SignInFragment.class.getSimpleName();
     private boolean pwd_label = true;
-    private Boolean isUserRememberPwd;
+    @NonNull
+    private Boolean isUserRememberPwd = true;
     private String name;
     private String password;
     private MaterialDialog signInLoadingDialog;
@@ -155,13 +150,13 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
             case R.id.forget_pwd_tv:
                 ForgetPwdFragment fragment = ForgetPwdFragment.newInstance();
                 start(fragment, SINGLETASK);
-                ((AccountActivity) getActivity()).setForgetPwdPresenter(new ForgetPwdPresenter(fragment,
+                fragment.setPresenter(new ForgetPwdPresenter(fragment,
                         SchedulerProvider.getInstance()));
                 break;
             case R.id.signup_tv:
                 SignUpFragment signUpFragment = SignUpFragment.newInstance();
                 start(signUpFragment, SINGLETASK);
-                ((AccountActivity) getActivity()).setSignUpPresenter(new SignUpPresenter(signUpFragment,
+                signUpFragment.setPresenter(new SignUpPresenter(signUpFragment,
                         SchedulerProvider.getInstance()));
                 break;
             case R.id.action_wechat_login:
@@ -185,6 +180,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         if (isUserRememberPwd) edit.putBoolean("loginState", true);//att 是否记住密码
+
         edit.putString("id", user.get_id());
         edit.putString("name", user.getName());
         edit.putString("curr_times", user.getCurrTimes() + "");
@@ -195,18 +191,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     public void showSignInError(Throwable e) {
         signInLoadingDialog.dismiss();
-        if (e instanceof SocketTimeoutException) {
-            showToast(getString(R.string.net_connect_timeout));
-        } else if (e instanceof ConnectException) {
-            showToast(getString(R.string.net_connect_out));
-        } else if (e instanceof HttpException) {
-            showToast(getString(R.string.service_down));
-        } else if (e instanceof ApiException) {
-            showToast(e.getMessage());
-        } else {
-            showToast(getString(R.string.something_error));
-        }
-        Log.e(TAG, e.getMessage());
+        handleError(e, TAG);
     }
 
     @Override

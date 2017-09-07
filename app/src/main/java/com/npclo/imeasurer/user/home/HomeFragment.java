@@ -17,6 +17,8 @@ import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.user.contact.ContactFragment;
 import com.npclo.imeasurer.user.feedback.FeedbackFragment;
 import com.npclo.imeasurer.user.manage.ManageFragment;
+import com.npclo.imeasurer.user.manage.ManagePresenter;
+import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
@@ -141,6 +143,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             case R.id.action_user_manage:
                 ManageFragment manageFragment = ManageFragment.newInstance();
                 start(manageFragment, SINGLETASK);
+                manageFragment.setPresenter(new ManagePresenter(manageFragment, SchedulerProvider.getInstance()));
                 break;
             case R.id.action_connect:
             case R.id.device_state:

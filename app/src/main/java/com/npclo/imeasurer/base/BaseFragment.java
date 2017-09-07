@@ -78,4 +78,5 @@ public abstract class BaseFragment extends SupportFragment {
         }
         Log.e(TAG, e.getMessage());
     }
+
 }

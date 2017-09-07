@@ -96,7 +96,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
         baseToolbar.setNavigationOnClickListener(__ -> {
             SignInFragment signInFragment = SignInFragment.newInstance();
             start(signInFragment, SINGLETASK);
-            ((AccountActivity) getActivity()).setSignInPresenter(new SignInPresenter(signInFragment,
+            signInFragment.setPresenter(new SignInPresenter(signInFragment,
                     SchedulerProvider.getInstance()));
         });
     }
