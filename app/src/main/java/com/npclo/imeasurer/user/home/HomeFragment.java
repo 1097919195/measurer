@@ -22,6 +22,7 @@ import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
+import com.tencent.mm.opensdk.utils.Log;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 import com.unisound.client.SpeechSynthesizerListener;
@@ -38,6 +39,7 @@ import static android.content.Context.MODE_APPEND;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class HomeFragment extends BaseFragment implements HomeContract.View {
+    private static final String TAG = HomeFragment.class.getSimpleName();
     HomeContract.Presenter mPresenter;
     @BindView(R.id.action_logout)
     AppCompatButton actionLogout;
@@ -56,6 +58,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private MaterialDialog connectingProgressBar;
     private MaterialDialog scanningProgressBar;
     private SpeechSynthesizer speechSynthesizer;
+    private MaterialDialog resultDialog;
 
     public HomeFragment() {
     }
@@ -78,7 +81,29 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         baseToolbar.setNavigationIcon(R.mipmap.left);
-        baseToolbar.setNavigationOnClickListener(__ -> startActivity(new Intent(getActivity(), MainActivity.class)));
+        baseToolbar.setNavigationOnClickListener(__ -> {
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            pop();
+        });
+        configureResultList();
+    }
+
+    private void configureResultList() {
+        scanResultsAdapter = new ScanResultsAdapter(this, bleDeviceList);
+        scanResultDialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.choose_device_prompt)
+                .backgroundColor(getResources().getColor(R.color.white))
+                .titleColor(getResources().getColor(R.color.scan_result_list_title))
+                .dividerColor(getResources().getColor(R.color.divider))
+                .adapter(scanResultsAdapter, null);
+        ;
+        //选择目的蓝牙设备
+        scanResultsAdapter.setOnAdapterItemClickListener(v -> {
+                    // FIXME: 2017/8/23 点击所选择的蓝牙设备后，蓝牙设备对话框关闭
+                    String s = ((TextView) v.findViewById(R.id.txt_mac)).getText().toString();
+                    mPresenter.connectDevice(s);
+                }
+        );
     }
 
     private void initSpeech() {
@@ -131,7 +156,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         edit.putBoolean("loginState", false);
         edit.putString("id", null);
         edit.apply();
-        Toast.makeText(getActivity(), "login out", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), AccountActivity.class);
         startActivity(intent);
     }
@@ -167,11 +192,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 break;
         }
     }
-
-    /********************************************************************
-     *蓝牙连接相关
-     ********************************************************************
-     **/
 
     /**
      * @param bleScanException
@@ -216,39 +236,25 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     public void handleScanResult(ScanResult result) {
-        scanningProgressBar.dismiss();
-        RxBleDevice device = result.getBleDevice();
-        scanResultsAdapter = new ScanResultsAdapter(this, bleDeviceList);
-
-        if (showDialogLabel) {
-            showScanDialog();
-            showDialogLabel = false;
+        if (scanningProgressBar != null) {
+            scanningProgressBar.dismiss();
+            scanningProgressBar = null;
         }
-
+        android.util.Log.e(TAG, "正在扫描。。。");
+        RxBleDevice device = result.getBleDevice();
+        if (resultDialog == null) {
+            resultDialog = scanResultDialog.show();
+        }
+        if (!resultDialog.isShowing()) {
+            resultDialog.show();
+            Log.e(TAG, "结果对话框显示：" + resultDialog.toString());
+        }
         if (!rxBleDeviceAddressList.contains(device.getMacAddress())) {
+            Log.e(TAG, "新的设备" + device.getMacAddress());
             rxBleDeviceAddressList.add(device.getMacAddress());
             bleDeviceList.add(new BleDevice(device.getName(), device.getMacAddress(), result.getRssi()));
             scanResultsAdapter.notifyDataSetChanged();
         }
-    }
-
-    private void showScanDialog() {
-        if (scanResultDialog == null) {
-            scanResultDialog = new MaterialDialog.Builder(getActivity())
-                    .title(R.string.choose_device_prompt)
-                    .backgroundColor(getResources().getColor(R.color.white))
-                    .titleColor(getResources().getColor(R.color.scan_result_list_title))
-                    .dividerColor(getResources().getColor(R.color.divider));
-        }
-        scanResultDialog.adapter(scanResultsAdapter, null).show();
-        //选择目的蓝牙设备
-        scanResultsAdapter.setOnAdapterItemClickListener(v -> {
-                    // FIXME: 2017/8/23 点击所选择的蓝牙设备后，蓝牙设备对话框关闭
-                    String s = ((TextView) v.findViewById(R.id.txt_mac)).getText().toString();
-                    mPresenter.connectDevice(s);
-                    showDialogLabel = true;
-                }
-        );
     }
 
     @Override
@@ -264,16 +270,18 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showConnected() {
         connectingProgressBar.dismiss();
-
         deviceState.setText(getString(R.string.prompt_connected));
+        deviceState.setTextColor(getResources().getColor(R.color.primary));
         showToast(getString(R.string.device_connected));
+        speechSynthesizer.playText("蓝牙连接成功");
     }
 
     @Override
     public void isConnecting() {
-        scanResultDialog.build().dismiss();
+        android.util.Log.e(TAG, "扫描弹窗正在扫描。。。");
         connectingProgressBar = new MaterialDialog.Builder(getActivity())
                 .title(getString(R.string.connecting))
+                .titleColor(getResources().getColor(R.color.ff5001))
                 .progress(true, 100)
                 .show();
     }
@@ -286,9 +294,21 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showScanning() {
         scanningProgressBar = new MaterialDialog.Builder(getActivity())
-                .title(getString(R.string.scanning))
                 .backgroundColor(getResources().getColor(R.color.white))
                 .progress(true, 100)
                 .show();
+    }
+
+    @Override
+    public void closeScanResultDialog() {
+        try {
+            if (resultDialog != null || resultDialog.isShowing()) {
+                resultDialog.dismiss();
+                resultDialog = null;
+                android.util.Log.e(TAG, "蓝牙设备显示弹窗关闭");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

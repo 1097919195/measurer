@@ -29,6 +29,8 @@ public interface HomeContract {
         void showScanning();
 
         void handleScanResult(ScanResult scanResult);
+
+        void closeScanResultDialog();
     }
 
     interface Presenter extends BasePresenter {

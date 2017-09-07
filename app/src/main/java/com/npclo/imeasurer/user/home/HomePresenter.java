@@ -86,6 +86,7 @@ public class HomePresenter implements HomeContract.Presenter {
             fragment.showError("重复连接，请检查");
         } else {
             fragment.showError();
+            Log.e(TAG, e.toString());
         }
     }
 
@@ -102,12 +103,18 @@ public class HomePresenter implements HomeContract.Presenter {
         return bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
     }
 
-    /**
-     * 选择设备后，选择服务，再选择通知特性
-     *
-     * @param s
-     */
     public void connectDevice(String s) {
+        try {
+            if (scanSubscribe != null || scanSubscribe.isUnsubscribed()) {
+                scanSubscribe.unsubscribe();
+                fragment.closeScanResultDialog();
+                Log.e(TAG, "执行扫描观察者取消订阅");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "发生错误：" + e.getMessage());
+            e.printStackTrace();
+        }
+
         bleDevice = rxBleClient.getBleDevice(s);
         bleDevice.establishConnection(false)
                 .flatMap(RxBleConnection::discoverServices)
@@ -119,6 +126,7 @@ public class HomePresenter implements HomeContract.Presenter {
                             if (isCharacteristicNotifiable(characteristic)) {
                                 characteristicUUID = characteristic.getUuid();
                                 connectionObservable = prepareConnectionObservable();
+                                Log.e(TAG, "查找到符合要求的特性");
                                 connectDevice();
                                 break;
                             }
@@ -136,10 +144,10 @@ public class HomePresenter implements HomeContract.Presenter {
                     .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUUID))
                     .observeOn(mSchedulerProvider.ui())
                     .doOnSubscribe(this::connecting)
-                    .doOnUnsubscribe(() -> Log.e(getClass().toString(), "is on connecting"))
+                    .doOnUnsubscribe(() -> Log.e(getClass().toString(), "连接设备订阅器-取消订阅"))
                     .subscribe(c -> {
-//                        fragment.showConnected();
-                        Log.e(TAG, "Hey, connection has been established!");
+                        fragment.showConnected();
+                        Log.e(TAG, "设备已连接上");
                     }, this::handleError);
         }
     }
@@ -149,20 +157,15 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     public void startScan() {
-//        if (scanSubscribe != null) {
-//            scanSubscribe.unsubscribe();
-//            scanSubscribe = null;
-//        } else {
         scanSubscribe = rxBleClient.scanBleDevices(new ScanSettings.Builder()
                         .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                         .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                         .build(),
                 new ScanFilter.Builder().build())
-                .doOnSubscribe(this::scanning)
                 .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(this::scanning)
                 .doOnUnsubscribe(this::clearSubscription)
                 .subscribe(this::handleResult, this::handleError);
-//        }
     }
 
     private void handleResult(ScanResult scanResult) {

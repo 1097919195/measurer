@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +36,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     Toolbar toolbarBase;
     Unbinder unbinder;
     private static final String TAG = HomeFragment.class.getSimpleName();
+    @BindView(R.id.input_byte)
+    EditText inputByte;
+    @BindView(R.id.byte_result)
+
+    TextView byteResult;
+    Unbinder unbinder1;
+    @BindView(R.id.btn_result)
+    Button btnResult;
     private HomeContract.Presenter mPresenter;
     private MaterialDialog dialog;
 
@@ -159,5 +169,18 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showCompleteGetInfo() {
         showLoading(false);
+    }
+
+    @OnClick(R.id.btn_result)
+    public void onViewClicked() {
+        String s = inputByte.getText().toString();
+        int code = Integer.parseInt("8D6A", 16);
+        int length = Integer.parseInt(s.substring(0, 4), 16);
+        int angle = Integer.parseInt(s.substring(4, 8), 16);
+        int battery = Integer.parseInt(s.substring(8, 12), 16);
+        int a1 = length ^ code;
+        int a2 = angle ^ code;
+        int a3 = battery ^ code;
+        byteResult.setText("length: " + a1 + " battery: " + a2 + " angle: " + a3);
     }
 }

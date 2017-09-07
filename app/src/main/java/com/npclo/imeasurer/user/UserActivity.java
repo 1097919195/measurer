@@ -21,6 +21,11 @@ public class UserActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         client = BaseApplication.getRxBleClient(this);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         init();
     }
 
@@ -30,7 +35,7 @@ public class UserActivity extends BaseActivity {
         if (homeFragment == null) {
             homeFragment = HomeFragment.newInstance();
             loadRootFragment(R.id.content_frame, homeFragment);
-            new HomePresenter(client, homeFragment, SchedulerProvider.getInstance());
+            homeFragment.setPresenter(new HomePresenter(client, homeFragment, SchedulerProvider.getInstance()));
         }
     }
 
