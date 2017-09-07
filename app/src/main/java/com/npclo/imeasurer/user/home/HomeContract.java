@@ -2,6 +2,7 @@ package com.npclo.imeasurer.user.home;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
+import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
 
@@ -20,7 +21,7 @@ public interface HomeContract {
 
         void showError();
 
-        void showConnected();
+        void showConnected(RxBleDevice bleDevice);
 
         void isConnecting();
 

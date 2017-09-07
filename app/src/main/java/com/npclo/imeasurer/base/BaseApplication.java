@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.polidea.rxandroidble.RxBleClient;
+import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.internal.RxBleLog;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -13,11 +14,14 @@ import com.squareup.leakcanary.LeakCanary;
 
 public class BaseApplication extends Application {
     private RxBleClient rxBleClient;
+    private RxBleDevice rxBleDevice;
+
 
     public static RxBleClient getRxBleClient(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         return application.rxBleClient;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,5 +35,15 @@ public class BaseApplication extends Application {
         LeakCanary.install(this);
         rxBleClient = RxBleClient.create(this);
         RxBleClient.setLogLevel(RxBleLog.DEBUG);
+    }
+
+    public static RxBleDevice getRxBleDevice(Context context) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        return application.rxBleDevice;
+    }
+
+    public static void setRxBleDevice(Context context, RxBleDevice rxBleDevice) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        application.rxBleDevice = rxBleDevice;
     }
 }

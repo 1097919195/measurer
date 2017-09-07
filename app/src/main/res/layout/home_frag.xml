@@ -27,6 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:id="@+id/ble_state"
+                android:text="@string/unconnected"
                 android:textColor="@color/ff0000"
                 android:textSize="16sp" />
             <!--TODO 图标-->
@@ -35,6 +37,7 @@
                 android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
                 android:src="@mipmap/hand_up" />
+
         </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -65,6 +68,8 @@
         android:text="@string/slogan_scan"
         android:textColor="@color/primary"
         android:textSize="18sp" />
+
+
     <!--TODO test-->
     <EditText
         android:layout_width="match_parent"

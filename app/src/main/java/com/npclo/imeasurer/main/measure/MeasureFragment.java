@@ -21,6 +21,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
+import com.npclo.imeasurer.main.home.HomeFragment;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 import com.unisound.client.SpeechSynthesizerListener;
@@ -109,6 +110,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private void initToolbar() {
         baseToolbarTitle.setText("量体");
         baseToolbar.setNavigationIcon(R.mipmap.left);
+        baseToolbar.setNavigationOnClickListener(__ -> {
+            start(HomeFragment.newInstance(), SINGLETASK);
+            pop();
+        });
         baseToolbar.inflateMenu(R.menu.base_toolbar_menu);
         baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.redact);
         baseToolbar.setOnMenuItemClickListener(item -> {

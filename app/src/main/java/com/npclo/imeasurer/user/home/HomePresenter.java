@@ -146,7 +146,7 @@ public class HomePresenter implements HomeContract.Presenter {
                     .doOnSubscribe(this::connecting)
                     .doOnUnsubscribe(() -> Log.e(getClass().toString(), "连接设备订阅器-取消订阅"))
                     .subscribe(c -> {
-                        fragment.showConnected();
+                        fragment.showConnected(bleDevice);
                         Log.e(TAG, "设备已连接上");
                     }, this::handleError);
         }

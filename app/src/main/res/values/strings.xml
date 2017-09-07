@@ -139,6 +139,8 @@
     <string name="company_address">地址:浙江省绍兴市柯桥区创意大厦809室</string>
     <string name="copyright">&#169;浙江格心科技有限公司</string>
     <string name="logout_success">退出登录成功</string>
+    <string name="unconnected">未连接</string>
+    <string name="connected">已连接</string>
     <string-array name="angle_items">
         <item>ZuoJianXie</item>
         <item>YouJianXie</item>

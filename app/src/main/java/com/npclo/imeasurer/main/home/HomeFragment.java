@@ -3,6 +3,7 @@ package com.npclo.imeasurer.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,12 +14,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.zxing.client.android.decode.CaptureActivity;
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.measure.MeasureFragment;
 import com.npclo.imeasurer.main.measure.MeasurePresenter;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
+import com.polidea.rxandroidble.RxBleConnection;
+import com.polidea.rxandroidble.RxBleDevice;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,14 +38,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     TextView scanHint;
     @BindView(R.id.base_toolbar)
     Toolbar toolbarBase;
+    @BindView(R.id.ble_state)
+    TextView bleState;
     Unbinder unbinder;
     private static final String TAG = HomeFragment.class.getSimpleName();
+
     @BindView(R.id.input_byte)
     EditText inputByte;
     @BindView(R.id.byte_result)
-
     TextView byteResult;
-    Unbinder unbinder1;
     @BindView(R.id.btn_result)
     Button btnResult;
     private HomeContract.Presenter mPresenter;
@@ -110,12 +115,21 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         toolbarBase.inflateMenu(R.menu.base_toolbar_menu);
         Intent intent = new Intent(getActivity(), UserActivity.class);
         toolbarBase.getMenu().getItem(0).setIntent(intent);
+        // TODO: 2017/9/7 蓝牙未连接时，点击未连接按钮前往连接
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mPresenter.subscribe();
+        RxBleDevice rxBleDevice = BaseApplication.getRxBleDevice(getActivity());
+        if (rxBleDevice != null && rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
+            Log.e(TAG, "获取到蓝牙状态" + rxBleDevice.toString());
+            bleState.setText(getString(R.string.connected));
+            bleState.setTextColor(getResources().getColor(R.color.green));
+            bleState.setEnabled(false);//TODO 未连接按钮不能再点击前往连接
+        }
     }
 
     @Override
@@ -171,6 +185,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         showLoading(false);
     }
 
+
+    // TODO: 2017/9/7 test 开始
     @OnClick(R.id.btn_result)
     public void onViewClicked() {
         String s = inputByte.getText().toString();

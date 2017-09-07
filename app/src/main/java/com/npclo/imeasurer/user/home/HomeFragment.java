@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
+import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.main.MainActivity;
@@ -268,12 +269,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showConnected() {
+    public void showConnected(RxBleDevice bleDevice) {
         connectingProgressBar.dismiss();
         deviceState.setText(getString(R.string.prompt_connected));
         deviceState.setTextColor(getResources().getColor(R.color.primary));
         showToast(getString(R.string.device_connected));
         speechSynthesizer.playText("蓝牙连接成功");
+        BaseApplication.setRxBleDevice(getActivity(), bleDevice);
     }
 
     @Override
