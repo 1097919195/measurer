@@ -1,5 +1,7 @@
 package com.npclo.imeasurer.main.measure;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.measure.Measurement;
@@ -49,6 +52,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Observable;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasureFragment extends BaseFragment implements MeasureContract.View {
@@ -264,7 +268,14 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 Method method = Class2.getMethod("set" + en, aClass);
                 method.invoke(item, part);
             }
-            Measurement measurement = new Measurement(user, item);
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+            String id = sharedPreferences.getString("id", null);
+            if (TextUtils.isEmpty(id)) {
+                showToast("账号异常，请重新登录");
+                startActivity(new Intent(getActivity(), AccountActivity.class));
+                return;
+            }
+            Measurement measurement = new Measurement(user, item, id);
             measurePresenter.saveMeasurement(measurement);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -419,7 +430,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             textView.setTextColor(getResources().getColor(R.color.measured));//修改颜色
             if (speechSynthesizer != null) {
                 if (type == 1) { //修改原有结果
-                    String result = cn + "，重新测量结果为" + value;
+                    String result = cn + "，重新测量结果为" + value;// TODO: 2017/9/8 播报下一个测量部位
                     speechSynthesizer.playText(result);
                 } else {
                     String result = cn + value;
