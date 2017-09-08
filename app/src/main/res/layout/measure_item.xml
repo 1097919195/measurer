@@ -12,7 +12,6 @@
         android:layout_height="42dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="测试测试"
         android:textColor="@color/unmeasured"
         android:textSize="16sp" />
 </LinearLayout>

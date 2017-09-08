@@ -7,9 +7,12 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.utils.MeasureStateEnum;
 
 public class MyTextView extends AppCompatTextView {
     private float value;
+    //FIXME 该条目的测量状态，未测，已测，正在修改等。。。
+    private int state = MeasureStateEnum.UNMEASUED.ordinal();
 
     public MyTextView(Context context) {
         super(context);
@@ -32,5 +35,13 @@ public class MyTextView extends AppCompatTextView {
 
     public void setValue(float value) {
         this.value = value;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

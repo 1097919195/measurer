@@ -19,6 +19,6 @@ public class ItemS extends Part {
 
     @Override
     public String getEn() {
-        return "ItemT";
+        return "ItemS";
     }
 }

@@ -57,7 +57,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private List<BleDevice> bleDeviceList = new ArrayList<>();
     private List<String> rxBleDeviceAddressList = new ArrayList<>();
     private ScanResultsAdapter scanResultsAdapter;
-    private boolean showDialogLabel = true;
     private MaterialDialog.Builder scanResultDialog;
     private MaterialDialog connectingProgressBar;
     private MaterialDialog scanningProgressBar;
@@ -244,7 +243,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             scanningProgressBar.dismiss();
             scanningProgressBar = null;
         }
-        android.util.Log.e(TAG, "正在扫描。。。");
+        Log.e(TAG, "正在扫描。。。");
         RxBleDevice device = result.getBleDevice();
         if (resultDialog == null) {
             resultDialog = scanResultDialog.show();
@@ -292,6 +291,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         connectingProgressBar = new MaterialDialog.Builder(getActivity())
                 .title(getString(R.string.connecting))
                 .titleColor(getResources().getColor(R.color.ff5001))
+                .backgroundColor(getResources().getColor(R.color.white))
                 .progress(true, 100)
                 .show();
     }

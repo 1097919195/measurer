@@ -142,12 +142,12 @@
     <string name="unconnected">未连接</string>
     <string name="connected">已连接</string>
     <string-array name="angle_items">
-        <item>ZuoJianXie</item>
-        <item>YouJianXie</item>
-        <item>WanBeiAngle</item>
-        <item>ShangTuDu</item>
-        <item>XiaTuDu</item>
-        <item>AoYao</item>
+        <item>ItemD</item>
+        <item>ItemE</item>
+        <item>ItemF</item>
+        <item>ItemO</item>
+        <item>ItemP</item>
+        <item>ItemN</item>
     </string-array>
     <string-array name="items_sequence">
         <item>头围</item>
