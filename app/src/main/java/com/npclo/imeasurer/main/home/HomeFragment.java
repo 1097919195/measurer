@@ -57,7 +57,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.home_frag;
+        return R.layout.frag_home;
     }
 
     @Override

@@ -106,7 +106,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     protected int getLayoutId() {
-        return R.layout.measure_frag;
+        return R.layout.frag_measure;
     }
 
     @Override
@@ -123,7 +123,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         initToolbar();
         //渲染测量部位列表
         initMeasureItemList();
-        ItemAdapter adapter = new ItemAdapter(getActivity(), R.layout.measure_item, (ArrayList<Part>) partList);
+        ItemAdapter adapter = new ItemAdapter(getActivity(), R.layout.list_measure_item, (ArrayList<Part>) partList);
         gridView.setAdapter(adapter);// TODO: 2017/9/4 使用RecyclerView替代
         // FIXME: 2017/9/8 notifyItemChanged 部分绑定
         gridView.setOnItemClickListener((AdapterView<?> var1, View view, int position, long var4) -> {

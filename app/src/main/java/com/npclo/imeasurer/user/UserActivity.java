@@ -40,6 +40,6 @@ public class UserActivity extends BaseActivity {
     }
 
     protected void initView() {
-        setContentView(R.layout.main_act);
+        setContentView(R.layout.act_main);
     }
 }

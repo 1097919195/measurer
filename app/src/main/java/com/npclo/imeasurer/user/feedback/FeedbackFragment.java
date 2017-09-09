@@ -43,7 +43,7 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
 
     @Override
     protected int getLayoutId() {
-        return R.layout.feedback_frag;
+        return R.layout.frag_feedback;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
 
     @Override
     protected int getLayoutId() {
-        return R.layout.contact_frag;
+        return R.layout.frag_contact;
     }
 
     @Override

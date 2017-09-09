@@ -71,7 +71,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
 
     @Override
     protected int getLayoutId() {
-        return R.layout.forget_pwd_frag;
+        return R.layout.frag_forget_pwd;
     }
 
     @Override

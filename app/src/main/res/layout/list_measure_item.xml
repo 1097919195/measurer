@@ -8,9 +8,9 @@
 
     <com.npclo.imeasurer.utils.views.MyTextView
         android:id="@+id/tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:textColor="@color/unmeasured"
         android:textSize="16sp" />

@@ -50,7 +50,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.manage_frag;
+        return R.layout.frag_manage;
     }
 
     @Override

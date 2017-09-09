@@ -60,7 +60,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.sign_up_frag;
+        return R.layout.frag_signup;
     }
 
     @Override

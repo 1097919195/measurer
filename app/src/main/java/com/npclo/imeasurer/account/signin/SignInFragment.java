@@ -88,7 +88,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.sign_in_frag;
+        return R.layout.frag_signin;
     }
 
     @Override

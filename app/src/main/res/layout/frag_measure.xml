@@ -17,11 +17,11 @@
 
             <include layout="@layout/base_toolbar" />
 
-            <include layout="@layout/wechat_user_info" />
+            <include layout="@layout/view_wechat_user_info" />
 
-            <include layout="@layout/measure_table" />
+            <include layout="@layout/view_mygridview" />
 
-            <include layout="@layout/camera_user" />
+            <include layout="@layout/view_camera_user" />
         </LinearLayout>
     </ScrollView>
 
