@@ -1,5 +1,7 @@
 package com.npclo.imeasurer.data.wuser;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -7,19 +9,41 @@ import android.support.annotation.Nullable;
  * Created by Endless on 2017/8/14.
  */
 
-public class WechatUser {
+public class WechatUser implements Parcelable {
     private int sex;
     private String nickname;
-    @NonNull
+    @Nullable
     private String height;
-    @NonNull
+    @Nullable
     private String weight;
-    @NonNull
+    @Nullable
     private String openID;
     @Nullable
     private String avatar;
     @NonNull
     private String name;
+
+    protected WechatUser(Parcel in) {
+        sex = in.readInt();
+        nickname = in.readString();
+        height = in.readString();
+        weight = in.readString();
+        openID = in.readString();
+        avatar = in.readString();
+        name = in.readString();
+    }
+
+    public static final Creator<WechatUser> CREATOR = new Creator<WechatUser>() {
+        @Override
+        public WechatUser createFromParcel(Parcel in) {
+            return new WechatUser(in);
+        }
+
+        @Override
+        public WechatUser[] newArray(int size) {
+            return new WechatUser[size];
+        }
+    };
 
     @NonNull
     public String getName() {
@@ -85,5 +109,21 @@ public class WechatUser {
     public WechatUser setOpenID(@Nullable String openID) {
         this.openID = openID;
         return this;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(sex);
+        parcel.writeString(nickname);
+        parcel.writeString(height);
+        parcel.writeString(weight);
+        parcel.writeString(openID);
+        parcel.writeString(avatar);
+        parcel.writeString(name);
     }
 }

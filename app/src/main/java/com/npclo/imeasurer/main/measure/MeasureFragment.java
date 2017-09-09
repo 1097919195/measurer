@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
@@ -103,13 +101,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         super.onCreate(savedInstanceState);
         //FIXME is it right
         Bundle bundle = getArguments();
-        String s = (String) bundle.get("user");
-        try {
-            user = new Gson().fromJson(s, WechatUser.class);
-        } catch (JsonSyntaxException e) {
-            showToast("二维码格式不正确");
-            e.printStackTrace();
-        }
+        user = bundle.getParcelable("user");
     }
 
     @Override

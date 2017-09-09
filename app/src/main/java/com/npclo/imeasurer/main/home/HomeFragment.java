@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.gson.Gson;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
@@ -95,12 +94,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bundle bundle = data.getExtras();
-        String result = bundle.getString("result");
+        String result = null;
+        try {
+            Bundle bundle = data.getExtras();
+            result = bundle.getString("result");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Log.e(TAG, "传输过来的数据：" + result);
         switch (resultCode) {
             case 1:
-                toMeasure(result);
+                mPresenter.getUserInfoWithOpenID(result);
                 break;
             case 2:
                 mPresenter.getUserInfoWithCode(result);
@@ -129,7 +133,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             Log.e(TAG, "获取到蓝牙状态" + rxBleDevice.toString());
             bleState.setText(getString(R.string.connected));
             bleState.setTextColor(getResources().getColor(R.color.green));
-            bleState.setEnabled(false);//TODO 未连接按钮不能再点击前往连接
+            bleState.setEnabled(false);//TODO 已连接按钮不能再点击前往连接
         }
     }
 
@@ -154,21 +158,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showGetInfoSuccess(WechatUser user) {
         showLoading(false);
-        String s = new Gson().toJson(user);
-        toMeasure(s);
-    }
-
-    private void toMeasure(String s) {
         MeasureFragment measureFragment = findFragment(MeasureFragment.class);
         if (measureFragment == null) {
             measureFragment = MeasureFragment.newInstance();
             Bundle bundle = new Bundle();
-//            s = "{\"openID\":\"oaym60wV0nUG2KUmD84enwm5CAzE\",\"gender\":0,\"height\":\"170\"," +
-//                    "\"weight\":\"60\",\"name\":\"MapleImage\",\"nickname\":\"MapleImage\"," +
-//                    "\"avatar\":\"http:\\/\\/wx.qlogo.cn\\/mmopen\\/vi_32\\/icBY913leXwE7HP1pqlQnt7sJJwLL" +
-//                    "VguLicMTvPYsDUHRtp0qNuKHrpPeUJJgNpsfxg62k5ENTl8NPhsiceWRKMSg\\/0\"}";
-
-            bundle.putString("user", s);
+            bundle.putParcelable("user", user);
             measureFragment.setArguments(bundle);
             measureFragment.setPresenter(new MeasurePresenter(measureFragment, SchedulerProvider.getInstance()));
             start(measureFragment, SINGLETASK);
@@ -183,20 +177,5 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showCompleteGetInfo() {
         showLoading(false);
-    }
-
-
-    // TODO: 2017/9/7 test 开始
-    @OnClick(R.id.btn_result)
-    public void onViewClicked() {
-        String s = inputByte.getText().toString();
-        int code = Integer.parseInt("8D6A", 16);
-        int length = Integer.parseInt(s.substring(0, 4), 16);
-        int angle = Integer.parseInt(s.substring(4, 8), 16);
-        int battery = Integer.parseInt(s.substring(8, 12), 16);
-        int a1 = length ^ code;
-        int a2 = angle ^ code;
-        int a3 = battery ^ code;
-        byteResult.setText("length: " + a1 + " battery: " + a2 + " angle: " + a3);
     }
 }

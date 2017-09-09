@@ -8,6 +8,8 @@ public interface HomeContract {
     interface Presenter extends BasePresenter {
 
         void getUserInfoWithCode(String result);
+
+        void getUserInfoWithOpenID(String result);
     }
 
     interface View extends BaseView<Presenter> {

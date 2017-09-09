@@ -52,4 +52,18 @@ public class HomePresenter implements HomeContract.Presenter {
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
     }
+
+    @Override
+    public void getUserInfoWithOpenID(String id) {
+        Subscription subscribe = new UserRepository()
+                .getUserInfoWithOpenID(id)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(
+                        user -> fragment.showGetInfoSuccess(user),
+                        e -> fragment.showGetInfoError(e),
+                        () -> fragment.showCompleteGetInfo());
+        mSubscriptions.add(subscribe);
+    }
 }

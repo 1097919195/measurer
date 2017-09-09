@@ -41,4 +41,7 @@ public interface UserService {
     @POST("clientUser/editPwd")
     Observable<HttpResponse<HttpMsg>> editPwd(@Field("id") String id, @Field("old") String old,
                                               @Field("new") String newpwd);
+
+    @GET("clientUser/getInfoWithOpenID")
+    Observable<HttpResponse<WechatUser>> getUserInfoWithOpenID(@Query("openid") String id);
 }

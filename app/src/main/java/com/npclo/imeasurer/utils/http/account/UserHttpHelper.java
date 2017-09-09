@@ -48,4 +48,10 @@ public class UserHttpHelper extends HttpHelper {
                 .editPwd(id, old, newpwd)
                 .map(new HttpResponseFunc<>());
     }
+
+    public Observable<WechatUser> getUserInfoWithOpenID(String id) {
+        return retrofit.create(UserService.class)
+                .getUserInfoWithOpenID(id)
+                .map(new HttpResponseFunc<>());
+    }
 }
