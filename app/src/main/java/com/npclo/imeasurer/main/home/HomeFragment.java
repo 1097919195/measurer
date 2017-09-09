@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
-import com.google.zxing.client.android.decode.CaptureActivity;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
+import com.npclo.imeasurer.camera.decode.CaptureActivity;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.measure.MeasureFragment;
 import com.npclo.imeasurer.main.measure.MeasurePresenter;
@@ -97,6 +97,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Bundle bundle = data.getExtras();
         String result = bundle.getString("result");
+        Log.e(TAG, "传输过来的数据：" + result);
         switch (resultCode) {
             case 1:
                 toMeasure(result);

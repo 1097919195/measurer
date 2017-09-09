@@ -44,6 +44,10 @@
             android:name=".user.UserActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".camera.decode.CaptureActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

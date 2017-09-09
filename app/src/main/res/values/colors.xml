@@ -23,10 +23,6 @@
     <color name="btn_text_color">#f83f1d</color>
     <color name="toolbar_text">#fff</color>
     <drawable name="touchFeedback">#CFD8DC</drawable>
-    <!--渐变-->
-    <color name="colorPrimary">#455A64</color>
-    <color name="colorPrimaryDark">#263238</color>
-    <color name="colorAccent">#D50000</color>
     <color name="layout_border_color">#9c9c9c</color>
     <color name="measure_button">#f83f1d</color>
     <color name="ble_connected">#00ff00</color>
@@ -57,4 +53,16 @@
     <color name="c393a3a">#393a3a</color>
     <color name="e8e8e8">#e8e8e8</color>
     <color name="c434446">#434446</color>
+    <!--QRCode scanner color begin-->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#B0000000</color>
+    <color name="viewfinder_frame">#90FFFFFF</color>
+    <color name="result_point_color">#C0FFFF00</color>
+    <color name="laser_color">#3385D9</color>
+    <color name="corner_color">#fff</color>
+    <color name="scan_label_color">#fff</color>
+    <color name="scan_input_color">#fff</color>
+    <color name="c999">#999999</color>
+    <color name="ccc">#cccccc</color>
+    <!--QRCode scanner color end-->
 </resources>
