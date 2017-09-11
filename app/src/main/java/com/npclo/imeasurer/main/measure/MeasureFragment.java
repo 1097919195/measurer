@@ -505,7 +505,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         } else {
             MyTextView textView = unMeasuredList.get(0);
             if (textView != null) {
-                Log.e(TAG, "当前赋值部位：" + textView.getText().toString());
                 assignValue(length, angle, textView, 0);
             }
         }
@@ -578,7 +577,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             if (!TextUtils.isEmpty(strings[0])) s = result + "        请测" + strings[0];
             if (!TextUtils.isEmpty(strings[1])) s = result + strings[1];
             speechSynthesizer.playText(s);
-            Log.e(TAG, "播报" + s);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -589,14 +587,12 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         String next = null;
         String[] strings = new String[2];
         if (type == 1) {
-            Log.e(TAG, "按中途修改测量，当前未测量数目" + unMeasuredList.size());
             if (unMeasuredList.size() == 0) {
                 last = "测量完毕";
             } else {
                 next = unMeasuredList.get(0).getText().toString();
             }
         } else {
-            Log.e(TAG, "按顺序测量，当前未测量数目" + unMeasuredList.size());
             if (unMeasuredList.size() == 1) {
                 last = "测量完毕";
             } else {
