@@ -125,7 +125,8 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         unbinder.unbind();
     }
 
-    @OnClick({R.id.logo, R.id.input_eye, R.id.action_remember_pwd, R.id.action_sign_in, R.id.forget_pwd_tv, R.id.signup_tv, R.id.action_wechat_login})
+    @OnClick({R.id.logo, R.id.input_eye, R.id.action_remember_pwd, R.id.action_sign_in,
+            R.id.forget_pwd_tv, R.id.signup_tv, R.id.action_wechat_login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.logo:
@@ -161,6 +162,8 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
                 break;
             case R.id.action_wechat_login:
                 showToast("待开放微信登录");
+                break;
+            default:
                 break;
         }
     }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +15,7 @@ import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.ble.BleDevice;
-import com.npclo.imeasurer.main.MainActivity;
+import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.user.contact.ContactFragment;
 import com.npclo.imeasurer.user.feedback.FeedbackFragment;
 import com.npclo.imeasurer.user.manage.ManageFragment;
@@ -24,7 +25,6 @@ import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
-import com.tencent.mm.opensdk.utils.Log;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 import com.unisound.client.SpeechSynthesizerListener;
@@ -85,8 +85,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         unbinder = ButterKnife.bind(this, mRootView);
         baseToolbar.setNavigationIcon(R.mipmap.left);
         baseToolbar.setNavigationOnClickListener(__ -> {
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            pop();
+            com.npclo.imeasurer.main.home.HomeFragment fragment = com.npclo.imeasurer.main.home.HomeFragment.newInstance();
+            start(fragment);
+            fragment.setPresenter(new HomePresenter(fragment, SchedulerProvider.getInstance()));
         });
         configureResultList();
     }
@@ -275,6 +276,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         connectingProgressBar.dismiss();
         deviceState.setText(getString(R.string.prompt_connected));
         deviceState.setTextColor(getResources().getColor(R.color.primary));
+        deviceState.setEnabled(false);
         showToast(getString(R.string.device_connected));
         speechSynthesizer.playText("蓝牙连接成功");
         BaseApplication.setRxBleDevice(getActivity(), bleDevice);

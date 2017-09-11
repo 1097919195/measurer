@@ -3,7 +3,13 @@ package com.npclo.imeasurer.main.measure;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,12 +25,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
+import com.npclo.imeasurer.camera.decode.CaptureActivity;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
@@ -37,11 +46,18 @@ import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 import com.unisound.client.SpeechSynthesizerListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,11 +87,31 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @BindView(R.id.camera_add)
     RelativeLayout cameraAdd;
     @BindView(R.id.save_measure_result)
-    AppCompatButton saveMeasureResult;
+    AppCompatButton btnSave;
+    @BindView(R.id.next_person)
+    AppCompatButton btnNext;
     @BindView(R.id.measure_table_layout)
     GridView gridView;
     @BindView(R.id.wechat_gender_edit)
     LinearLayout gender_line;
+    @BindView(R.id.img_1)
+    ImageView img_1;
+    @BindView(R.id.img_2)
+    ImageView img_2;
+    @BindView(R.id.img_3)
+    ImageView img_3;
+    @BindView(R.id.del_1)
+    ImageView del_1;
+    @BindView(R.id.del_2)
+    ImageView del_2;
+    @BindView(R.id.del_3)
+    ImageView del_3;
+    @BindView(R.id.frame_1)
+    FrameLayout frame_1;
+    @BindView(R.id.frame_2)
+    FrameLayout frame_2;
+    @BindView(R.id.frame_3)
+    FrameLayout frame_3;
     Unbinder unbinder;
     private MeasureContract.Presenter measurePresenter;
     private WechatUser user;
@@ -86,6 +122,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private List<String> angleList;
     private List<Part> partList = new ArrayList<>();
     private MaterialDialog saveProgressbar;
+    private Uri imageUri; //图片路径
+    public static final int TAKE_PHOTO = 1001;
+    public static final int CROP_PHOTO = 1002;
+    private List<FrameLayout> picList = new ArrayList<>();
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -99,7 +139,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //FIXME is it right
         Bundle bundle = getArguments();
         user = bundle.getParcelable("user");
     }
@@ -137,6 +176,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 speechSynthesizer.playText("重新测量部位" + cn);
             }
         });
+        picList.add(frame_1);
+        picList.add(frame_1);
+        picList.add(frame_1);
     }
 
     // FIXME: 2017/9/8 遍历 更好的方式
@@ -208,7 +250,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         speechSynthesizer = null;
     }
 
-    @OnClick({R.id.save_measure_result, R.id.wechat_gender_edit})
+    @OnClick({R.id.save_measure_result, R.id.wechat_gender_edit, R.id.camera_add, R.id.next_person,
+            R.id.del_1, R.id.del_2, R.id.del_3,
+            R.id.img_1, R.id.img_2, R.id.img_3})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.wechat_gender_edit:
@@ -217,7 +261,87 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             case R.id.save_measure_result:
                 handleSaveData();
                 break;
+            case R.id.next_person:
+                measureNextPerson();
+                break;
+            case R.id.camera_add:
+                capturePic();
+                break;
+            case R.id.del_1:
+            case R.id.del_2:
+            case R.id.del_3:
+                delPic((ImageView) view);
+                break;
+            case R.id.img_1:
+            case R.id.img_2:
+            case R.id.img_3:
+                preview(((ImageView) view));
+                break;
         }
+    }
+
+    private void measureNextPerson() {
+        int count = gridView.getChildCount();
+        for (int i = 0; i < count; i++) {
+            LinearLayout linearLayout = (LinearLayout) gridView.getChildAt(i);
+            MyTextView textView = (MyTextView) linearLayout.getChildAt(0);
+            textView.setState(MeasureStateEnum.UNMEASUED.ordinal());
+            textView.setValue(0.0f);
+        }
+        frame_1.setVisibility(View.INVISIBLE);
+        frame_2.setVisibility(View.INVISIBLE);
+        frame_3.setVisibility(View.INVISIBLE);
+        img_1.setImageDrawable(null);
+        img_2.setImageDrawable(null);
+        img_3.setImageDrawable(null);
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, 1001);
+    }
+
+    private void preview(ImageView view) {
+        new MaterialDialog.Builder(getActivity())
+                .customView(view, false)
+                .contentGravity(GravityEnum.CENTER)
+                .show();
+    }
+
+    private void delPic(ImageView view) {
+        FrameLayout parent = (FrameLayout) view.getParent();
+        ImageView img = (ImageView) parent.getChildAt(0);
+        img.setImageDrawable(null);
+        parent.setVisibility(View.INVISIBLE);
+    }
+
+    private void capturePic() {
+        Date date = new Date(System.nanoTime());
+        String pic_name;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            // 计算md5函数
+            md.update(date.toString().getBytes());
+            pic_name = new BigInteger(1, md.digest()).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            pic_name = date.toString();
+            e.printStackTrace();
+        }
+        //创建File对象用于存储拍照的图片 SD卡根目录
+        //File outputImage = new File(Environment.getExternalStorageDirectory(),"test.jpg");
+        //存储至DCIM文件夹
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File outputImage = new File(path, pic_name + ".jpg");
+        try {
+            if (outputImage.exists()) {
+                outputImage.delete();
+            }
+            outputImage.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //将File对象转换为Uri并启动照相程序
+        imageUri = Uri.fromFile(outputImage);
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
+        startActivityForResult(intent, TAKE_PHOTO); //启动照相
     }
 
     private void switchGender(View view) {
@@ -255,9 +379,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             MeasurementItem item = (MeasurementItem) Class2.newInstance();
             for (int i = 0, count = gridView.getCount(); i < count; i++) {
                 MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
-                if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) {
+                if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) { //att 校验是否量体完成
                     showToast("量体未完成");
-                    break;
+                    return;
                 }
                 float value = textView.getValue();
                 String cn = textView.getText().toString();
@@ -359,7 +483,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void handleMeasureData(float length, float angle, int battery) {
-//        if (battery < 20) speechSynthesizer.playText("电量低");
+//        if (battery < 20) speechSynthesizer.playText("battery_low");
         // FIXME: 2017/9/8 赋值方式
         for (int i = 0, count = gridView.getChildCount(); i < count; i++) {
             MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
@@ -381,7 +505,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showSuccessSave() {
         showToast("保存成功");
-        // TODO: 2017/9/8 下一个人量体
+        btnSave.setVisibility(View.INVISIBLE);
+        btnNext.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -476,5 +601,51 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         strings[0] = next;
         strings[1] = last;
         return strings;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TAKE_PHOTO:
+                Intent intent = new Intent("com.android.camera.action.CROP"); //剪裁
+                intent.setDataAndType(imageUri, "image/*");
+                intent.putExtra("scale", true);
+                //设置宽高比例
+                intent.putExtra("aspectX", 1);
+                intent.putExtra("aspectY", 1);
+                //设置裁剪图片宽高
+                intent.putExtra("outputX", 340);
+                intent.putExtra("outputY", 340);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                //广播刷新相册
+                Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                intentBc.setData(imageUri);
+                getActivity().sendBroadcast(intentBc);
+                startActivityForResult(intent, CROP_PHOTO); //设置裁剪参数显示图片至ImageView
+                break;
+            case CROP_PHOTO:
+                try {
+                    //图片解析成Bitmap对象
+                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().
+                            getContentResolver()
+                            .openInputStream(imageUri));
+                    Matrix matrix = new Matrix();
+                    matrix.setScale(0.2f, 0.2f);
+                    Bitmap bm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                            bitmap.getHeight(), matrix, true);
+                    for (FrameLayout frameLayout : picList) {
+                        if (frameLayout.getVisibility() == View.INVISIBLE) {
+                            ImageView img = (ImageView) frameLayout.getChildAt(0);
+                            img.setImageBitmap(bm); //将剪裁后照片显示出来
+                            frameLayout.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

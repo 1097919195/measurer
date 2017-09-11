@@ -222,4 +222,5 @@
     <string name="preferences_vibrate_title">振动</string>
     <string name="msg_error">错误</string>
     <string name="msg_invalid_value">值无效</string>
+    <string name="next_person">下一个量体</string>
 </resources>

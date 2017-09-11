@@ -25,6 +25,7 @@ import com.google.zxing.Result;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.camera.camera.CameraManager;
 import com.npclo.imeasurer.camera.view.ViewfinderView;
+import com.npclo.imeasurer.main.MainActivity;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -86,7 +87,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             return false;
         });
         toolbar.setNavigationOnClickListener(__ -> {
-            // TODO: 2017/9/3 返回到上一个界面 ，把这个库整合到项目中
+            Intent intent = new Intent(CaptureActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 

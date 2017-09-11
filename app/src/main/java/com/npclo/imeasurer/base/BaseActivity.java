@@ -1,11 +1,15 @@
 package com.npclo.imeasurer.base;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.account.AccountActivity;
 
 import me.yokeyword.fragmentation.SupportActivity;
 
@@ -15,6 +19,12 @@ public abstract class BaseActivity extends SupportActivity {
     private long TOUCH_TIME = 0;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        checkLogin();
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -22,6 +32,17 @@ public abstract class BaseActivity extends SupportActivity {
     }
 
     protected void beforeInit() {
+    }
+
+    private void checkLogin() {
+        SharedPreferences loginState = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+        boolean isLogin = loginState.getBoolean("loginState", false);
+        String id = loginState.getString("id", null);
+
+        if (!isLogin && TextUtils.isEmpty(id)) {
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

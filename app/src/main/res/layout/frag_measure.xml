@@ -25,11 +25,10 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="vertical">
-
+        android:layout_height="48dp">
+        <!--TODO 修改这种布局-->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/save_measure_result"
             android:layout_width="match_parent"
@@ -40,5 +39,17 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/next_person"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:background="@color/primary"
+            android:text="@string/next_person"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:visibility="invisible" />
+    </FrameLayout>
 </LinearLayout>

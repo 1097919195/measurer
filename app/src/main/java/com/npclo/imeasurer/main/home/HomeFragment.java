@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,8 +16,9 @@ import com.npclo.imeasurer.camera.decode.CaptureActivity;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.measure.MeasureFragment;
 import com.npclo.imeasurer.main.measure.MeasurePresenter;
-import com.npclo.imeasurer.user.UserActivity;
+import com.npclo.imeasurer.user.home.HomePresenter;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
+import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
 
@@ -41,13 +40,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     TextView bleState;
     Unbinder unbinder;
     private static final String TAG = HomeFragment.class.getSimpleName();
-
-    @BindView(R.id.input_byte)
-    EditText inputByte;
-    @BindView(R.id.byte_result)
-    TextView byteResult;
-    @BindView(R.id.btn_result)
-    Button btnResult;
     private HomeContract.Presenter mPresenter;
     private MaterialDialog dialog;
 
@@ -118,9 +110,18 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initToolbar() {
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.toolbar_text));//设置主标题颜色
         toolbarBase.inflateMenu(R.menu.base_toolbar_menu);
-        Intent intent = new Intent(getActivity(), UserActivity.class);
-        toolbarBase.getMenu().getItem(0).setIntent(intent);
+        toolbarBase.getMenu().getItem(0).setOnMenuItemClickListener(__ -> {
+            com.npclo.imeasurer.user.home.HomeFragment fragment = com.npclo.imeasurer.user.home.HomeFragment.newInstance();
+            start(fragment);
+            fragment.setPresenter(new HomePresenter(RxBleClient.create(getActivity()), fragment, SchedulerProvider.getInstance()));
+            return true;
+        });
         // TODO: 2017/9/7 蓝牙未连接时，点击未连接按钮前往连接
+        bleState.setOnClickListener(__ -> {
+            com.npclo.imeasurer.user.home.HomeFragment fragment = com.npclo.imeasurer.user.home.HomeFragment.newInstance();
+            start(fragment);
+            fragment.setPresenter(new HomePresenter(RxBleClient.create(getActivity()), fragment, SchedulerProvider.getInstance()));
+        });
 
     }
 
@@ -171,7 +172,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showGetInfoError(Throwable e) {
-        super.handleError(e, TAG);
+        showLoading(false);
+        handleError(e, TAG);
     }
 
     @Override
