@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,6 +38,7 @@ import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
+import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -50,7 +50,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -91,7 +90,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @BindView(R.id.next_person)
     AppCompatButton btnNext;
     @BindView(R.id.measure_table_layout)
-    GridView gridView;
+    MyGridView gridView;
     @BindView(R.id.wechat_gender_edit)
     LinearLayout gender_line;
     @BindView(R.id.img_1)
@@ -118,7 +117,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private SpeechSynthesizer speechSynthesizer;
     private String PART_PACKAGE = Part.class.getPackage().getName();
     private String ITEM_PACKAGE = MeasurementItem.class.getPackage().getName();
-    private String[] measureSequence;
     private List<String> angleList;
     private List<Part> partList = new ArrayList<>();
     private MaterialDialog saveProgressbar;
@@ -126,6 +124,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public static final int TAKE_PHOTO = 1003;
     public static final int CROP_PHOTO = 1004;
     private List<FrameLayout> picList = new ArrayList<>();
+    private List<MyTextView> unMeasuredList = new ArrayList<>();
+    private MyTextView modifyingView;
+    private boolean initUmMeasureListFlag;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -174,6 +175,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 textView.setTextColor(getResources().getColor(R.color.modifying));
                 textView.setState(MeasureStateEnum.MODIFYING.ordinal());
                 speechSynthesizer.playText("重新测量部位" + cn);
+                modifyingView = textView;//att 正在修改测量值textview赋值
             }
         });
         picList.clear();
@@ -214,10 +216,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        String[] angleItems = getResources().getStringArray(R.array.angle_items);
-        angleList = Arrays.asList(angleItems);
         initSpeech();
         measurePresenter.subscribe();
+        String[] angleItems = getResources().getStringArray(R.array.angle_items);
+        angleList = Arrays.asList(angleItems);
+
         RxBleDevice bleDevice = BaseApplication.getRxBleDevice(getActivity());
         if (bleDevice != null && bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
             Log.e(TAG, "获取到蓝牙状态" + bleDevice.toString());
@@ -231,6 +234,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 e.printStackTrace();
             }
         }
+        initUmMeasureListFlag = true;
     }
 
     @Override
@@ -378,15 +382,15 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void handleSaveData() {
+        if (unMeasuredList.size() != 0) { //att 校验是否量体完成
+            showToast("量体未完成");
+            return;
+        }
         try {
             Class Class2 = Class.forName(ITEM_PACKAGE + ".MeasurementItem");
             MeasurementItem item = (MeasurementItem) Class2.newInstance();
             for (int i = 0, count = gridView.getCount(); i < count; i++) {
                 MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
-                if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) { //att 校验是否量体完成
-                    showToast("量体未完成");
-                    return;
-                }
                 float value = textView.getValue();
                 String cn = textView.getText().toString();
                 String en = textView.getTag().toString();
@@ -407,15 +411,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             }
             Measurement measurement = new Measurement(user, item, id);
             measurePresenter.saveMeasurement(measurement);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -460,11 +456,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 Part part = (Part) itemSubclass.newInstance();
                 partList.add(new Part(part.getCn(), part.getEn()));
             }
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -481,23 +473,40 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void bleDeviceMeasuring() {
-        measureSequence = getResources().getStringArray(R.array.items_sequence);
+        String[] measureSequence = getResources().getStringArray(R.array.items_sequence);
         speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
+    }
+
+    private void initUnMeasureList() {
+        int count = gridView.getChildCount();
+        unMeasuredList.clear();
+        try {
+            for (int i = 0; i < count; i++) {
+                MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
+                if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal())
+                    unMeasuredList.add(textView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        unMeasuredList.remove(0);//att 排除第一项
+        initUmMeasureListFlag = false;
+        Log.e(TAG, "未测量数目" + unMeasuredList.size());
     }
 
     @Override
     public void handleMeasureData(float length, float angle, int battery) {
 //        if (battery < 20) speechSynthesizer.playText("battery_low");
+        if (initUmMeasureListFlag) initUnMeasureList();
         // FIXME: 2017/9/8 赋值方式
-        for (int i = 0, count = gridView.getChildCount(); i < count; i++) {
-            MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
-            int state = textView.getState();
-            if (state == MeasureStateEnum.UNMEASUED.ordinal()) {
+        //att 先判断是否有正处于修改状态的textview，有的话，先给其赋值，再给下一个未测量的部位赋值
+        if (modifyingView != null) {
+            assignValue(length, angle, modifyingView, 1);
+        } else {
+            MyTextView textView = unMeasuredList.get(0);
+            if (textView != null) {
+                Log.e(TAG, "当前赋值部位：" + textView.getText().toString());
                 assignValue(length, angle, textView, 0);
-                return;
-            } else if (state == MeasureStateEnum.MODIFYING.ordinal()) {
-                assignValue(length, angle, textView, 1);
-                return;
             }
         }
     }
@@ -555,47 +564,43 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             }
             textView.setState(MeasureStateEnum.MEASURED.ordinal());//更新状态
             textView.setTextColor(getResources().getColor(R.color.measured));//修改颜色
-            if (speechSynthesizer != null) {
-                if (type == 1) { //修改原有结果
-                    String result = cn + "，重新测量结果为" + value;// TODO: 2017/9/8 播报下一个测量部位
-                    speechSynthesizer.playText(result);
-                } else {
-                    String result = cn + value;
-                    String[] nextString;
-                    nextString = getNextString(cn, measureSequence);
-                    if (!TextUtils.isEmpty(nextString[0]))
-                        speechSynthesizer.playText(result + "        请测" + nextString[0]);
-                    if (!TextUtils.isEmpty(nextString[1]))
-                        speechSynthesizer.playText(result + nextString[1]);
-                }
+            // FIXME: 2017/9/11
+            String s = null;//最终播放文字
+            String result;//播报当前测量结果
+            String[] strings = getNextString(type);
+            if (type == 1) { //修改原有结果
+                result = cn + "，重新测量结果为" + value;// TODO: 2017/9/8 播报下一个测量部位
+                modifyingView = null;//att 重置待修改项
+            } else { //按顺序测量
+                result = cn + value;
+                unMeasuredList.remove(0);//att 最前的一项测量完毕
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+            if (!TextUtils.isEmpty(strings[0])) s = result + "        请测" + strings[0];
+            if (!TextUtils.isEmpty(strings[1])) s = result + strings[1];
+            speechSynthesizer.playText(s);
+            Log.e(TAG, "播报" + s);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * 获取下一个测量字段
-     *
-     * @param cn     当前字段
-     * @param arrays 字段数组
-     * @return 包含结果的数组
-     */
-    private String[] getNextString(String cn, String[] arrays) {
+    private String[] getNextString(int type) {
         String last = null;
         String next = null;
         String[] strings = new String[2];
-        for (int m = 0, l = arrays.length; m < l; m++) {
-            if (arrays[m].equals(cn)) {
-                if (m == l - 1) {
-                    last = "所有部位测量完成";
-                } else {
-                    next = arrays[m + 1];
-                }
+        if (type == 1) {
+            Log.e(TAG, "按中途修改测量，当前未测量数目" + unMeasuredList.size());
+            if (unMeasuredList.size() == 0) {
+                last = "测量完毕";
+            } else {
+                next = unMeasuredList.get(0).getText().toString();
+            }
+        } else {
+            Log.e(TAG, "按顺序测量，当前未测量数目" + unMeasuredList.size());
+            if (unMeasuredList.size() == 1) {
+                last = "测量完毕";
+            } else {
+                next = unMeasuredList.get(1).getText().toString();
             }
         }
         strings[0] = next;

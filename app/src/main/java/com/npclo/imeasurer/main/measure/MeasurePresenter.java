@@ -46,30 +46,31 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void unsubscribe() {
         mSubscriptions.clear();
+        Log.e(TAG, "==================所有观察者清空!!!!!!!!!!==============");
     }
 
     @Override
     public void startMeasure(UUID characteristicUUID, Observable<RxBleConnection> connectionObservable) {
-        connectionObservable
+        Subscription subscribe = connectionObservable
                 .flatMap(rxBleConnection -> rxBleConnection.setupNotification(characteristicUUID))
                 .flatMap(notificationObservable -> notificationObservable)
                 .doOnSubscribe(() -> fragment.bleDeviceMeasuring())
                 .observeOn(schedulerProvider.ui())
                 .doOnNext(notificationObservable -> fragment.showStartReceiveData())
                 .subscribe(this::handleBleResult, this::handleError);
+        mSubscriptions.add(subscribe);
     }
 
     private void handleBleResult(byte[] v) {
         String s = HexString.bytesToHex(v);
         int code = Integer.parseInt("8D6A", 16);
-        Log.e(TAG, s);
         int length = Integer.parseInt(s.substring(0, 4), 16);
         int angle = Integer.parseInt(s.substring(4, 8), 16);
         int battery = Integer.parseInt(s.substring(8, 12), 16);
         int a1 = length ^ code;
         int a2 = angle ^ code;
         int a3 = battery ^ code;
-        Log.e(TAG, "length:" + length + "angle:" + a2 + "battery:" + a3);
+        Log.e(TAG, "获得数据：长度: " + a1 / 10 + "; 角度:  " + a2 / 10 + "; 电量: " + a3);
         fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
     }
 
