@@ -123,8 +123,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private List<Part> partList = new ArrayList<>();
     private MaterialDialog saveProgressbar;
     private Uri imageUri; //图片路径
-    public static final int TAKE_PHOTO = 1001;
-    public static final int CROP_PHOTO = 1002;
+    public static final int TAKE_PHOTO = 1003;
+    public static final int CROP_PHOTO = 1004;
     private List<FrameLayout> picList = new ArrayList<>();
 
     public static MeasureFragment newInstance() {
@@ -176,6 +176,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 speechSynthesizer.playText("重新测量部位" + cn);
             }
         });
+        picList.clear();
         picList.add(frame_1);
         picList.add(frame_1);
         picList.add(frame_1);
@@ -286,6 +287,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             LinearLayout linearLayout = (LinearLayout) gridView.getChildAt(i);
             MyTextView textView = (MyTextView) linearLayout.getChildAt(0);
             textView.setState(MeasureStateEnum.UNMEASUED.ordinal());
+            textView.setTextColor(getResources().getColor(R.color.unmeasured));
             textView.setValue(0.0f);
         }
         frame_1.setVisibility(View.INVISIBLE);
@@ -293,9 +295,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         frame_3.setVisibility(View.INVISIBLE);
         img_1.setImageDrawable(null);
         img_2.setImageDrawable(null);
-        img_3.setImageDrawable(null);
+        img_3.setImageDrawable(null);// FIXME: 2017/9/11
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
         startActivityForResult(intent, 1001);
+        btnNext.setVisibility(View.GONE);
+        btnSave.setVisibility(View.VISIBLE);
     }
 
     private void preview(ImageView view) {
@@ -308,7 +312,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private void delPic(ImageView view) {
         FrameLayout parent = (FrameLayout) view.getParent();
         ImageView img = (ImageView) parent.getChildAt(0);
-        img.setImageDrawable(null);
+        img.setImageDrawable(null);// FIXME: 2017/9/11
         parent.setVisibility(View.INVISIBLE);
     }
 
@@ -490,22 +494,18 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             int state = textView.getState();
             if (state == MeasureStateEnum.UNMEASUED.ordinal()) {
                 assignValue(length, angle, textView, 0);
-                break;
+                return;
             } else if (state == MeasureStateEnum.MODIFYING.ordinal()) {
                 assignValue(length, angle, textView, 1);
-                break;
+                return;
             }
-//            else {
-//                speechSynthesizer.playText("当前测量结束");// TODO: 2017/9/8  可修改 or 直接提交提示
-//                break;
-//            }
         }
     }
 
     @Override
     public void showSuccessSave() {
         showToast("保存成功");
-        btnSave.setVisibility(View.INVISIBLE);
+        btnSave.setVisibility(View.GONE);
         btnNext.setVisibility(View.VISIBLE);
     }
 
@@ -618,7 +618,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 //广播刷新相册
                 Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intentBc.setData(imageUri);
+                intentBc.setData(imageUri);// FIXME: 2017/9/11
                 getActivity().sendBroadcast(intentBc);
                 startActivityForResult(intent, CROP_PHOTO); //设置裁剪参数显示图片至ImageView
                 break;
@@ -631,7 +631,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     Matrix matrix = new Matrix();
                     matrix.setScale(0.2f, 0.2f);
                     Bitmap bm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                            bitmap.getHeight(), matrix, true);
+                            bitmap.getHeight(), matrix, true);// FIXME: 2017/9/11 bitmap为空
+                    bitmap.recycle();
                     for (FrameLayout frameLayout : picList) {
                         if (frameLayout.getVisibility() == View.INVISIBLE) {
                             ImageView img = (ImageView) frameLayout.getChildAt(0);
