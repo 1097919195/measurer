@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -22,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -187,7 +185,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     // FIXME: 2017/9/8 遍历 更好的方式
     //att 针对误点击进行修改操作，重置所有的处于修改状态的textview为非修改状态
     private void resetTextViewClickState() {
-        for (int i = 0, count = gridView.getCount(); i < count; i++) {
+        for (int i = 0, count = gridView.getChildCount(); i < count; i++) {
             MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
             if (textView.getState() == MeasureStateEnum.MODIFYING.ordinal()) {
                 textView.setState(MeasureStateEnum.MEASURED.ordinal());
@@ -204,13 +202,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             pop();
         });
         baseToolbar.inflateMenu(R.menu.base_toolbar_menu);
-        baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.redact);
-        baseToolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_menu) {
-                Toast.makeText(getActivity(), "启用编辑状态", Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        });
+        baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
     }
 
     @Override
@@ -223,7 +215,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
         RxBleDevice bleDevice = BaseApplication.getRxBleDevice(getActivity());
         if (bleDevice != null && bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
-            Log.e(TAG, "获取到蓝牙状态" + bleDevice.toString());
             //启动测量
             try {
                 UUID characteristicUUID = BaseApplication.getUUID(getActivity());
@@ -489,16 +480,16 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        unMeasuredList.remove(0);//att 排除第一项
         initUmMeasureListFlag = false;
-        Log.e(TAG, "未测量数目" + unMeasuredList.size());
     }
 
     @Override
     public void handleMeasureData(float length, float angle, int battery) {
-//        if (battery < 20) speechSynthesizer.playText("battery_low");
+        if (battery < 30) baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_low);
+        if (battery > 30 && battery < 80)
+            baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_mid);
+        if (battery > 80) baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_high);
         if (initUmMeasureListFlag) initUnMeasureList();
-        // FIXME: 2017/9/8 赋值方式
         //att 先判断是否有正处于修改状态的textview，有的话，先给其赋值，再给下一个未测量的部位赋值
         if (modifyingView != null) {
             assignValue(length, angle, modifyingView, 1);
