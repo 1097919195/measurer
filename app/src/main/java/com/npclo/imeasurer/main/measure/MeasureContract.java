@@ -7,6 +7,7 @@ import com.polidea.rxandroidble.RxBleConnection;
 
 import java.util.UUID;
 
+import okhttp3.MultipartBody;
 import rx.Observable;
 
 /**
@@ -36,6 +37,6 @@ public interface MeasureContract {
     interface Presenter extends BasePresenter {
         void startMeasure(UUID characteristicUUID, Observable<RxBleConnection> connectionObservable);
 
-        void saveMeasurement(Measurement measurement);
+        void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs);
     }
 }

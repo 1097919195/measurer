@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -44,8 +45,9 @@ import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 import com.unisound.client.SpeechSynthesizerListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -62,6 +64,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.Observable;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -69,6 +74,8 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasureFragment extends BaseFragment implements MeasureContract.View {
     private static final String TAG = MeasureFragment.class.getSimpleName();
+    private static final int MY_PERMISSIONS_REQUEST_CAPTURE = 101;
+    private static final int MY_PERMISSIONS_REQUEST_CHOOSE = 102;
     @BindView(R.id.base_toolbar_title)
     TextView baseToolbarTitle;
     @BindView(R.id.base_toolbar)
@@ -118,13 +125,15 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private List<String> angleList;
     private List<Part> partList = new ArrayList<>();
     private MaterialDialog saveProgressbar;
-    private Uri imageUri; //图片路径
     public static final int TAKE_PHOTO = 1003;
     public static final int CROP_PHOTO = 1004;
-    private List<FrameLayout> picList = new ArrayList<>();
+    private static final int IMAGE_REQUEST_CODE = 1005;
+    private List<FrameLayout> unVisibleView = new ArrayList<>();
     private List<MyTextView> unMeasuredList = new ArrayList<>();
     private MyTextView modifyingView;
     private boolean initUmMeasureListFlag;
+    private Uri imageUri;
+    private boolean firstHint = true;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -176,10 +185,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 modifyingView = textView;//att 正在修改测量值textview赋值
             }
         });
-        picList.clear();
-        picList.add(frame_1);
-        picList.add(frame_1);
-        picList.add(frame_1);
+        unVisibleView.clear();
+        unVisibleView.add(frame_1);
+        unVisibleView.add(frame_2);
+        unVisibleView.add(frame_3);
     }
 
     // FIXME: 2017/9/8 遍历 更好的方式
@@ -261,6 +270,39 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 measureNextPerson();
                 break;
             case R.id.camera_add:
+//                new MaterialDialog.Builder(getActivity())
+//                        .items(R.array.picType)
+//                        .itemsColor(getResources().getColor(R.color.c252527))
+//                        .itemsGravity(GravityEnum.CENTER)
+//                        .backgroundColor(getResources().getColor(R.color.white))
+//                        .itemsCallback((dialog, v, which, text) -> {
+//                            switch (which) {
+//                                case 0:
+//                                    if (ContextCompat.checkSelfPermission(getActivity(),
+//                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                                            != PackageManager.PERMISSION_GRANTED) {
+//                                        ActivityCompat.requestPermissions(getActivity(),
+//                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                                                MY_PERMISSIONS_REQUEST_CAPTURE);
+//                                    } else {
+//                                        capturePic();
+//                                    }
+//                                    break;
+//                                case 1:
+//                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+//                                            != PackageManager.PERMISSION_GRANTED) {
+//                                        ActivityCompat.requestPermissions(getActivity(),
+//                                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                                                MY_PERMISSIONS_REQUEST_CHOOSE);
+//                                    } else {
+//                                        galleryPic();
+//                                    }
+//                                    break;
+//                                default:
+//                                    break;
+//                            }
+//                        })
+//                        .show();
                 capturePic();
                 break;
             case R.id.del_1:
@@ -268,12 +310,19 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             case R.id.del_3:
                 delPic((ImageView) view);
                 break;
-            case R.id.img_1:
-            case R.id.img_2:
-            case R.id.img_3:
-                preview(((ImageView) view));
-                break;
+//            case R.id.img_1:
+//            case R.id.img_2:
+//            case R.id.img_3:// FIXME: 2017/9/12 取消预览
+//                preview(((ImageView) view));
+//                break;
         }
+    }
+
+    private void galleryPic() {
+        Intent intentFromGallery = new Intent();
+        intentFromGallery.setType("image/*"); // 设置文件类型
+        intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intentFromGallery, IMAGE_REQUEST_CODE);
     }
 
     private void measureNextPerson() {
@@ -299,7 +348,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     private void preview(ImageView view) {
         new MaterialDialog.Builder(getActivity())
-                .customView(view, false)
+                .customView(view, true)
                 .contentGravity(GravityEnum.CENTER)
                 .show();
     }
@@ -309,38 +358,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         ImageView img = (ImageView) parent.getChildAt(0);
         img.setImageDrawable(null);// FIXME: 2017/9/11
         parent.setVisibility(View.INVISIBLE);
-    }
-
-    private void capturePic() {
-        Date date = new Date(System.nanoTime());
-        String pic_name;
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            // 计算md5函数
-            md.update(date.toString().getBytes());
-            pic_name = new BigInteger(1, md.digest()).toString(16);
-        } catch (NoSuchAlgorithmException e) {
-            pic_name = date.toString();
-            e.printStackTrace();
-        }
-        //创建File对象用于存储拍照的图片 SD卡根目录
-        //File outputImage = new File(Environment.getExternalStorageDirectory(),"test.jpg");
-        //存储至DCIM文件夹
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File outputImage = new File(path, pic_name + ".jpg");
-        try {
-            if (outputImage.exists()) {
-                outputImage.delete();
-            }
-            outputImage.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //将File对象转换为Uri并启动照相程序
-        imageUri = Uri.fromFile(outputImage);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
-        startActivityForResult(intent, TAKE_PHOTO); //启动照相
+        unVisibleView.add(0, parent);
     }
 
     private void switchGender(View view) {
@@ -401,10 +419,35 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 return;
             }
             Measurement measurement = new Measurement(user, item, id);
-            measurePresenter.saveMeasurement(measurement);
+            MultipartBody.Part[] imgs = new MultipartBody.Part[3];
+            try {
+                if (img_1.getDrawable() != null) imgs[0] = drawable2file(img_1, "img1");
+                if (img_2.getDrawable() != null) imgs[1] = drawable2file(img_2, "img2");
+                if (img_3.getDrawable() != null) imgs[2] = drawable2file(img_3, "img3");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            measurePresenter.saveMeasurement(measurement, imgs);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private MultipartBody.Part drawable2file(ImageView img, String filename) throws IOException {
+        Bitmap bitmap = ((BitmapDrawable) img.getDrawable()).getBitmap();
+        File f = new File(getContext().getCacheDir(), filename);
+        f.createNewFile();
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.write(bitmapdata);
+        fos.flush();
+        fos.close();
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
+        return MultipartBody.Part.createFormData("img[]", filename, requestFile);//att 多文件上传名字
     }
 
     private void initSpeech() {
@@ -465,7 +508,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void bleDeviceMeasuring() {
         String[] measureSequence = getResources().getStringArray(R.array.items_sequence);
-        speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
+        if (firstHint) {
+            speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
+            firstHint = false;
+        }
     }
 
     private void initUnMeasureList() {
@@ -510,6 +556,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void showSaveError(Throwable e) {
+        showLoading(false);
         handleError(e, TAG);
     }
 
@@ -597,43 +644,35 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case IMAGE_REQUEST_CODE:
+                startPhotoCrop(data.getData());
+                break;
             case TAKE_PHOTO:
-                Intent intent = new Intent("com.android.camera.action.CROP"); //剪裁
-                intent.setDataAndType(imageUri, "image/*");
-                intent.putExtra("scale", true);
-                //设置宽高比例
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                //设置裁剪图片宽高
-                intent.putExtra("outputX", 340);
-                intent.putExtra("outputY", 340);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startPhotoCrop(imageUri);
                 //广播刷新相册
                 Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intentBc.setData(imageUri);// FIXME: 2017/9/11
+                intentBc.setData(imageUri);
                 getActivity().sendBroadcast(intentBc);
-                startActivityForResult(intent, CROP_PHOTO); //设置裁剪参数显示图片至ImageView
                 break;
             case CROP_PHOTO:
                 try {
-                    //图片解析成Bitmap对象
-                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().
-                            getContentResolver()
-                            .openInputStream(imageUri));
-                    Matrix matrix = new Matrix();
-                    matrix.setScale(0.2f, 0.2f);
-                    Bitmap bm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                            bitmap.getHeight(), matrix, true);// FIXME: 2017/9/11 bitmap为空
-                    bitmap.recycle();
-                    for (FrameLayout frameLayout : picList) {
-                        if (frameLayout.getVisibility() == View.INVISIBLE) {
-                            ImageView img = (ImageView) frameLayout.getChildAt(0);
-                            img.setImageBitmap(bm); //将剪裁后照片显示出来
-                            frameLayout.setVisibility(View.VISIBLE);
-                            break;
-                        }
+                    if (data != null) {
+                        Bundle bundle = data.getExtras();
+                        Bitmap bm = bundle.getParcelable("data");
+                        FrameLayout frameLayout = unVisibleView.get(0);
+                        ImageView imageView = (ImageView) frameLayout.getChildAt(0);
+                        Matrix matrix = new Matrix();// att 裁剪压缩图片
+                        matrix.setScale(0.5f, 0.5f);
+                        Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(),
+                                bm.getHeight(), matrix, true);// FIXME: 2017/9/11 bitmap为空
+                        bm.recycle();
+                        imageView.setImageBitmap(bm1);
+                        Log.e(TAG, "bm1 size :" + bm1.getAllocationByteCount());
+                        frameLayout.setVisibility(View.VISIBLE);
+                        unVisibleView.remove(0);
                     }
-                } catch (FileNotFoundException e) {
+                } catch (Exception e) {
+                    showToast("操作失败，请重试");
                     e.printStackTrace();
                 }
                 break;
@@ -641,4 +680,67 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 break;
         }
     }
+
+    private void capturePic() {
+        Date date = new Date(System.nanoTime());
+        String pic_name;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            // 计算md5函数
+            md.update(date.toString().getBytes());
+            pic_name = new BigInteger(1, md.digest()).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            pic_name = date.toString();
+            e.printStackTrace();
+        }
+        //创建File对象用于存储拍照的图片 SD卡根目录  TODO 判断
+        //File outputImage = new File(Environment.getExternalStorageDirectory(),"test.jpg");
+        //存储至DCIM文件夹
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File outputImage = new File(path, pic_name + ".png");
+        try {
+            outputImage.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //将File对象转换为Uri并启动照相程序
+        imageUri = Uri.fromFile(outputImage);
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
+        startActivityForResult(intent, TAKE_PHOTO); //启动照相
+    }
+
+    private void startPhotoCrop(Uri imageUri) {
+        Intent intent = new Intent("com.android.camera.action.CROP"); //剪裁
+        intent.setDataAndType(imageUri, "image/*");
+        intent.putExtra("scale", true);
+        //设置宽高比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        //设置裁剪图片宽高
+        intent.putExtra("outputX", 800);
+        intent.putExtra("outputY", 800);
+        intent.putExtra("return-data", true);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CROP_PHOTO); //设置裁剪参数显示图片至ImageView
+    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        if (requestCode == MY_PERMISSIONS_REQUEST_CAPTURE) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                capturePic();
+//            } else {
+//                showToast("未授予权限");
+//            }
+//        }
+//        if (requestCode == MY_PERMISSIONS_REQUEST_CHOOSE) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                galleryPic();
+//            } else {
+//                showToast("未授予权限");
+//            }
+//        }
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 }

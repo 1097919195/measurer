@@ -12,6 +12,7 @@ import com.polidea.rxandroidble.RxBleConnection;
 
 import java.util.UUID;
 
+import okhttp3.MultipartBody;
 import rx.Observable;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -79,10 +80,10 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     @Override
-    public void saveMeasurement(Measurement measurement) {
+    public void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs) {
         String s = (new Gson()).toJson(measurement);
         Log.e(TAG, s);
-        Subscription subscribe = new MeasurementHelper().saveMeasurement(s)
+        Subscription subscribe = new MeasurementHelper().saveMeasurement(s, imgs)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))

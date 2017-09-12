@@ -48,4 +48,8 @@
         <item>@string/preferences_front_light_auto</item>
         <item>@string/preferences_front_light_off</item>
     </string-array>
+    <string-array name="picType">
+        <item>拍照选取</item>
+        <item>照相选取</item>
+    </string-array>
 </resources>

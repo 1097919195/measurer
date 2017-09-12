@@ -1,16 +1,15 @@
 package com.npclo.imeasurer.utils.http.measurement;
 
 
+import com.npclo.imeasurer.data.HttpResponse;
+import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.utils.http.HttpHelper;
 
 import java.util.List;
 
-import retrofit2.http.Body;
+import okhttp3.MultipartBody;
 import retrofit2.http.Path;
 import rx.Observable;
-
-import com.npclo.imeasurer.data.measure.Measurement;
-import com.npclo.imeasurer.data.HttpResponse;
 
 public class MeasurementHelper extends HttpHelper {
     public Observable<List<Measurement>> getMeasurements() {
@@ -24,7 +23,8 @@ public class MeasurementHelper extends HttpHelper {
         return measurement.map(new HttpResponseFunc<>());
     }
 
-    public Observable<HttpResponse> saveMeasurement(@Body String measurement) {
-        return retrofit.create(MeasurementService.class).saveMeasurement(measurement);
+    public Observable<HttpResponse> saveMeasurement(String measurement, MultipartBody.Part[] imgs) {
+        return retrofit.create(MeasurementService.class)
+                .saveMeasurement(measurement, imgs);
     }
 }
