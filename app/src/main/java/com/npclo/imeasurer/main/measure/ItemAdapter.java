@@ -42,7 +42,7 @@ public class ItemAdapter extends ArrayAdapter<Part> {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             convertView = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
-            holder.textView = convertView.findViewById(R.id.tv);
+            holder.textView = (MyTextView) convertView.findViewById(R.id.tv);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
