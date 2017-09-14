@@ -167,6 +167,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .doOnSubscribe(this::scanning)
                 .doOnUnsubscribe(this::clearSubscription)
                 .subscribe(this::handleResult, this::handleError);
+        mSubscription.add(scanSubscribe);
     }
 
     private void handleResult(ScanResult scanResult) {

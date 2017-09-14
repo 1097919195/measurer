@@ -133,11 +133,11 @@
     <string name="hint_feedback">问题描述：</string>
     <string name="submit">提交</string>
     <string name="company_name">浙江格心科技有限公司</string>
-    <string name="company_tel">电话:0575-85595213</string>
-    <string name="company_website">网址:www.npclo.com</string>
-    <string name="company_email">邮箱:info@npclo.com</string>
-    <string name="company_address">地址:浙江省绍兴市柯桥区创意大厦809室</string>
-    <string name="copyright">&#169;浙江格心科技有限公司</string>
+    <string name="company_tel">电话: 0575-85595213</string>
+    <string name="company_website">网址: www.npclo.com</string>
+    <string name="company_email">邮箱: info@npclo.com</string>
+    <string name="company_address">地址: 浙江省绍兴市柯桥区创意大厦809室</string>
+    <string name="copyright">&#169; 浙江格心科技有限公司</string>
     <string name="logout_success">退出登录成功</string>
     <string name="unconnected">未连接</string>
     <string name="connected">已连接</string>

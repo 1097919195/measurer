@@ -54,6 +54,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     Toolbar baseToolbar;
     @BindView(R.id.device_state)
     TextView deviceState;
+    @BindView(R.id.action_connect)
+    ImageView actionConnect;
     @BindView(R.id.app_version)
     TextView appVersion;
     @BindView(R.id.user_name)
@@ -154,6 +156,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onResume() {
         super.onResume();
         initSpeech();
+        RxBleDevice rxBleDevice = BaseApplication.getRxBleDevice(getActivity());
+        if (rxBleDevice != null &&
+                rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED)
+            updateDeviceState();
         mPresenter.subscribe();
     }
 
@@ -294,12 +300,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showConnected(RxBleDevice bleDevice) {
         connectingProgressBar.dismiss();
-        deviceState.setText(getString(R.string.prompt_connected));
-        deviceState.setTextColor(getResources().getColor(R.color.primary));
-        deviceState.setEnabled(false);
+        updateDeviceState();
         showToast(getString(R.string.device_connected));
         speechSynthesizer.playText("蓝牙连接成功");
         BaseApplication.setRxBleDevice(getActivity(), bleDevice);
+    }
+
+    private void updateDeviceState() {
+        deviceState.setText(getString(R.string.prompt_connected));
+        deviceState.setTextColor(getResources().getColor(R.color.primary));
+        deviceState.setEnabled(false);
+        actionConnect.setEnabled(false);
     }
 
     @Override
