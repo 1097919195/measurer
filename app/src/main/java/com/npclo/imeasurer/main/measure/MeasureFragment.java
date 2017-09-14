@@ -36,7 +36,9 @@ import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
+import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
+import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -207,8 +209,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         baseToolbarTitle.setText("量体");
         baseToolbar.setNavigationIcon(R.mipmap.left);
         baseToolbar.setNavigationOnClickListener(__ -> {
-            start(HomeFragment.newInstance(), SINGLETASK);
-            pop();
+            HomeFragment homeFragment = HomeFragment.newInstance();
+            start(homeFragment, SINGLETASK);
+            homeFragment.setPresenter(new HomePresenter(homeFragment, SchedulerProvider.getInstance()));
         });
         baseToolbar.inflateMenu(R.menu.base_toolbar_menu);
         baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
@@ -362,7 +365,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void switchGender(View view) {
-        TextView genderView = view.findViewById(R.id.wechat_gender);
+        TextView genderView = (TextView) view.findViewById(R.id.wechat_gender);
         String gender = genderView.getText().toString();
         int index = 0;
         if (gender.equals("女")) {

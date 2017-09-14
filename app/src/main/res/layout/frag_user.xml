@@ -55,6 +55,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="11dp"
@@ -76,9 +77,9 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/curr_times"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="23"
                             android:textColor="@color/primary"
                             android:textSize="12sp" />
 
@@ -105,9 +106,9 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/total_times"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="123"
                             android:textColor="@color/primary"
                             android:textSize="12sp" />
 

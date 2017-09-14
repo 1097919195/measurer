@@ -75,11 +75,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     }
 
     private void initToolBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(getDrawable(R.mipmap.left));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.left));
         toolbar.inflateMenu(R.menu.base_toolbar_menu);
         MenuItem item = toolbar.getMenu().getItem(0);
-        toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText("扫描二维码");
         item.setTitle("帮助");
         item.setOnMenuItemClickListener(__ -> {
@@ -103,7 +103,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         // off screen.
         cameraManager = new CameraManager(getApplication());
 
-        viewfinderView = findViewById(R.id.viewfinderView);
+        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinderView);
         viewfinderView.setCameraManager(cameraManager);
         handler = null;
 
@@ -115,16 +115,16 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         decodeFormats = null;
         characterSet = null;
 
-        surfaceView = findViewById(R.id.preview_view);
+        surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
 
         //手动输入二维码编号
-        view_enter_qrcode = findViewById(R.id.view_enter_qrcode);
-        to_manual_enter_qrcode = findViewById(R.id.to_manual_enter_qrcode);
+        view_enter_qrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
+        to_manual_enter_qrcode = (RelativeLayout) findViewById(R.id.to_manual_enter_qrcode);
         findViewById(R.id.enter_qrcode_img).setOnClickListener(__ -> showEnterCodeView());
         findViewById(R.id.enter_qrcode_tv).setOnClickListener(__ -> showEnterCodeView());
-        AppCompatButton btnEnterCode = findViewById(R.id.action_enter_qrcode);
-        final EditText inputQrcode = findViewById(R.id.input_qrcode);
+        AppCompatButton btnEnterCode = (AppCompatButton) findViewById(R.id.action_enter_qrcode);
+        final EditText inputQrcode = (EditText) findViewById(R.id.input_qrcode);
         btnEnterCode.setOnClickListener(__ -> {
             String code = inputQrcode.getText().toString();
             if (!TextUtils.isEmpty(code)) {
@@ -169,7 +169,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         cameraManager.closeDriver();
         //historyManager = null; // Keep for onActivityResult
         if (!hasSurface) {
-            surfaceView = findViewById(R.id.preview_view);
+            surfaceView = (SurfaceView) findViewById(R.id.preview_view);
             SurfaceHolder surfaceHolder = surfaceView.getHolder();
             surfaceHolder.removeCallback(this);
         }

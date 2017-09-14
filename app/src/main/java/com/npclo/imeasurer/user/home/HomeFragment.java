@@ -1,11 +1,13 @@
 package com.npclo.imeasurer.user.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     TextView deviceState;
     @BindView(R.id.app_version)
     TextView appVersion;
+    @BindView(R.id.user_name)
+    TextView userName;
+    @BindView(R.id.curr_times)
+    TextView currTimes;
+    @BindView(R.id.total_times)
+    TextView totalTimes;
+    @BindView(R.id.action_update)
+    ImageView actionUpdate;
+    @BindView(R.id.action_help)
+    ImageView actionHelp;
+    @BindView(R.id.action_feedback)
+    ImageView actionFeedback;
+    @BindView(R.id.action_contact)
+    ImageView actionContact;
     private List<BleDevice> bleDeviceList = new ArrayList<>();
     private List<String> rxBleDeviceAddressList = new ArrayList<>();
     private ScanResultsAdapter scanResultsAdapter;
@@ -89,6 +105,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             start(fragment);
             fragment.setPresenter(new HomePresenter(fragment, SchedulerProvider.getInstance()));
         });
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        currTimes.setText(preferences.getString("currTimes", "N/A"));
+        totalTimes.setText(preferences.getString("totalTimes", "N/A"));
+        userName.setText(preferences.getString("name", "N/A"));
         configureResultList();
     }
 
@@ -289,7 +309,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void isConnecting() {
-        android.util.Log.e(TAG, "扫描弹窗正在扫描。。。");
+        Log.e(TAG, "扫描弹窗正在扫描。。。");
         connectingProgressBar = new MaterialDialog.Builder(getActivity())
                 .title(getString(R.string.connecting))
                 .titleColor(getResources().getColor(R.color.ff5001))
@@ -317,10 +337,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             if (resultDialog != null || resultDialog.isShowing()) {
                 resultDialog.dismiss();
                 resultDialog = null;
-                android.util.Log.e(TAG, "蓝牙设备显示弹窗关闭");
+                Log.e(TAG, "蓝牙设备显示弹窗关闭");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

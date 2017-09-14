@@ -186,8 +186,8 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
 
         edit.putString("id", user.get_id());
         edit.putString("name", user.getName());
-        edit.putString("curr_times", user.getCurrTimes() + "");
-        edit.putString("total_times", user.getTotalTimes() + "");
+        edit.putString("currTimes", user.getCurrTimes() + "");
+        edit.putString("totalTimes", user.getTotalTimes() + "");
         edit.apply();
     }
 
