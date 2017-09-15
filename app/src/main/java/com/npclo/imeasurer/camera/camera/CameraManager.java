@@ -27,7 +27,7 @@ import android.view.SurfaceHolder;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.npclo.imeasurer.camera.camera.open.OpenCamera;
 import com.npclo.imeasurer.camera.camera.open.OpenCameraInterface;
-import com.npclo.imeasurer.camera.decode.CaptureActivity;
+import com.npclo.imeasurer.camera.CaptureActivity;
 
 import java.io.IOException;
 

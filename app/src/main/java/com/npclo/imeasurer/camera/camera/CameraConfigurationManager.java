@@ -26,7 +26,7 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.npclo.imeasurer.camera.PreferencesActivity;
+import com.npclo.imeasurer.camera.pregerences.PreferencesActivity;
 import com.npclo.imeasurer.camera.camera.open.CameraFacing;
 import com.npclo.imeasurer.camera.camera.open.OpenCamera;
 

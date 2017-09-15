@@ -23,7 +23,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.npclo.imeasurer.camera.PreferencesActivity;
+import com.npclo.imeasurer.camera.pregerences.PreferencesActivity;
 
 import java.util.ArrayList;
 import java.util.Collection;

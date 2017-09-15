@@ -18,7 +18,7 @@ package com.npclo.imeasurer.camera.camera;
 
 import android.content.SharedPreferences;
 
-import com.npclo.imeasurer.camera.PreferencesActivity;
+import com.npclo.imeasurer.camera.pregerences.PreferencesActivity;
 
 /**
  * Enumerates settings of the preference controlling the front light.

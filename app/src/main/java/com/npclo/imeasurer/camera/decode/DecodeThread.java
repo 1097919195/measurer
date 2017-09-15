@@ -25,7 +25,8 @@ import android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
-import com.npclo.imeasurer.camera.PreferencesActivity;
+import com.npclo.imeasurer.camera.CaptureActivity;
+import com.npclo.imeasurer.camera.pregerences.PreferencesActivity;
 
 import java.util.Collection;
 import java.util.EnumMap;

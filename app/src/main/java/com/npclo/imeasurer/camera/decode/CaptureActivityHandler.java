@@ -33,6 +33,7 @@ import android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.camera.camera.CameraManager;
 
 import java.util.Collection;

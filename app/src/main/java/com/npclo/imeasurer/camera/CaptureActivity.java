@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.camera.decode;
+package com.npclo.imeasurer.camera;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,6 +24,10 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.camera.camera.CameraManager;
+import com.npclo.imeasurer.camera.decode.AmbientLightManager;
+import com.npclo.imeasurer.camera.decode.BeepManager;
+import com.npclo.imeasurer.camera.decode.CaptureActivityHandler;
+import com.npclo.imeasurer.camera.decode.InactivityTimer;
 import com.npclo.imeasurer.camera.view.ViewfinderView;
 import com.npclo.imeasurer.main.MainActivity;
 

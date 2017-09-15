@@ -27,7 +27,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.camera.PreferencesActivity;
+import com.npclo.imeasurer.camera.CaptureActivity;
+import com.npclo.imeasurer.camera.pregerences.PreferencesActivity;
 
 import java.io.Closeable;
 import java.io.IOException;

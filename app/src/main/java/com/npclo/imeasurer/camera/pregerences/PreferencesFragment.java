@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.npclo.imeasurer.camera;
+package com.npclo.imeasurer.camera.pregerences;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;

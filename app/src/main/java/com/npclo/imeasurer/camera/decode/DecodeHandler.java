@@ -32,6 +32,7 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.camera.CaptureActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
