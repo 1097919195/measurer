@@ -23,16 +23,18 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
-import com.google.zxing.MultiFormatReader;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 import com.npclo.imeasurer.R;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Hashtable;
 import java.util.Map;
 
 final class DecodeHandler extends Handler {
@@ -40,13 +42,25 @@ final class DecodeHandler extends Handler {
     private static final String TAG = DecodeHandler.class.getSimpleName();
 
     private final CaptureActivity activity;
-    private final MultiFormatReader multiFormatReader;
+    //    private final MultiFormatReader multiFormatReader;
+    private final Map<DecodeHintType, Object> mHints;
+    private final QRCodeReader mQrCodeReader;
+
     private boolean running = true;
 
-    DecodeHandler(CaptureActivity activity, Map<DecodeHintType, Object> hints) {
-        multiFormatReader = new MultiFormatReader();
-        multiFormatReader.setHints(hints);
+    //    DecodeHandler(CaptureActivity activity, Map<DecodeHintType, Object> hints) {
+//        multiFormatReader = new MultiFormatReader();
+//        multiFormatReader.setHints(hints);
+//        this.activity = activity;
+//    }
+    //att 改为目标识别格式为二维码
+    DecodeHandler(CaptureActivity activity) {
         this.activity = activity;
+        mHints = new Hashtable<>();
+        mQrCodeReader = new QRCodeReader();
+        mHints.put(DecodeHintType.CHARACTER_SET, "utf-8");
+        mHints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+        mHints.put(DecodeHintType.POSSIBLE_FORMATS, BarcodeFormat.QR_CODE);
     }
 
     @Override
@@ -61,15 +75,6 @@ final class DecodeHandler extends Handler {
             running = false;
             Looper.myLooper().quit();
         }
-//        switch (message.what) {
-//            case R.id.decode:
-//                decode((byte[]) message.obj, message.arg1, message.arg2);
-//                break;
-//            case R.id.quit:
-//                running = false;
-//                Looper.myLooper().quit();
-//                break;
-//        }
     }
 
     /**
@@ -87,11 +92,12 @@ final class DecodeHandler extends Handler {
         if (source != null) {
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
             try {
-                rawResult = multiFormatReader.decodeWithState(bitmap);
+//                rawResult = multiFormatReader.decodeWithState(bitmap);
+                rawResult = mQrCodeReader.decode(bitmap);
             } catch (ReaderException re) {
                 // continue
             } finally {
-                multiFormatReader.reset();
+                mQrCodeReader.reset();
             }
         }
 

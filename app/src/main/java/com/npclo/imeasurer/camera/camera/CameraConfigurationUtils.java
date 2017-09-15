@@ -274,7 +274,7 @@ public final class CameraConfigurationUtils {
     }
 
     public static Point findBestPreviewSizeValue(Camera.Parameters parameters, Point screenResolution) {
-
+        //获取当前手机支持的屏幕预览尺寸
         List<Camera.Size> rawSupportedSizes = parameters.getSupportedPreviewSizes();
         if (rawSupportedSizes == null) {
             Log.w(TAG, "Device returned no supported preview sizes; using default");
@@ -285,7 +285,7 @@ public final class CameraConfigurationUtils {
             return new Point(defaultSize.width, defaultSize.height);
         }
 
-        // Sort by size, descending
+        //对这些尺寸根据像素值（即宽乘以高的值）进行从大到小排序 Sort by size, descending
         List<Camera.Size> supportedPreviewSizes = new ArrayList<>(rawSupportedSizes);
         Collections.sort(supportedPreviewSizes, new Comparator<Camera.Size>() {
             @Override
@@ -329,6 +329,7 @@ public final class CameraConfigurationUtils {
             int maybeFlippedHeight = isCandidatePortrait ? realWidth : realHeight;
             double aspectRatio = (double) maybeFlippedWidth / (double) maybeFlippedHeight;
             double distortion = Math.abs(aspectRatio - screenAspectRatio);
+            //根据宽高比判断是否满足最大误差要求（默认最大值0.15，即宽高比默认不超过给定比例的15%）
             if (distortion > MAX_ASPECT_DISTORTION) {
                 it.remove();
                 continue;
@@ -336,7 +337,7 @@ public final class CameraConfigurationUtils {
 
             if (maybeFlippedWidth == screenResolution.x && maybeFlippedHeight == screenResolution.y) {
                 Point exactPoint = new Point(realWidth, realHeight);
-                Log.i(TAG, "Found preview size exactly matching screen size: " + exactPoint);
+                Log.e(TAG, "Found preview size exactly matching screen size: " + exactPoint);
                 return exactPoint;
             }
         }
@@ -347,7 +348,7 @@ public final class CameraConfigurationUtils {
         if (!supportedPreviewSizes.isEmpty()) {
             Camera.Size largestPreview = supportedPreviewSizes.get(0);
             Point largestSize = new Point(largestPreview.width, largestPreview.height);
-            Log.i(TAG, "Using largest suitable preview size: " + largestSize);
+            Log.e(TAG, "Using largest suitable preview size: " + largestSize);
             return largestSize;
         }
 
@@ -357,7 +358,7 @@ public final class CameraConfigurationUtils {
             throw new IllegalStateException("Parameters contained no preview size!");
         }
         Point defaultSize = new Point(defaultPreview.width, defaultPreview.height);
-        Log.i(TAG, "No suitable preview sizes, using default: " + defaultSize);
+        Log.e(TAG, "No suitable preview sizes, using default: " + defaultSize);
         return defaultSize;
     }
 

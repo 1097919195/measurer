@@ -327,13 +327,15 @@ public final class CameraManager {
      * @return A PlanarYUVLuminanceSource instance.
      */
     public PlanarYUVLuminanceSource buildLuminanceSource(byte[] data, int width, int height) {
-        Rect rect = getFramingRectInPreview();
-        if (rect == null) {
-            return null;
-        }
-        // Go ahead and assume it's YUV rather than die.
-        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
-                rect.width(), rect.height(), false);
+//        Rect rect = getFramingRectInPreview();
+//        if (rect == null) {
+//            return null;
+//        }
+//        // Go ahead and assume it's YUV rather than die.
+//        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
+//                rect.width(), rect.height(), false);
+        //att 采集的二维码数据不再拘束于聚集框，二维码数据可以铺满整个屏幕。
+        return new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
     }
 
 }
