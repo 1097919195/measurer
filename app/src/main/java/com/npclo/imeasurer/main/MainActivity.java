@@ -1,8 +1,11 @@
 package com.npclo.imeasurer.main;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
@@ -18,6 +21,9 @@ import kr.co.namee.permissiongen.PermissionGen;
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int SCAN_HINT = 1001;
+    private static final int CODE_HINT = 1002;
+    private HomePresenter mPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,11 +47,38 @@ public class MainActivity extends BaseActivity {
         if (homeFragment == null) {
             homeFragment = HomeFragment.newInstance();
             loadRootFragment(R.id.content_frame, homeFragment);
-            new HomePresenter(homeFragment, SchedulerProvider.getInstance());
+            mPresenter = new HomePresenter(homeFragment, SchedulerProvider.getInstance());
+            homeFragment.setPresenter(mPresenter);
         }
     }
 
     protected void initView() {
         setContentView(R.layout.act_main);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        String result = null;
+        try {
+            Bundle bundle = data.getExtras();
+            result = bundle.getString("result");
+        } catch (Exception e) {
+            Log.e(TAG, "===============activity未接收到数据==================");
+            Toast.makeText(MainActivity.this, "未接收到数据", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        if (result != null) {
+            Log.e(TAG, "activity传输过来的数据：" + result);
+            Toast.makeText(MainActivity.this, "接收到数据" + result, Toast.LENGTH_SHORT).show();
+            switch (resultCode) {
+                case SCAN_HINT:
+                    mPresenter.getUserInfoWithOpenID(result);
+                    break;
+                case CODE_HINT:
+                    mPresenter.getUserInfoWithCode(result);
+                    break;
+            }
+        }
     }
 }

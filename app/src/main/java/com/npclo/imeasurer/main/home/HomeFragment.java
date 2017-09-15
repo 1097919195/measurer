@@ -30,6 +30,7 @@ import butterknife.Unbinder;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class HomeFragment extends BaseFragment implements HomeContract.View {
+    public static final int REQUEST_CODE = 1001;
     @BindView(R.id.scan_img)
     ImageView scanImg;
     @BindView(R.id.scan_hint)
@@ -42,6 +43,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private HomeContract.Presenter mPresenter;
     private MaterialDialog dialog;
+    private static final int SCAN_HINT = 1001;
+    private static final int CODE_HINT = 1002;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -81,28 +84,29 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private void startScan() {
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, 1001);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String result = null;
-        try {
-            Bundle bundle = data.getExtras();
-            result = bundle.getString("result");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.e(TAG, "传输过来的数据：" + result);
-        switch (resultCode) {
-            case 1:
-                mPresenter.getUserInfoWithOpenID(result);
-                break;
-            case 2:
-                mPresenter.getUserInfoWithCode(result);
-                break;
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        String result = null;
+//        try {
+//            Bundle bundle = data.getExtras();
+//            result = bundle.getString("result");
+//        } catch (Exception e) {
+//            Log.e(TAG, "===============fragment未接收到数据==================");
+//            e.printStackTrace();
+//        }
+//        Log.e(TAG, "fragment传输过来的数据：" + result);
+//        switch (resultCode) {
+//            case SCAN_HINT:
+//                mPresenter.getUserInfoWithOpenID(result);
+//                break;
+//            case CODE_HINT:
+//                mPresenter.getUserInfoWithCode(result);
+//                break;
+//        }
+//    }
 
     /**
      * 初始化toolbar的一些默认属性

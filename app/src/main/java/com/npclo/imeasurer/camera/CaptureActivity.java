@@ -37,7 +37,8 @@ import java.util.Collection;
 public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
-    private static final int ENTER_OK = 2;
+    private static final int SCAN_HINT = 1001;
+    private static final int CODE_HINT = 1002;
 
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
@@ -121,7 +122,20 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
 
         surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        handleEnterCode();
 
+
+        if (hasSurface) {
+            // The activity was paused but not stopped, so the surface still exists. Therefore
+            // surfaceCreated() won't be called, so init the camera here.
+            initCamera(surfaceHolder);
+        } else {
+            // Install the callback and wait for surfaceCreated() to init the camera.
+            surfaceHolder.addCallback(this);
+        }
+    }
+
+    private void handleEnterCode() {
         //手动输入二维码编号
         view_enter_qrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
         to_manual_enter_qrcode = (RelativeLayout) findViewById(R.id.to_manual_enter_qrcode);
@@ -136,21 +150,12 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
                 Bundle bundle = new Bundle();
                 bundle.putString("result", code);
                 resultIntent.putExtras(bundle);
-                CaptureActivity.this.setResult(ENTER_OK, resultIntent);
+                CaptureActivity.this.setResult(CODE_HINT, resultIntent);
+                CaptureActivity.this.finish();
             } else {
                 Toast.makeText(CaptureActivity.this, getString(R.string.plz_enter_qrcode), Toast.LENGTH_SHORT).show();
             }
-            CaptureActivity.this.finish();
         });
-
-        if (hasSurface) {
-            // The activity was paused but not stopped, so the surface still exists. Therefore
-            // surfaceCreated() won't be called, so init the camera here.
-            initCamera(surfaceHolder);
-        } else {
-            // Install the callback and wait for surfaceCreated() to init the camera.
-            surfaceHolder.addCallback(this);
-        }
     }
 
     private void showEnterCodeView() {
@@ -232,12 +237,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             Bundle bundle = new Bundle();
             bundle.putString("result", resultString);
             resultIntent.putExtras(bundle);
-            this.setResult(1, resultIntent);
+            this.setResult(SCAN_HINT, resultIntent);
         } else {
             Toast.makeText(CaptureActivity.this, "扫描失败，请重试", Toast.LENGTH_SHORT).show();
         }
         CaptureActivity.this.finish();
-
     }
 
     @Override
