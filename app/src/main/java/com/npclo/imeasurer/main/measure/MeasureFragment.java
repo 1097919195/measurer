@@ -163,7 +163,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unbinder = ButterKnife.bind(this, mRootView);
         try {
             wechatNickname.setText(user.getNickname());
-            wechatGender.setText(user.getSex() == 0 ? "男" : "女");
+            wechatGender.setText(user.getSex() == 1 ? "男" : "女");
             wechatName.setText("微信号：" + user.getName());
             Glide.with(this).load(user.getAvatar()).into(wechatIcon);
         } catch (Exception e) {
