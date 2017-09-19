@@ -6,7 +6,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "stuido.tsing.IMeasurer"
+        applicationId "com.npclo.IMeasurer"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -18,7 +18,13 @@ android {
     }
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
