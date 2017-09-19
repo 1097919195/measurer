@@ -1,8 +1,9 @@
 package com.npclo.imeasurer.data.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
+import com.npclo.imeasurer.data.ValidCode;
 import com.npclo.imeasurer.data.wuser.WechatUser;
-import com.npclo.imeasurer.utils.http.account.UserHttpHelper;
+import com.npclo.imeasurer.utils.http.user.UserHttpHelper;
 
 import rx.Observable;
 
@@ -41,4 +42,5 @@ public class UserRepository implements UserDataSource {
     public Observable<WechatUser> getUserInfoWithOpenID(String id) {
         return new UserHttpHelper().getUserInfoWithOpenID(id);
     }
+
 }

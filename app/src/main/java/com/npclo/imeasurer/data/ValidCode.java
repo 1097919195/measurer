@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.data.user;
+package com.npclo.imeasurer.data;
 
 /**
  * Created by Endless on 2017/8/30.

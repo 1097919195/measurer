@@ -1,5 +1,7 @@
 package com.npclo.imeasurer.data.user;
 
+import com.npclo.imeasurer.data.ValidCode;
+
 import rx.Observable;
 
 /**

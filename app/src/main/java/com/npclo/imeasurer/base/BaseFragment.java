@@ -1,5 +1,7 @@
 package com.npclo.imeasurer.base;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -77,6 +79,18 @@ public abstract class BaseFragment extends SupportFragment {
             showToast(getString(R.string.something_error));
         }
         Log.e(TAG, e.getMessage());
+    }
+
+    public int getVersionCode() {
+        PackageManager manager = getActivity().getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return info.versionCode;
+
     }
 
 }

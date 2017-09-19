@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
@@ -64,13 +63,9 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = data.getExtras();
             result = bundle.getString("result");
         } catch (Exception e) {
-            Log.e(TAG, "===============activity未接收到数据==================");
-            Toast.makeText(MainActivity.this, "未接收到数据", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         if (result != null) {
-            Log.e(TAG, "activity传输过来的数据：" + result);
-            Toast.makeText(MainActivity.this, "接收到数据" + result, Toast.LENGTH_SHORT).show();
             switch (resultCode) {
                 case SCAN_HINT:
                     mPresenter.getUserInfoWithOpenID(result);
@@ -79,6 +74,8 @@ public class MainActivity extends BaseActivity {
                     mPresenter.getUserInfoWithCode(result);
                     break;
             }
+        } else {
+            Toast.makeText(MainActivity.this, "未收到数据，请重试", Toast.LENGTH_LONG).show();
         }
     }
 }

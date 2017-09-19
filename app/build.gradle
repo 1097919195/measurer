@@ -71,6 +71,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('src/main/jniLibs/usc.jar')
     compile 'com.google.zxing:core:3.2.1'
+    compile 'com.teprinciple:updateapputils:1.3.1'
 }
 
 configurations.all {

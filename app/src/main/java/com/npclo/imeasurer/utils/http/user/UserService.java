@@ -1,9 +1,9 @@
-package com.npclo.imeasurer.utils.http.account;
+package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
 import com.npclo.imeasurer.data.HttpResponse;
 import com.npclo.imeasurer.data.user.User;
-import com.npclo.imeasurer.data.user.ValidCode;
+import com.npclo.imeasurer.data.ValidCode;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 
 import retrofit2.http.Body;

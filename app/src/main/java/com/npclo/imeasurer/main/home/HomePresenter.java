@@ -2,6 +2,7 @@ package com.npclo.imeasurer.main.home;
 
 import android.support.annotation.NonNull;
 
+import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 
@@ -31,7 +32,16 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void subscribe() {
+        getLatestVersion();
+    }
 
+    @Override
+    public void getLatestVersion() {
+        new AppRepository()
+                .getLatestVersion()
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(app -> fragment.showGetVersionSuccess(app));
     }
 
     @Override
@@ -66,4 +76,6 @@ public class HomePresenter implements HomeContract.Presenter {
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
     }
+
+
 }

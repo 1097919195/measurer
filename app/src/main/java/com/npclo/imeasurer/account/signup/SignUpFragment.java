@@ -18,7 +18,7 @@ import com.npclo.imeasurer.account.signin.SignInFragment;
 import com.npclo.imeasurer.account.signin.SignInPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
-import com.npclo.imeasurer.data.user.ValidCode;
+import com.npclo.imeasurer.data.ValidCode;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 

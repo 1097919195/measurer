@@ -13,6 +13,7 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
+import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.measure.MeasureFragment;
 import com.npclo.imeasurer.main.measure.MeasurePresenter;
@@ -26,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import util.UpdateAppUtils;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -185,4 +187,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         showLoading(false);
     }
 
+    private void updateApp(App app) {
+        UpdateAppUtils.from(getActivity())
+                .serverVersionCode(app.getCode())
+                .serverVersionName(app.getVersion())
+                .apkPath(app.getPath())
+                .updateInfo(app.getInfo())
+                .update();
+    }
+
+    @Override
+    public void showGetVersionSuccess(App app) {
+        if (app.getCode() > getVersionCode()) updateApp(app);
+    }
 }
