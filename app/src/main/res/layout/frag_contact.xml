@@ -38,20 +38,22 @@
                 android:textSize="22sp" />
 
             <TextView
+                android:id="@+id/tv_phone"
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="16dp"
                 android:layout_marginLeft="17dp"
                 android:layout_marginRight="16dp"
+                android:autoLink="phone"
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="18dp"
-                android:autoLink="phone"
                 android:text="@string/company_tel"
                 android:textColor="@color/c434446"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/tv_web"
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
                 android:layout_gravity="center_vertical"
@@ -60,12 +62,13 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="7dp"
-                android:autoLink="web"
                 android:text="@string/company_website"
+                android:autoLink="web"
                 android:textColor="@color/c434446"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/tv_email"
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
                 android:layout_gravity="center_vertical"
@@ -73,8 +76,8 @@
                 android:layout_marginLeft="17dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="17dp"
-                android:layout_marginTop="7dp"
                 android:autoLink="email"
+                android:layout_marginTop="7dp"
                 android:text="@string/company_email"
                 android:textColor="@color/c434446"
                 android:textSize="16sp" />

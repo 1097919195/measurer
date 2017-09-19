@@ -184,4 +184,5 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void showCompleteGetInfo() {
         showLoading(false);
     }
+
 }
