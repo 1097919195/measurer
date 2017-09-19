@@ -26,5 +26,7 @@ public interface HomeContract {
         void showCompleteGetInfo();
 
         void showGetVersionSuccess(App app);
+
+        void showGetVersionError(Throwable e);
     }
 }

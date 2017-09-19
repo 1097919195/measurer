@@ -32,7 +32,6 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void subscribe() {
-        getLatestVersion();
     }
 
     @Override
@@ -41,7 +40,8 @@ public class HomePresenter implements HomeContract.Presenter {
                 .getLatestVersion()
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(app -> fragment.showGetVersionSuccess(app));
+                .subscribe(app -> fragment.showGetVersionSuccess(app),
+                        e -> fragment.showGetVersionError(e));
     }
 
     @Override
@@ -76,6 +76,4 @@ public class HomePresenter implements HomeContract.Presenter {
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
     }
-
-
 }

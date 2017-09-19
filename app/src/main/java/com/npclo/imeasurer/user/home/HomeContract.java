@@ -2,6 +2,7 @@ package com.npclo.imeasurer.user.home;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
+import com.npclo.imeasurer.data.app.App;
 import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
@@ -39,6 +40,10 @@ public interface HomeContract {
         void closeScanResultDialog();
 
         void setNotificationInfo(UUID characteristicUUID, Observable<RxBleConnection> connectionObservable);
+
+        void showGetVersionSuccess(App app);
+
+        void showGetVersionError(Throwable e);
     }
 
     interface Presenter extends BasePresenter {
@@ -48,5 +53,6 @@ public interface HomeContract {
 
         void startScan();
 
+        void checkVersion();
     }
 }

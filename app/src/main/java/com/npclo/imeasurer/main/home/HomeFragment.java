@@ -27,7 +27,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import util.UpdateAppUtils;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -142,6 +141,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             bleState.setTextColor(getResources().getColor(R.color.green));
             bleState.setEnabled(false);//TODO 已连接按钮不能再点击前往连接
         }
+        if (BaseApplication.getFirstCheckHint(getActivity())) {
+            mPresenter.getLatestVersion();
+            BaseApplication.setIsFirstCheck(getActivity());
+        }
     }
 
     @Override
@@ -187,17 +190,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         showLoading(false);
     }
 
-    private void updateApp(App app) {
-        UpdateAppUtils.from(getActivity())
-                .serverVersionCode(app.getCode())
-                .serverVersionName(app.getVersion())
-                .apkPath(app.getPath())
-                .updateInfo(app.getInfo())
-                .update();
-    }
 
     @Override
     public void showGetVersionSuccess(App app) {
         if (app.getCode() > getVersionCode()) updateApp(app);
+    }
+
+    @Override
+    public void showGetVersionError(Throwable e) {
+        handleError(e, TAG);
     }
 }

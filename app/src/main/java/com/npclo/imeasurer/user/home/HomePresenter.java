@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothGattService;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -182,4 +183,13 @@ public class HomePresenter implements HomeContract.Presenter {
         fragment.showScanning();
     }
 
+    @Override
+    public void checkVersion() {
+        new AppRepository()
+                .getLatestVersion()
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(fragment::showGetVersionSuccess,
+                        fragment::showGetVersionError);
+    }
 }

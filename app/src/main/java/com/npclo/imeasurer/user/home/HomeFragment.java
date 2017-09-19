@@ -16,6 +16,7 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
+import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.user.contact.ContactFragment;
@@ -161,6 +162,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED)
             updateDeviceState();
         mPresenter.subscribe();
+        //att 处理版本更新提示
+        if (BaseApplication.canUpdate(getActivity())) {
+            actionConnect.setEnabled(true);
+            appVersion.setEnabled(true);
+            appVersion.setText(getString(R.string.prompt_can_update));
+            appVersion.setTextColor(getResources().getColor(R.color.primary));
+        } else {
+            actionConnect.setEnabled(false);
+            appVersion.setEnabled(false);
+            appVersion.setText(getString(R.string.prompt_latest_version));
+        }
     }
 
     @Override
@@ -206,8 +218,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 break;
             case R.id.action_update:
             case R.id.app_version:
-                showToast(getString(R.string.prompt_latest_version));
-                // TODO: 2017/9/4 mPresenter.checkVersionUpdate();
+                mPresenter.checkVersion();
                 break;
             case R.id.action_help:
                 showToast(getString(R.string.prompt_app_help), Toast.LENGTH_LONG);
@@ -355,4 +366,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
     }
 
+    @Override
+    public void showGetVersionSuccess(App app) {
+        if (app.getCode() > getVersionCode()) {
+            updateApp(app);
+        } else {
+            showToast(getString(R.string.prompt_latest_version));
+        }
+    }
+
+    @Override
+    public void showGetVersionError(Throwable e) {
+        handleError(e, TAG);
+    }
 }

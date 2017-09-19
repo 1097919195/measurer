@@ -21,6 +21,8 @@ public class BaseApplication extends Application {
     private RxBleClient rxBleClient;
     private RxBleDevice rxBleDevice;
     private UUID characteristicUUID;
+    private boolean haveUpdate = false;
+    private boolean isFirstCheckUpdate = true;
     private Observable<RxBleConnection> connectionObservable;
 
 
@@ -68,5 +70,25 @@ public class BaseApplication extends Application {
     public static Observable<RxBleConnection> getConnection(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         return application.connectionObservable;
+    }
+
+    public static void haveUpdate(Context context, boolean b) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        application.haveUpdate = b;
+    }
+
+    public static boolean canUpdate(Context context) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        return application.haveUpdate;
+    }
+
+    public static void setIsFirstCheck(Context context) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        application.isFirstCheckUpdate = false;
+    }
+
+    public static boolean getFirstCheckHint(Context context) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        return application.isFirstCheckUpdate;
     }
 }

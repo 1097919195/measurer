@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.utils.ApiException;
 
 import java.net.ConnectException;
@@ -19,6 +20,7 @@ import java.net.SocketTimeoutException;
 
 import me.yokeyword.fragmentation.SupportFragment;
 import retrofit2.HttpException;
+import util.UpdateAppUtils;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -81,7 +83,7 @@ public abstract class BaseFragment extends SupportFragment {
         Log.e(TAG, e.getMessage());
     }
 
-    public int getVersionCode() {
+    protected int getVersionCode() {
         PackageManager manager = getActivity().getPackageManager();
         PackageInfo info = null;
         try {
@@ -93,4 +95,13 @@ public abstract class BaseFragment extends SupportFragment {
 
     }
 
+    protected void updateApp(App app) {
+        BaseApplication.haveUpdate(getActivity(), true);
+        UpdateAppUtils.from(getActivity())
+                .serverVersionCode(app.getCode())
+                .serverVersionName(app.getVersion())
+                .apkPath(app.getPath())
+                .updateInfo(app.getInfo())
+                .update();
+    }
 }
