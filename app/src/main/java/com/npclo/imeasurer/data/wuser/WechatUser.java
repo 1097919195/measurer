@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
  */
 
 public class WechatUser implements Parcelable {
-    private int sex;
+    private int gender;
     private String nickname;
     @Nullable
     private String height;
@@ -24,7 +24,7 @@ public class WechatUser implements Parcelable {
     private String name;
 
     protected WechatUser(Parcel in) {
-        sex = in.readInt();
+        gender = in.readInt();
         nickname = in.readString();
         height = in.readString();
         weight = in.readString();
@@ -63,12 +63,12 @@ public class WechatUser implements Parcelable {
         this.avatar = avatar;
     }
 
-    public int getSex() {
-        return sex;
+    public int getGender() {
+        return gender;
     }
 
-    public WechatUser setSex(int sex) {
-        this.sex = sex;
+    public WechatUser setGender(int gender) {
+        this.gender = gender;
         return this;
     }
 
@@ -118,7 +118,7 @@ public class WechatUser implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(sex);
+        parcel.writeInt(gender);
         parcel.writeString(nickname);
         parcel.writeString(height);
         parcel.writeString(weight);

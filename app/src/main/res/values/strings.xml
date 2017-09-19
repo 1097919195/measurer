@@ -141,40 +141,6 @@
     <string name="logout_success">退出登录成功</string>
     <string name="unconnected">未连接</string>
     <string name="connected">已连接</string>
-    <string-array name="angle_items">
-        <item>ItemD</item>
-        <item>ItemE</item>
-        <item>ItemF</item>
-        <item>ItemO</item>
-        <item>ItemP</item>
-        <item>ItemN</item>
-    </string-array>
-    <string-array name="items_sequence">
-        <item>头围</item>
-        <item>颈围</item>
-        <item>肩宽</item>
-        <item>左肩斜</item>
-        <item>右肩斜</item>
-        <item>弯背角度</item>
-        <item>臂围</item>
-        <item>手腕围</item>
-        <item>臂长</item>
-        <item>胸围</item>
-        <item>下胸围</item>
-        <item> 肚围</item>
-        <item>腰围</item>
-        <item>凹腰角度</item>
-        <item>上凸肚角度</item>
-        <item>下凸肚角度</item>
-        <item>臀围</item>
-        <item>大腿围</item>
-        <item>中部大腿围</item>
-        <item>膝围</item>
-        <item>小腿围</item>
-        <item>脚踝围</item>
-        <item>通裆</item>
-        <item>髂骨高度</item>
-    </string-array>
     <string name="enter_qrcode_prompt">请输入二维码编号</string>
     <string name="valid_qrcode_prompt">请确认您输入的二维码编号是正确的</string>
     <string name="btn_sure">确认</string>

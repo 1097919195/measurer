@@ -86,8 +86,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     ImageView wechatIcon;
     @BindView(R.id.wechat_nickname)
     TextView wechatNickname;
-    @BindView(R.id.wechat_name)
-    TextView wechatName;
+    //    @BindView(R.id.wechat_name)
+//    TextView wechatName;
     @BindView(R.id.wechat_gender)
     TextView wechatGender;
     @BindView(R.id.camera_add)
@@ -163,8 +163,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unbinder = ButterKnife.bind(this, mRootView);
         try {
             wechatNickname.setText(user.getNickname());
-            wechatGender.setText(user.getSex() == 1 ? "男" : "女");
-            wechatName.setText("微信号：" + user.getName());
+            wechatGender.setText(user.getGender() == 1 ? "男" : "女");
+//            wechatName.setText("微信号：" + user.getName());
             Glide.with(this).load(user.getAvatar()).into(wechatIcon);
         } catch (Exception e) {
             e.printStackTrace();
@@ -367,9 +367,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private void switchGender(View view) {
         TextView genderView = (TextView) view.findViewById(R.id.wechat_gender);
         String gender = genderView.getText().toString();
-        int index = 0;
+        int index = 1;
         if (gender.equals("女")) {
-            index = 1;
+            index = 2;
         }
         //颜色状态列表
         ColorStateList sl = new ColorStateList(new int[][]{
