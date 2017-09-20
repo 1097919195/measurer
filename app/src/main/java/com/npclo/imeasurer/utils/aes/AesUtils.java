@@ -207,7 +207,7 @@ public class AesUtils {
      * @return 解密后的原文
      * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
      */
-    private String decryptMsg(String msgSignature, String timeStamp, String nonce, String postData)
+    public String decryptMsg(String msgSignature, String timeStamp, String nonce, String postData)
             throws AesException {
 
         // 密钥，公众账号的app secret
@@ -246,4 +246,5 @@ public class AesUtils {
 
         return decrypt(echoStr);
     }
+
 }

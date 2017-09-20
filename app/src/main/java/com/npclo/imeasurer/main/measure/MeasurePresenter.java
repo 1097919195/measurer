@@ -12,7 +12,19 @@ import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleConnection;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.UUID;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import okhttp3.MultipartBody;
 import rx.Observable;
@@ -88,14 +100,19 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         String s = (new Gson()).toJson(measurement);
         if (aesUtils == null) aesUtils = new AesUtils();
         String s1 = null;
+        String nonce = aesUtils.getRandomStr();
+        String timeStamp = Long.toString(System.currentTimeMillis());
         try {
-            s1 = aesUtils.encryptMsg(s, "", aesUtils.getRandomStr());
+            s1 = aesUtils.encryptMsg(s, timeStamp, nonce);
         } catch (AesException e) {
             Log.e(TAG, "出错啦，" + e.getMessage());
             e.printStackTrace();
         }
+        //检测
+        check(s, s1, nonce, timeStamp);
+
         Subscription subscribe = new MeasurementHelper()
-                .saveMeasurement(s1, imgs)
+                .saveMeasurement(s1, nonce, timeStamp, imgs)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
@@ -104,5 +121,35 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                         () -> fragment.showSaveCompleted()
                 );
         mSubscriptions.add(subscribe);
+    }
+
+    private void check(String s, String s1, String nonce, String timeStamp) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            StringReader sr = new StringReader(s1);
+            InputSource is = new InputSource(sr);
+            Document document = db.parse(is);
+
+            Element root = document.getDocumentElement();
+            NodeList nodelist1 = root.getElementsByTagName("Encrypt");
+            NodeList nodelist2 = root.getElementsByTagName("MsgSignature");
+
+            String encrypt = nodelist1.item(0).getTextContent();
+            String msgSignature = nodelist2.item(0).getTextContent();
+            String fromXML = String.format("<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%1$s]]></Encrypt></xml>"
+                    , encrypt);
+
+            String s2 = aesUtils.decryptMsg(msgSignature, timeStamp, nonce, fromXML);
+            if (s.equals(s2)) Log.e(TAG, "正确解析");
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (AesException e) {
+            e.printStackTrace();
+        }
     }
 }

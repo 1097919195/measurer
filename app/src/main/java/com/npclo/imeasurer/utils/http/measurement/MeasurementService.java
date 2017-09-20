@@ -26,6 +26,7 @@ public interface MeasurementService {
 
     @Multipart
     @POST("measurement/save")
-    Observable<HttpResponse> saveMeasurement(@Part("measurement") String measurement,
-                                             @Part MultipartBody.Part[] imgs);
+    Observable<HttpResponse> saveMeasurement(
+            @Part("measurement") String measurement, @Part("nonce") String randomStr,
+            @Part("timeStamp") String timeStamp, @Part MultipartBody.Part[] imgs);
 }
