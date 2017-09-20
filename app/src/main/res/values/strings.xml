@@ -190,4 +190,5 @@
     <string name="msg_invalid_value">值无效</string>
     <string name="next_person">下一个量体</string>
     <string name="prompt_can_update">发现新版本</string>
+    <string name="measure_completed">测量完毕，检查无误后保存</string>
 </resources>

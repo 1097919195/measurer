@@ -71,7 +71,8 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         int a1 = length ^ code;
         int a2 = angle ^ code;
         int a3 = battery ^ code;
-        Log.e(TAG, "获得数据：长度: " + a1 / 10 + "; 角度:  " + a2 / 10 + "; 电量: " + a3);
+//        Log.e(TAG, "测量原始结果："+s);
+//        Log.e(TAG, "获得数据：长度: " +length + "; 角度:  " +angle+ "; 电量: " + battery);
         fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
     }
 

@@ -124,14 +124,14 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private SpeechSynthesizer speechSynthesizer;
     private String PART_PACKAGE = Part.class.getPackage().getName();
     private String ITEM_PACKAGE = MeasurementItem.class.getPackage().getName();
-    private List<String> angleList;
-    private List<Part> partList = new ArrayList<>();
     private MaterialDialog saveProgressbar;
     public static final int TAKE_PHOTO = 1003;
     public static final int CROP_PHOTO = 1004;
     private static final int IMAGE_REQUEST_CODE = 1005;
     private List<FrameLayout> unVisibleView = new ArrayList<>();
     private List<MyTextView> unMeasuredList = new ArrayList<>();
+    private List<String> angleList;
+    private List<Part> partList = new ArrayList<>();
     private MyTextView modifyingView;
     private boolean initUmMeasureListFlag;
     private Uri imageUri;
@@ -224,18 +224,18 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         measurePresenter.subscribe();
         String[] angleItems = getResources().getStringArray(R.array.angle_items);
         angleList = Arrays.asList(angleItems);
+        try {
+            RxBleDevice bleDevice = BaseApplication.getRxBleDevice(getActivity());
+            if (bleDevice != null && bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
+                //启动测量
 
-        RxBleDevice bleDevice = BaseApplication.getRxBleDevice(getActivity());
-        if (bleDevice != null && bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
-            //启动测量
-            try {
                 UUID characteristicUUID = BaseApplication.getUUID(getActivity());
                 Observable<RxBleConnection> connectionObservable = BaseApplication.getConnection(getActivity());
                 measurePresenter.startMeasure(characteristicUUID, connectionObservable);
-            } catch (Exception e) {
-                showToast("蓝牙连接异常，请重新连接！");
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            showToast("蓝牙连接异常，请重新连接！");
+            e.printStackTrace();
         }
         initUmMeasureListFlag = true;
     }
@@ -329,20 +329,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void measureNextPerson() {
-        int count = gridView.getChildCount();
-        for (int i = 0; i < count; i++) {
-            LinearLayout linearLayout = (LinearLayout) gridView.getChildAt(i);
-            MyTextView textView = (MyTextView) linearLayout.getChildAt(0);
-            textView.setState(MeasureStateEnum.UNMEASUED.ordinal());
-            textView.setTextColor(getResources().getColor(R.color.unmeasured));
-            textView.setValue(0.0f);
-        }
-        frame_1.setVisibility(View.INVISIBLE);
-        frame_2.setVisibility(View.INVISIBLE);
-        frame_3.setVisibility(View.INVISIBLE);
-        img_1.setImageDrawable(null);
-        img_2.setImageDrawable(null);
-        img_3.setImageDrawable(null);// FIXME: 2017/9/11
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
         startActivityForResult(intent, 1001);
         btnNext.setVisibility(View.GONE);
@@ -543,9 +529,15 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         if (modifyingView != null) {
             assignValue(length, angle, modifyingView, 1);
         } else {
-            MyTextView textView = unMeasuredList.get(0);
-            if (textView != null) {
-                assignValue(length, angle, textView, 0);
+            try {
+                MyTextView textView = unMeasuredList.get(0);
+                if (textView != null) {
+                    assignValue(length, angle, textView, 0);
+                }
+            } catch (Exception e) {
+                //无未测项目，提示测量完成，
+                showToast(getString(R.string.measure_completed));
+                e.printStackTrace();
             }
         }
     }
@@ -553,8 +545,27 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showSuccessSave() {
         showToast("保存成功");
+        //清除所有已测量项目
+        clearAndMeasureNext();
         btnSave.setVisibility(View.GONE);
         btnNext.setVisibility(View.VISIBLE);
+    }
+
+    private void clearAndMeasureNext() {
+        int count = gridView.getChildCount();
+        for (int i = 0; i < count; i++) {
+            LinearLayout linearLayout = (LinearLayout) gridView.getChildAt(i);
+            MyTextView textView = (MyTextView) linearLayout.getChildAt(0);
+            textView.setState(MeasureStateEnum.UNMEASUED.ordinal());
+            textView.setTextColor(getResources().getColor(R.color.unmeasured));
+            textView.setValue(0.0f);
+        }
+        frame_1.setVisibility(View.INVISIBLE);
+        frame_2.setVisibility(View.INVISIBLE);
+        frame_3.setVisibility(View.INVISIBLE);
+        img_1.setImageDrawable(null);
+        img_2.setImageDrawable(null);
+        img_3.setImageDrawable(null);// FIXME: 2017/9/11
     }
 
     @Override
@@ -596,6 +607,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             cn = part.getCn();
             String value;//播报的测量结果
             if (angleList.contains(tag)) { //按要求赋值
+                if (angle > 90f) {
+                    speechSynthesizer.playText(cn + "测量出错，请重新测量");
+                    return;
+                }
                 textView.setValue(angle);
                 value = angle + "";
             } else {
