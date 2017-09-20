@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.utils.HexString;
+import com.npclo.imeasurer.utils.aes.AesException;
+import com.npclo.imeasurer.utils.aes.AesUtils;
 import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -31,6 +33,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private BaseSchedulerProvider schedulerProvider;
     @NonNull
     private CompositeSubscription mSubscriptions;
+    private AesUtils aesUtils;
 
     public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider) {
         fragment = ((MeasureFragment) checkNotNull(view));
@@ -83,8 +86,16 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs) {
         String s = (new Gson()).toJson(measurement);
-        Log.e(TAG, s);
-        Subscription subscribe = new MeasurementHelper().saveMeasurement(s, imgs)
+        if (aesUtils == null) aesUtils = new AesUtils();
+        String s1 = null;
+        try {
+            s1 = aesUtils.encryptMsg(s, "", aesUtils.getRandomStr());
+        } catch (AesException e) {
+            Log.e(TAG, "出错啦，" + e.getMessage());
+            e.printStackTrace();
+        }
+        Subscription subscribe = new MeasurementHelper()
+                .saveMeasurement(s1, imgs)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))

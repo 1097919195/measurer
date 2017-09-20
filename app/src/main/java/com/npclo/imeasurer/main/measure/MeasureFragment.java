@@ -395,7 +395,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 Class<?> aClass = Class.forName(PART_PACKAGE + "." + en);
                 Part part = (Part) aClass.newInstance();
                 part.setValue(value + "");
-                part.setCn(cn);
+                part.setCn(cn); //att 不存储当前部位的
                 part.setEn(en);
                 Method method = Class2.getMethod("set" + en, aClass);
                 method.invoke(item, part);
@@ -608,7 +608,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             String value;//播报的测量结果
             if (angleList.contains(tag)) { //按要求赋值
                 if (angle > 90f) {
-                    speechSynthesizer.playText(cn + "测量出错，请重新测量");
+                    speechSynthesizer.playText(cn + "测量结果有误，请重新测量");
                     return;
                 }
                 textView.setValue(angle);
