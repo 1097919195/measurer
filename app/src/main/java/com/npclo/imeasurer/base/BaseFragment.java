@@ -100,7 +100,7 @@ public abstract class BaseFragment extends SupportFragment {
         UpdateAppUtils.from(getActivity())
                 .serverVersionCode(app.getCode())
                 .serverVersionName(app.getVersion())
-                .apkPath(app.getPath())
+                .apkPath(app.getPath() + app.getVersion())
                 .updateInfo(app.getInfo())
                 .update();
     }
