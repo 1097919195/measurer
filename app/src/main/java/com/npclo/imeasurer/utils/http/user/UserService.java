@@ -2,11 +2,10 @@ package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
 import com.npclo.imeasurer.data.HttpResponse;
-import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.data.ValidCode;
+import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -19,11 +18,13 @@ import rx.Observable;
  */
 
 public interface UserService {
+    @FormUrlEncoded
     @POST("clientUser/signIn")
-    Observable<HttpResponse<User>> signIn(@Body User user);
+    Observable<HttpResponse<User>> signIn(@Field("name") String name, @Field("pwd") String pwd);
 
+    @FormUrlEncoded
     @POST("clientUser/signUp")
-    Observable<HttpResponse<User>> signUp(@Body User user);
+    Observable<HttpResponse<User>> signUp(@Field("name") String name, @Field("pwd") String pwd, @Field("code") String code);
 
     @FormUrlEncoded
     @POST("clientUser/validcode")

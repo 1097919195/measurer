@@ -1,7 +1,6 @@
 package com.npclo.imeasurer.main.measure;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -25,6 +24,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.blankj.utilcode.util.CacheUtils;
 import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
@@ -34,6 +34,7 @@ import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
+import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
@@ -71,7 +72,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.Observable;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasureFragment extends BaseFragment implements MeasureContract.View {
@@ -400,10 +400,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 Method method = Class2.getMethod("set" + en, aClass);
                 method.invoke(item, part);
             }
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
-            String id = sharedPreferences.getString("id", null);
+            String id = CacheUtils.getInstance().getParcelable("user", User.CREATOR).get_id();
             if (TextUtils.isEmpty(id)) {
-                showToast("账号异常，请重新登录");
+                showToast("账号异常，请重新登录"); // FIXME: 2017/9/21 缓存过期
                 startActivity(new Intent(getActivity(), AccountActivity.class));
                 return;
             }

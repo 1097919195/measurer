@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.CacheUtils;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 
@@ -37,9 +38,8 @@ public abstract class BaseActivity extends SupportActivity {
     private void checkLogin() {
         SharedPreferences loginState = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         boolean isLogin = loginState.getBoolean("loginState", false);
-        String id = loginState.getString("id", null);
-
-        if (!isLogin && TextUtils.isEmpty(id)) {
+        String uid = CacheUtils.getInstance().getString("uid");
+        if (!isLogin && TextUtils.isEmpty(uid)) {
             Intent intent = new Intent(this, AccountActivity.class);
             startActivity(intent);
         }
@@ -53,7 +53,7 @@ public abstract class BaseActivity extends SupportActivity {
             if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
                 finish();
             } else {
-                TOUCH_TIME = System.currentTimeMillis();
+                TOUCH_TIME = System.currentTimeMillis(); // FIXME: 2017/9/21 再按一次退出
                 Toast.makeText(this, R.string.press_again_exit, Toast.LENGTH_SHORT).show();
             }
         }

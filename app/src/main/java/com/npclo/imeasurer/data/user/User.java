@@ -1,12 +1,35 @@
 package com.npclo.imeasurer.data.user;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 /**
  * Created by Endless on 2017/7/19.
  */
 
-public class User {
+public class User implements Parcelable {
+    protected User(Parcel in) {
+        name = in.readString();
+        pwd = in.readString();
+        _id = in.readString();
+        currTimes = in.readInt();
+        totalTimes = in.readInt();
+        code = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
     public String getName() {
         return name;
     }
@@ -21,10 +44,9 @@ public class User {
         return pwd;
     }
 
-    public User setPwd(@Nullable String pwd) {
-        this.pwd = pwd;
-        return this;
-    }
+//    public void setPwd(@Nullable String pwd) {
+//        this.pwd = pwd;
+//    }
 
     @Nullable
     public String get_id() {
@@ -44,7 +66,6 @@ public class User {
     private int currTimes;
     @Nullable
     private int totalTimes;
-
     private int code;
 
     @Nullable
@@ -71,5 +92,20 @@ public class User {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(pwd);
+        dest.writeString(_id);
+        dest.writeInt(currTimes);
+        dest.writeInt(totalTimes);
+        dest.writeInt(code);
     }
 }

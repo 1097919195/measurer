@@ -13,12 +13,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.blankj.utilcode.util.CacheUtils;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.signin.SignInFragment;
 import com.npclo.imeasurer.account.signin.SignInPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
-import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.data.ValidCode;
+import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
@@ -94,15 +95,20 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
         showToast(getResources().getString(R.string.register_success_hint));
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
+
         SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putBoolean("loginState", true);
-        edit.putString("id", user.get_id());
-        edit.putString("name", user.getName());
-        edit.putString("curr_times", user.getCurrTimes() + "");
-        edit.putString("total_times", user.getTotalTimes() + "");
+//        edit.putString("id", user.get_id());
+//        edit.putString("name", user.getName());
+//        edit.putString("curr_times", user.getCurrTimes() + "");
+//        edit.putString("total_times", user.getTotalTimes() + "");
         edit.apply();
+
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.put("user", user);
+        cacheUtils.put("uid", user.get_id());
     }
 
     @Override

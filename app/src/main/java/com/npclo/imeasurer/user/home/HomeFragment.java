@@ -1,8 +1,9 @@
 package com.npclo.imeasurer.user.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,12 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.blankj.utilcode.util.CacheUtils;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
+import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.user.contact.ContactFragment;
 import com.npclo.imeasurer.user.feedback.FeedbackFragment;
@@ -108,10 +111,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             start(fragment);
             fragment.setPresenter(new HomePresenter(fragment, SchedulerProvider.getInstance()));
         });
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
-        currTimes.setText(preferences.getString("currTimes", "N/A"));
-        totalTimes.setText(preferences.getString("totalTimes", "N/A"));
-        userName.setText(preferences.getString("name", "N/A"));
+//        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        User user = CacheUtils.getInstance().getParcelable("user", User.CREATOR);
+//        currTimes.setText(preferences.getString("currTimes", "N/A"));
+//        totalTimes.setText(preferences.getString("totalTimes", "N/A"));
+//        userName.setText(preferences.getString("name", "N/A"));
+        currTimes.setText(user.getCurrTimes() + "");
+        totalTimes.setText(user.getTotalTimes() + "");
+        userName.setText(user.getName());
+
         configureResultList();
     }
 
@@ -196,8 +204,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void logout() {
         SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name), MODE_APPEND).edit();
         edit.putBoolean("loginState", false);
-        edit.putString("id", null);
         edit.apply();
+        CacheUtils.getInstance().clear();
         Toast.makeText(getActivity(), getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), AccountActivity.class);
         startActivity(intent);
