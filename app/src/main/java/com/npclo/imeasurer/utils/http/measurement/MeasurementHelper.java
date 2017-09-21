@@ -23,9 +23,8 @@ public class MeasurementHelper extends HttpHelper {
         return measurement.map(new HttpResponseFunc<>());
     }
 
-    public Observable<HttpResponse> saveMeasurement(String measurement, String randomStr,
-                                                    String timeStamp, MultipartBody.Part[] imgs) {
+    public Observable<HttpResponse> saveMeasurement(String measurement, MultipartBody.Part[] imgs) {
         return retrofit.create(MeasurementService.class)
-                .saveMeasurement(measurement, randomStr, timeStamp, imgs);
+                .saveMeasurement(measurement, imgs);
     }
 }

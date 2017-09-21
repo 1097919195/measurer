@@ -44,7 +44,7 @@ class SHA1 {
             byte[] digest = md.digest();
 
             StringBuffer hexstr = new StringBuffer();
-            String shaHex = "";
+            String shaHex;
             for (int i = 0; i < digest.length; i++) {
                 shaHex = Integer.toHexString(digest[i] & 0xFF);
                 if (shaHex.length() < 2) {

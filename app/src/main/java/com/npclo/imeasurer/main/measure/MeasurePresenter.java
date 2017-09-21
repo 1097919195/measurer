@@ -12,19 +12,7 @@ import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleConnection;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.UUID;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import okhttp3.MultipartBody;
 import rx.Observable;
@@ -86,8 +74,8 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         int a1 = length ^ code;
         int a2 = angle ^ code;
         int a3 = battery ^ code;
-//        Log.e(TAG, "测量原始结果："+s);
-//        Log.e(TAG, "获得数据：长度: " +length + "; 角度:  " +angle+ "; 电量: " + battery);
+        Log.e(TAG, "测量原始结果：" + s);
+        Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
         fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
     }
 
@@ -108,11 +96,8 @@ public class MeasurePresenter implements MeasureContract.Presenter {
             Log.e(TAG, "出错啦，" + e.getMessage());
             e.printStackTrace();
         }
-        //检测
-        check(s, s1, nonce, timeStamp);
-
         Subscription subscribe = new MeasurementHelper()
-                .saveMeasurement(s1, nonce, timeStamp, imgs)
+                .saveMeasurement(s1, imgs)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
@@ -123,33 +108,4 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         mSubscriptions.add(subscribe);
     }
 
-    private void check(String s, String s1, String nonce, String timeStamp) {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            StringReader sr = new StringReader(s1);
-            InputSource is = new InputSource(sr);
-            Document document = db.parse(is);
-
-            Element root = document.getDocumentElement();
-            NodeList nodelist1 = root.getElementsByTagName("Encrypt");
-            NodeList nodelist2 = root.getElementsByTagName("MsgSignature");
-
-            String encrypt = nodelist1.item(0).getTextContent();
-            String msgSignature = nodelist2.item(0).getTextContent();
-            String fromXML = String.format("<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%1$s]]></Encrypt></xml>"
-                    , encrypt);
-
-            String s2 = aesUtils.decryptMsg(msgSignature, timeStamp, nonce, fromXML);
-            if (s.equals(s2)) Log.e(TAG, "正确解析");
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (AesException e) {
-            e.printStackTrace();
-        }
-    }
 }
