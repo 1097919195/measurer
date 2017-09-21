@@ -1,8 +1,5 @@
 package com.npclo.imeasurer.utils.http;
 
-import android.text.TextUtils;
-
-import com.blankj.utilcode.util.CacheUtils;
 import com.npclo.imeasurer.data.HttpResponse;
 import com.npclo.imeasurer.utils.ApiException;
 
@@ -38,13 +35,10 @@ public class HttpHelper {
             Request original = chain.request();
             Date date = new Date();
             long time = date.getTime();
-            String uid = CacheUtils.getInstance().getString("uid");
-            if (TextUtils.isEmpty(uid)) uid = "";
             String jwt = Jwts.builder()
                     .setIssuer("http://www.npclo.com")
                     .setExpiration(new Date(time + 600))
                     .signWith(SignatureAlgorithm.HS256, token)
-                    .setSubject(uid)
                     .compact();
 
             // Request customization: add request headers

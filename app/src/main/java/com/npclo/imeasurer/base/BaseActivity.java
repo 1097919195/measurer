@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.CacheUtils;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 
@@ -38,7 +37,7 @@ public abstract class BaseActivity extends SupportActivity {
     private void checkLogin() {
         SharedPreferences loginState = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         boolean isLogin = loginState.getBoolean("loginState", false);
-        String uid = CacheUtils.getInstance().getString("uid");
+        String uid = loginState.getString("id", "");
         if (!isLogin && TextUtils.isEmpty(uid)) {
             Intent intent = new Intent(this, AccountActivity.class);
             startActivity(intent);

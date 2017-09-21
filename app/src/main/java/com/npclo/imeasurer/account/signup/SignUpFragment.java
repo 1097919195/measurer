@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.blankj.utilcode.util.CacheUtils;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.signin.SignInFragment;
 import com.npclo.imeasurer.account.signin.SignInPresenter;
@@ -100,15 +99,11 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putBoolean("loginState", true);
-//        edit.putString("id", user.get_id());
-//        edit.putString("name", user.getName());
-//        edit.putString("curr_times", user.getCurrTimes() + "");
-//        edit.putString("total_times", user.getTotalTimes() + "");
+        edit.putString("id", user.get_id());
+        edit.putString("name", user.getName());
+        edit.putString("curr_times", user.getCurrTimes() + "");
+        edit.putString("total_times", user.getTotalTimes() + "");
         edit.apply();
-
-        CacheUtils cacheUtils = CacheUtils.getInstance();
-        cacheUtils.put("user", user);
-        cacheUtils.put("uid", user.get_id());
     }
 
     @Override

@@ -15,7 +15,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.blankj.utilcode.util.CacheUtils;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.forgetPwd.ForgetPwdFragment;
@@ -181,14 +180,11 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         SharedPreferences.Editor edit = sharedPreferences.edit();
         if (isUserRememberPwd) edit.putBoolean("loginState", true);//att 是否记住密码
 
-//        edit.putString("id", user.get_id());
-//        edit.putString("name", user.getName());
-//        edit.putString("currTimes", user.getCurrTimes() + "");
-//        edit.putString("totalTimes", user.getTotalTimes() + "");
+        edit.putString("id", user.get_id());
+        edit.putString("name", user.getName());
+        edit.putString("currTimes", user.getCurrTimes() + "");
+        edit.putString("totalTimes", user.getTotalTimes() + "");
         edit.apply();
-        CacheUtils cacheUtils = CacheUtils.getInstance();
-        cacheUtils.put("user", user);
-        cacheUtils.put("uid", user.get_id());
     }
 
     @Override

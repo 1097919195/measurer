@@ -78,4 +78,5 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(MainActivity.this, "未收到数据，请重试", Toast.LENGTH_LONG).show();
         }
     }
+
 }
