@@ -26,7 +26,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static final String TAG = "CrashHandler";
     private static final boolean DEBUG = true;
 
-    private static final String PATH = "/log/";
+    private static final String PATH = "/";
     private static final String FILE_NAME = "crash";
 
     //log文件的后缀名
@@ -64,7 +64,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
         try {
-
             //导出异常信息到外部存储中 // FIXME: 2017/9/22 存到外部存储中
             dumpExceptionToExternalStorage(ex);
             //这里可以通过网络上传异常信息到服务器，便于开发人员分析日志从而解决bug
@@ -75,12 +74,11 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
         //打印出当前调用栈信息
         ex.printStackTrace();
-
+        Toast.makeText(mContext, "非常抱歉，程序崩溃了", Toast.LENGTH_SHORT).show();
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultCrashHandler != null) {
             mDefaultCrashHandler.uncaughtException(thread, ex);
         } else {
-            Toast.makeText(mContext, "程序崩溃了", Toast.LENGTH_SHORT).show();
             Process.killProcess(Process.myPid());
         }
 
@@ -92,14 +90,14 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             Log.e(TAG, "===========ExternalStorage 不可用===========");
         }
 
-        File dir = new File(mContext.getExternalFilesDir("log") + PATH);
+        File dir = new File(mContext.getExternalFilesDir("log") + "");
         if (!dir.exists()) {
             dir.mkdirs();
         }
         long current = System.currentTimeMillis();
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(new Date(current));
         //以当前时间创建log文件
-        File file = new File(PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
+        File file = new File(dir + PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
 
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
@@ -149,6 +147,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private void uploadExceptionToServer() {
         //TODO Upload Exception Message To Your Web Server
+        LogUtils.upload(mContext);
     }
 
 }

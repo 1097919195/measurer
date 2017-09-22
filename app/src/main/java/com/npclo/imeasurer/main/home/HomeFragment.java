@@ -18,6 +18,7 @@ import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.measure.MeasureFragment;
 import com.npclo.imeasurer.main.measure.MeasurePresenter;
 import com.npclo.imeasurer.user.home.HomePresenter;
+import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -121,13 +122,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             fragment.setPresenter(new HomePresenter(RxBleClient.create(getActivity()), fragment, SchedulerProvider.getInstance()));
             return true;
         });
-        // TODO: 2017/9/7 蓝牙未连接时，点击未连接按钮前往连接
         bleState.setOnClickListener(__ -> {
             com.npclo.imeasurer.user.home.HomeFragment fragment = com.npclo.imeasurer.user.home.HomeFragment.newInstance();
             start(fragment);
             fragment.setPresenter(new HomePresenter(RxBleClient.create(getActivity()), fragment, SchedulerProvider.getInstance()));
         });
-
     }
 
     @Override
@@ -139,12 +138,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             Log.e(TAG, "获取到蓝牙状态" + rxBleDevice.toString());
             bleState.setText(getString(R.string.connected));
             bleState.setTextColor(getResources().getColor(R.color.green));
-            bleState.setEnabled(false);//TODO 已连接按钮不能再点击前往连接
+            bleState.setEnabled(false);
         }
         if (BaseApplication.getFirstCheckHint(getActivity())) {
             mPresenter.getLatestVersion();
             BaseApplication.setIsFirstCheck(getActivity());
         }
+        LogUtils.upload(getActivity());
     }
 
     @Override

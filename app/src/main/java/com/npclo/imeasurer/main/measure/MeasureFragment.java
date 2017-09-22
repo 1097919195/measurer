@@ -616,17 +616,17 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 textView.setValue(angle);
                 value = angle + "";
             } else {
+                length += 1.4f; //ATT 纠正尺子量体结果
                 textView.setValue(length);
                 value = length + "";
             }
             textView.setState(MeasureStateEnum.MEASURED.ordinal());//更新状态
             textView.setTextColor(getResources().getColor(R.color.measured));//修改颜色
-            // FIXME: 2017/9/11
             String s = null;//最终播放文字
             String result;//播报当前测量结果
             String[] strings = getNextString(type);
             if (type == 1) { //修改原有结果
-                result = cn + "，重新测量结果为" + value;// TODO: 2017/9/8 播报下一个测量部位
+                result = cn + "，重新测量结果为" + value;
                 modifyingView = null;//att 重置待修改项
             } else { //按顺序测量
                 result = cn + value;

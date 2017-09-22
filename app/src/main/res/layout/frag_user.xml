@@ -376,11 +376,11 @@
         </LinearLayout>
     </ScrollView>
 
+    <!--android:layout_marginTop="102dp"-->
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/action_logout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="102dp"
         android:background="@color/e24600"
         android:text="@string/sign_out"
         android:textAlignment="center"

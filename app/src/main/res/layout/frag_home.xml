@@ -66,6 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
+        android:textAlignment="center"
         android:text="@string/slogan_scan"
         android:textColor="@color/primary"
         android:textSize="18sp" />

@@ -190,7 +190,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @OnClick(R.id.action_logout)
     public void onViewClicked() {
-        mPresenter.logout();
+        new MaterialDialog.Builder(getActivity())
+                .title("确定要退出登录？")
+                .titleColor(getResources().getColor(R.color.ff5001))
+                .positiveText(R.string.sure)
+                .negativeText(R.string.cancel)
+                .backgroundColor(getResources().getColor(R.color.white))
+                .onPositive((dialog, which) -> {
+                    dialog.dismiss();
+                    mPresenter.logout();
+                })
+                .show();
     }
 
     @Override
