@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.data.user.UserRepository;
-import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 
 import rx.Subscription;
@@ -43,7 +42,6 @@ public class HomePresenter implements HomeContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(app -> fragment.showGetVersionSuccess(app),
                         e -> fragment.showGetVersionError(e));
-        LogUtils.upload(fragment.getActivity());
     }
 
     @Override

@@ -15,8 +15,6 @@ public class AppHttpHelper extends HttpHelper {
         return retrofit.create(AppService.class)
                 .getLatestVersion()
                 .map(new HttpResponseFunc<>());
-
-
     }
 
     public Observable<HttpMsg> upload(File file) {

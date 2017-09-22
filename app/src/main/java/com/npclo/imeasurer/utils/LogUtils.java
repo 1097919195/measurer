@@ -42,7 +42,6 @@ public class LogUtils {
     private static void upload(File file) {
         new AppHttpHelper().upload(file)
                 .subscribeOn(SchedulerProvider.getInstance().computation())
-                .observeOn(SchedulerProvider.getInstance().ui())
                 .subscribe(msg -> clear(file), e -> Log.e(TAG, e.getMessage()));
     }
 

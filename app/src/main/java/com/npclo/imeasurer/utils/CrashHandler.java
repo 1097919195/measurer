@@ -31,6 +31,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     //log文件的后缀名
     private static final String FILE_NAME_SUFFIX = ".trace";
+    public static final String GX_SEPARATOR = ";";
 
     private static CrashHandler sInstance = new CrashHandler();
 
@@ -81,7 +82,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         } else {
             Process.killProcess(Process.myPid());
         }
-
     }
 
     private void dumpExceptionToExternalStorage(Throwable ex) throws IOException {
@@ -102,15 +102,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             //导出发生异常的时间
-            pw.println(time);
-
+            pw.println(time + GX_SEPARATOR);
             //导出手机信息
             dumpPhoneInfo(pw);
-
-            pw.println();
             //导出异常的调用栈信息
             ex.printStackTrace(pw);
-
+            pw.print(GX_SEPARATOR);
             pw.close();
         } catch (Exception e) {
             Log.e(TAG, "dump crash info failed");
@@ -124,25 +121,25 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         pw.print("App Version: ");
         pw.print(pi.versionName);
         pw.print('_');
-        pw.println(pi.versionCode);
+        pw.println(pi.versionCode + GX_SEPARATOR);
 
         //android版本号
         pw.print("OS Version: ");
         pw.print(Build.VERSION.RELEASE);
         pw.print("_");
-        pw.println(Build.VERSION.SDK_INT);
+        pw.println(Build.VERSION.SDK_INT + GX_SEPARATOR);
 
         //手机制造商
         pw.print("Vendor: ");
-        pw.println(Build.MANUFACTURER);
+        pw.println(Build.MANUFACTURER + GX_SEPARATOR);
 
         //手机型号
         pw.print("Model: ");
-        pw.println(Build.MODEL);
+        pw.println(Build.MODEL + GX_SEPARATOR);
 
         //cpu架构
         pw.print("CPU ABI: ");
-        pw.println(Build.CPU_ABI);
+        pw.println(Build.CPU_ABI + GX_SEPARATOR);
     }
 
     private void uploadExceptionToServer() {
