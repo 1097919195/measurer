@@ -3,6 +3,7 @@ package com.npclo.imeasurer.base;
 import android.app.Application;
 import android.content.Context;
 
+import com.npclo.imeasurer.utils.CrashHandler;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -25,7 +26,6 @@ public class BaseApplication extends Application {
     private boolean isFirstCheckUpdate = true;
     private Observable<RxBleConnection> connectionObservable;
 
-
     public static RxBleClient getRxBleClient(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         return application.rxBleClient;
@@ -44,6 +44,9 @@ public class BaseApplication extends Application {
         LeakCanary.install(this);
         rxBleClient = RxBleClient.create(this);
         RxBleClient.setLogLevel(RxBleLog.DEBUG);
+        //att 处理app crash
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(this);
     }
 
     public static RxBleDevice getRxBleDevice(Context context) {
@@ -72,6 +75,7 @@ public class BaseApplication extends Application {
         return application.connectionObservable;
     }
 
+    /*=================TODO  elegant handle this=====================**/
     public static void haveUpdate(Context context, boolean b) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         application.haveUpdate = b;
