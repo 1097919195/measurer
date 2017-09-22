@@ -144,7 +144,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             mPresenter.getLatestVersion();
             BaseApplication.setIsFirstCheck(getActivity());
         }
-        LogUtils.upload(getActivity());
     }
 
     @Override
