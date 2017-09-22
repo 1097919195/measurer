@@ -170,7 +170,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
                     showToast(getString(R.string.plz_valid_mobile));
                     return;
                 }
-                signUpPresenter.getValidCode(mobile, "singup");
+                signUpPresenter.getValidCode(mobile, "signup");
                 break;
             case R.id.input_eye:
                 if (pwd_label) {
