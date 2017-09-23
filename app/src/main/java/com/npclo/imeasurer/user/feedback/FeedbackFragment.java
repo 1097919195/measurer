@@ -72,6 +72,7 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
 
     @OnClick(R.id.action_submit)
     public void onViewClicked() {
+        showToast("保存成功");
     }
 
     public static FeedbackFragment newInstance() {

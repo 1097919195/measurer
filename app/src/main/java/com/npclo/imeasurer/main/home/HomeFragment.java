@@ -190,7 +190,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         showLoading(false);
     }
 
-
     @Override
     public void showGetVersionSuccess(App app) {
         if (app.getCode() > getVersionCode()) updateApp(app);
