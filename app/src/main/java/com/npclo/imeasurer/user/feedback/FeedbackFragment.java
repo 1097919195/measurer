@@ -3,9 +3,8 @@ package com.npclo.imeasurer.user.feedback;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.npclo.imeasurer.R;
@@ -31,10 +30,10 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
     Toolbar baseToolbar;
     @BindView(R.id.input_content)
     AppCompatEditText inputContent;
-    @BindView(R.id.action_add_feedback_img)
-    ImageView actionAddFeedbackImg;
-    @BindView(R.id.line_feedback_img)
-    LinearLayout lineFeedbackImg;
+    //    @BindView(R.id.action_add_feedback_img)
+//    ImageView actionAddFeedbackImg;
+//    @BindView(R.id.line_feedback_img)
+//    LinearLayout lineFeedbackImg;
     @BindView(R.id.action_submit)
     AppCompatButton actionSubmit;
     Unbinder unbinder;
@@ -72,7 +71,12 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
 
     @OnClick(R.id.action_submit)
     public void onViewClicked() {
-        showToast("保存成功");
+        String s = inputContent.getText().toString();
+        if (TextUtils.isEmpty(s)) {
+            showToast("请输入描述内容");
+        } else {
+            showToast("保存成功");
+        }
     }
 
     public static FeedbackFragment newInstance() {
