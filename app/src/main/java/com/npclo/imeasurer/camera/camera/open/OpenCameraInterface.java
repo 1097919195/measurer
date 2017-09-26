@@ -71,7 +71,6 @@ public final class OpenCameraInterface {
 
         Camera camera;
         if (index < numCameras) {
-            Log.e(TAG, "Opening camera #" + index);
             camera = Camera.open(index);
         } else {
             if (explicitRequest) {

@@ -3,7 +3,6 @@ package com.npclo.imeasurer.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -89,27 +88,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        String result = null;
-//        try {
-//            Bundle bundle = data.getExtras();
-//            result = bundle.getString("result");
-//        } catch (Exception e) {
-//            Log.e(TAG, "===============fragment未接收到数据==================");
-//            e.printStackTrace();
-//        }
-//        Log.e(TAG, "fragment传输过来的数据：" + result);
-//        switch (resultCode) {
-//            case SCAN_HINT:
-//                mPresenter.getUserInfoWithOpenID(result);
-//                break;
-//            case CODE_HINT:
-//                mPresenter.getUserInfoWithCode(result);
-//                break;
-//        }
-//    }
-
     /**
      * 初始化toolbar的一些默认属性
      */
@@ -135,7 +113,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         mPresenter.subscribe();
         RxBleDevice rxBleDevice = BaseApplication.getRxBleDevice(getActivity());
         if (rxBleDevice != null && rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
-            Log.e(TAG, "获取到蓝牙状态" + rxBleDevice.toString());
             bleState.setText(getString(R.string.connected));
             bleState.setTextColor(getResources().getColor(R.color.green));
             bleState.setEnabled(false);

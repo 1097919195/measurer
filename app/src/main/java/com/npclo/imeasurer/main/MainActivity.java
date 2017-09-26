@@ -38,6 +38,9 @@ public class MainActivity extends BaseActivity {
                         Manifest.permission.LOCATION_HARDWARE,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission_group.LOCATION,
+                        Manifest.permission_group.STORAGE,
+                        Manifest.permission_group.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA)
                 .request();
@@ -57,7 +60,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         String result = null;
         try {
             Bundle bundle = data.getExtras();
@@ -65,18 +68,21 @@ public class MainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (result != null) {
-            switch (resultCode) {
-                case SCAN_HINT:
+        switch (resultCode) {
+            case SCAN_HINT:
+                if (result != null) {
                     mPresenter.getUserInfoWithOpenID(result);
-                    break;
-                case CODE_HINT:
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.scan_qrcode_failed), Toast.LENGTH_LONG).show();
+                }
+                break;
+            case CODE_HINT:
+                if (result != null) {
                     mPresenter.getUserInfoWithCode(result);
-                    break;
-            }
-        } else {
-            Toast.makeText(MainActivity.this, "未收到数据，请重试", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.enter_qrcode_error), Toast.LENGTH_LONG).show();
+                }
+                break;
         }
     }
-
 }

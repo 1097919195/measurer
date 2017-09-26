@@ -40,7 +40,8 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
-            android:background="@drawable/btn_radius_1_ddd" />
+            android:background="@drawable/btn_radius_1_ddd"
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/del_1"
@@ -64,7 +65,8 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
-            android:background="@drawable/btn_radius_1_ddd" />
+            android:background="@drawable/btn_radius_1_ddd"
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/del_2"
@@ -88,7 +90,8 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
-            android:background="@drawable/btn_radius_1_ddd" />
+            android:background="@drawable/btn_radius_1_ddd"
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/del_3"

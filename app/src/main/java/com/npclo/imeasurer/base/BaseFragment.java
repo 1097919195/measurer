@@ -80,7 +80,6 @@ public abstract class BaseFragment extends SupportFragment {
         } else {
             showToast(getString(R.string.something_error));
         }
-        Log.e(TAG, e.getMessage());
     }
 
     protected int getVersionCode() {

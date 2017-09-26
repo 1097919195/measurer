@@ -87,7 +87,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private void dumpExceptionToExternalStorage(Throwable ex) throws IOException {
         String state = Environment.getExternalStorageState();
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            Log.e(TAG, "===========ExternalStorage 不可用===========");
+            return;
         }
 
         File dir = new File(mContext.getExternalFilesDir("log") + "");

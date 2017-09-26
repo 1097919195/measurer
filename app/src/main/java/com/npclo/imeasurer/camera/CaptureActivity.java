@@ -226,7 +226,6 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
      * @param scaleFactor
      */
     public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
-        Log.e(TAG, "扫码结果 rawResult=" + rawResult);
 
         boolean fromLiveScan = barcode != null;
         if (fromLiveScan) {

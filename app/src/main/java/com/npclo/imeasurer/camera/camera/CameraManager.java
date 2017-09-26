@@ -107,8 +107,8 @@ public final class CameraManager {
             configManager.setDesiredCameraParameters(theCamera, false);
         } catch (RuntimeException re) {
             // Driver failed
-            Log.e(TAG, "Camera rejected parameters. Setting only minimal safe-mode parameters");
-            Log.e(TAG, "Resetting to saved camera params: " + parametersFlattened);
+//            Log.e(TAG, "Camera rejected parameters. Setting only minimal safe-mode parameters");
+//            Log.e(TAG, "Resetting to saved camera params: " + parametersFlattened);
             // Reset:
             if (parametersFlattened != null) {
                 parameters = cameraObject.getParameters();

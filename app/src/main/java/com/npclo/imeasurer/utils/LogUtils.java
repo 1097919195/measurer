@@ -1,7 +1,6 @@
 package com.npclo.imeasurer.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.npclo.imeasurer.utils.http.app.AppHttpHelper;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
@@ -32,7 +31,6 @@ public class LogUtils {
         try {
             if (file.isFile() && file.exists()) {
                 file.delete();
-                Log.e(TAG, file.getName() + "==================is delete");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,7 +40,8 @@ public class LogUtils {
     private static void upload(File file) {
         new AppHttpHelper().upload(file)
                 .subscribeOn(SchedulerProvider.getInstance().computation())
-                .subscribe(msg -> clear(file), e -> Log.e(TAG, e.getMessage()));
+                .subscribe(msg -> clear(file), e -> {
+                });
     }
 
 }
