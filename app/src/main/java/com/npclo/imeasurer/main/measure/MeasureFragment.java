@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -148,28 +147,21 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        user = bundle.getParcelable("user");
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.frag_measure;
     }
 
     @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        user = bundle.getParcelable("user");
+    }
+
+    @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        try {
-            wechatNickname.setText(user.getNickname());
-            wechatGender.setText(user.getGender() == 1 ? "男" : "女");
-//            wechatName.setText("微信号：" + user.getName());
-            Glide.with(this).load(user.getAvatar()).into(wechatIcon);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         initToolbar();
         //渲染测量部位列表
         initMeasureItemList();
@@ -221,6 +213,14 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onResume() {
         super.onResume();
+        try {
+            wechatNickname.setText(user.getNickname());
+            wechatGender.setText(user.getGender() == 1 ? "男" : "女");
+//            wechatName.setText("微信号：" + user.getName());
+            Glide.with(this).load(user.getAvatar()).into(wechatIcon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initSpeech();
         measurePresenter.subscribe();
         String[] angleItems = getResources().getStringArray(R.array.angle_items);
@@ -365,7 +365,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void handleSaveData() {
-        if (unMeasuredList.size() != 0) { //att 校验是否量体完成
+        if (unMeasuredList.size() != 0) { // FIXME: 2017/9/26 这种校验方式不严谨
             showToast("量体未完成");
             return;
         }
@@ -374,6 +374,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             MeasurementItem item = (MeasurementItem) Class2.newInstance();
             for (int i = 0, count = gridView.getCount(); i < count; i++) {
                 MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
+                if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) {
+                    showToast(textView.getText().toString() + "部位未完成测量");
+                    break;
+                }
                 float value = textView.getValue();
                 String cn = textView.getText().toString();
                 String en = textView.getTag().toString();
@@ -385,23 +389,21 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 Method method = Class2.getMethod("set" + en, aClass);
                 method.invoke(item, part);
             }
+
             SharedPreferences sharedPreferences = getActivity()
                     .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
-            String id = sharedPreferences.getString("id", "");
-            if (TextUtils.isEmpty(id)) {
-                showToast("账号异常，请重新登录"); // FIXME: 2017/9/21 缓存过期
+            String cid = sharedPreferences.getString("id", "");
+            if (TextUtils.isEmpty(cid)) {
+                showToast("账号异常，请重新登录");
                 startActivity(new Intent(getActivity(), AccountActivity.class));
                 return;
             }
-            Measurement measurement = new Measurement(user, item, id);
+
+            Measurement measurement = new Measurement(user, item, cid);
             MultipartBody.Part[] imgs = new MultipartBody.Part[3];
-            try {
-                if (img_1.getDrawable() != null) imgs[0] = drawable2file(img_1, "img1");
-                if (img_2.getDrawable() != null) imgs[1] = drawable2file(img_2, "img2");
-                if (img_3.getDrawable() != null) imgs[2] = drawable2file(img_3, "img3");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (img_1.getDrawable() != null) imgs[0] = drawable2file(img_1, "img1");
+            if (img_2.getDrawable() != null) imgs[1] = drawable2file(img_2, "img2");
+            if (img_3.getDrawable() != null) imgs[2] = drawable2file(img_3, "img3");
 
             measurePresenter.saveMeasurement(measurement, imgs);
         } catch (Exception e) {
@@ -550,7 +552,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         frame_3.setVisibility(View.INVISIBLE);
         img_1.setImageDrawable(null);
         img_2.setImageDrawable(null);
-        img_3.setImageDrawable(null);// FIXME: 2017/9/11
+        img_3.setImageDrawable(null);
     }
 
     @Override
