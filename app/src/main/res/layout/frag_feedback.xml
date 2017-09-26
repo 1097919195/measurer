@@ -21,7 +21,6 @@
         android:textColor="@color/c333"
         android:textColorHint="@color/c999"
         android:textSize="14sp" />
-    <!--
         <LinearLayout
             android:id="@+id/line_feedback_img"
             android:layout_width="match_parent"
@@ -41,7 +40,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/e8e8e8" /> -->
+            android:background="@color/e8e8e8" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/action_submit"

@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -38,6 +37,7 @@ import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
+import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
@@ -125,9 +125,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private String PART_PACKAGE = Part.class.getPackage().getName();
     private String ITEM_PACKAGE = MeasurementItem.class.getPackage().getName();
     private MaterialDialog saveProgressbar;
-    public static final int TAKE_PHOTO = 1003;
-    public static final int CROP_PHOTO = 1004;
-    private static final int IMAGE_REQUEST_CODE = 1005;
+    public static final int TAKE_PHOTO = 13;
+    public static final int CROP_PHOTO = 14;
+    private static final int IMAGE_REQUEST_CODE = 15;
+    public static final int DISPLAY_PHOTO = 16;
     private List<FrameLayout> unVisibleView = new ArrayList<>();
     private List<MyTextView> unMeasuredList = new ArrayList<>();
     private List<String> angleList;
@@ -281,26 +282,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 //                        .itemsCallback((dialog, v, which, text) -> {
 //                            switch (which) {
 //                                case 0:
-//                                    if (ContextCompat.checkSelfPermission(getActivity(),
-//                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                                            != PackageManager.PERMISSION_GRANTED) {
-//                                        ActivityCompat.requestPermissions(getActivity(),
-//                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                                                MY_PERMISSIONS_REQUEST_CAPTURE);
-//                                    } else {
 //                                        capturePic();
-//                                    }
 //                                    break;
 //                                case 1:
-//                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-//                                            != PackageManager.PERMISSION_GRANTED) {
-//                                        ActivityCompat.requestPermissions(getActivity(),
-//                                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-//                                                MY_PERMISSIONS_REQUEST_CHOOSE);
-//                                    } else {
 //                                        galleryPic();
-//                                    }
-//                                    break;
 //                                default:
 //                                    break;
 //                            }
@@ -492,7 +477,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void showStartReceiveData() {
-        // TODO: 2017/9/7
     }
 
     @Override
@@ -522,9 +506,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void handleMeasureData(float length, float angle, int battery) {
         if (battery < 30) baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_low);
-        if (battery > 30 && battery < 80)
+        if (battery >= 30 && battery < 80)
             baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_mid);
-        if (battery > 80) baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_high);
+        if (battery >= 80) baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_high);
         if (initUmMeasureListFlag) initUnMeasureList();
         //att 先判断是否有正处于修改状态的textview，有的话，先给其赋值，再给下一个未测量的部位赋值
         if (modifyingView != null) {
@@ -616,7 +600,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 textView.setValue(angle);
                 value = angle + "";
             } else {
-                length += 1.4f; //ATT 纠正尺子量体结果
                 textView.setValue(length);
                 value = length + "";
             }
@@ -626,7 +609,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             String result;//播报当前测量结果
             String[] strings = getNextString(type);
             if (type == 1) { //修改原有结果
-                result = cn + "，重新测量结果为" + value;
+                result = cn + value;
                 modifyingView = null;//att 重置待修改项
             } else { //按顺序测量
                 result = cn + value;
@@ -687,13 +670,26 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                                 bm.getHeight(), matrix, true);// FIXME: 2017/9/11 bitmap为空
                         bm.recycle();
                         imageView.setImageBitmap(bm1);
-                        Log.e(TAG, "bm1 size :" + bm1.getAllocationByteCount());
                         frameLayout.setVisibility(View.VISIBLE);
                         unVisibleView.remove(0);
                     }
                 } catch (Exception e) {
                     showToast("操作失败，请重试");
                     e.printStackTrace();
+                }
+                break;
+            case DISPLAY_PHOTO:
+                //广播刷新相册
+                Intent intentBc1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                intentBc1.setData(imageUri);
+                getActivity().sendBroadcast(intentBc1);
+                Bitmap bitmap = BitmapUtils.decodeUri(getActivity(), imageUri, 800, 800);//att 获得小预览图
+                FrameLayout frameLayout = unVisibleView.get(0);
+                ImageView imageView = (ImageView) frameLayout.getChildAt(0);
+                if (bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
+                    frameLayout.setVisibility(View.VISIBLE);
+                    unVisibleView.remove(0);
                 }
                 break;
             default:
@@ -717,7 +713,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         //File outputImage = new File(Environment.getExternalStorageDirectory(),"test.jpg");
         //存储至DCIM文件夹
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File outputImage = new File(path, pic_name + ".png");
+        File outputImage = new File(path, pic_name + ".jpg");
         try {
             outputImage.createNewFile();
         } catch (IOException e) {
@@ -727,7 +723,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         imageUri = Uri.fromFile(outputImage);
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
-        startActivityForResult(intent, TAKE_PHOTO); //启动照相
+        startActivityForResult(intent, DISPLAY_PHOTO); //启动照相
     }
 
     private void startPhotoCrop(Uri imageUri) {
@@ -744,23 +740,4 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, CROP_PHOTO); //设置裁剪参数显示图片至ImageView
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        if (requestCode == MY_PERMISSIONS_REQUEST_CAPTURE) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                capturePic();
-//            } else {
-//                showToast("未授予权限");
-//            }
-//        }
-//        if (requestCode == MY_PERMISSIONS_REQUEST_CHOOSE) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                galleryPic();
-//            } else {
-//                showToast("未授予权限");
-//            }
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
 }

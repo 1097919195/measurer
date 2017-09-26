@@ -292,17 +292,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             scanningProgressBar.dismiss();
             scanningProgressBar = null;
         }
-        Log.e(TAG, "正在扫描。。。");
         RxBleDevice device = result.getBleDevice();
         if (resultDialog == null) {
             resultDialog = scanResultDialog.show();
         }
         if (!resultDialog.isShowing()) {
             resultDialog.show();
-            Log.e(TAG, "结果对话框显示：" + resultDialog.toString());
         }
         if (!rxBleDeviceAddressList.contains(device.getMacAddress())) {
-            Log.e(TAG, "新的设备" + device.getMacAddress());
             rxBleDeviceAddressList.add(device.getMacAddress());
             bleDeviceList.add(new BleDevice(device.getName(), device.getMacAddress(), result.getRssi()));
             scanResultsAdapter.notifyDataSetChanged();
@@ -342,7 +339,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void isConnecting() {
-        Log.e(TAG, "扫描弹窗正在扫描。。。");
         connectingProgressBar = new MaterialDialog.Builder(getActivity())
                 .title(getString(R.string.connecting))
                 .titleColor(getResources().getColor(R.color.ff5001))
@@ -370,7 +366,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             if (resultDialog != null || resultDialog.isShowing()) {
                 resultDialog.dismiss();
                 resultDialog = null;
-                Log.e(TAG, "蓝牙设备显示弹窗关闭");
             }
         } catch (Exception e) {
             e.printStackTrace();

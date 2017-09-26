@@ -337,7 +337,7 @@ public final class CameraConfigurationUtils {
 
             if (maybeFlippedWidth == screenResolution.x && maybeFlippedHeight == screenResolution.y) {
                 Point exactPoint = new Point(realWidth, realHeight);
-                Log.e(TAG, "Found preview size exactly matching screen size: " + exactPoint);
+//                Log.e(TAG, "Found preview size exactly matching screen size: " + exactPoint);
                 return exactPoint;
             }
         }
@@ -348,7 +348,7 @@ public final class CameraConfigurationUtils {
         if (!supportedPreviewSizes.isEmpty()) {
             Camera.Size largestPreview = supportedPreviewSizes.get(0);
             Point largestSize = new Point(largestPreview.width, largestPreview.height);
-            Log.e(TAG, "Using largest suitable preview size: " + largestSize);
+//            Log.e(TAG, "Using largest suitable preview size: " + largestSize);
             return largestSize;
         }
 
@@ -358,7 +358,7 @@ public final class CameraConfigurationUtils {
             throw new IllegalStateException("Parameters contained no preview size!");
         }
         Point defaultSize = new Point(defaultPreview.width, defaultPreview.height);
-        Log.e(TAG, "No suitable preview sizes, using default: " + defaultSize);
+//        Log.e(TAG, "No suitable preview sizes, using default: " + defaultSize);
         return defaultSize;
     }
 

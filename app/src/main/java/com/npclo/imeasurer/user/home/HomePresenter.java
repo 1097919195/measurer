@@ -87,7 +87,6 @@ public class HomePresenter implements HomeContract.Presenter {
             fragment.showError("重复连接，请检查");
         } else {
             fragment.showError();
-            Log.e(TAG, e.toString());
         }
     }
 
@@ -109,10 +108,8 @@ public class HomePresenter implements HomeContract.Presenter {
             if (scanSubscribe != null || scanSubscribe.isUnsubscribed()) {
                 scanSubscribe.unsubscribe();
                 fragment.closeScanResultDialog();
-                Log.e(TAG, "执行扫描观察者取消订阅");
             }
         } catch (Exception e) {
-            Log.e(TAG, "发生错误：" + e.getMessage());
             e.printStackTrace();
         }
 
@@ -128,7 +125,6 @@ public class HomePresenter implements HomeContract.Presenter {
                                 characteristicUUID = characteristic.getUuid();
                                 connectionObservable = prepareConnectionObservable();
                                 fragment.setNotificationInfo(characteristicUUID, connectionObservable);
-                                Log.e(TAG, "查找到符合要求的特性");
                                 connectDevice();
                                 break;
                             }
@@ -146,10 +142,8 @@ public class HomePresenter implements HomeContract.Presenter {
                     .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(characteristicUUID))
                     .observeOn(mSchedulerProvider.ui())
                     .doOnSubscribe(this::connecting)
-                    .doOnUnsubscribe(() -> Log.e(getClass().toString(), "连接设备订阅器-取消订阅"))
                     .subscribe(c -> {
                         fragment.showConnected(bleDevice);
-                        Log.e(TAG, "设备已连接上");
                     }, this::handleError);
         }
     }

@@ -1,7 +1,6 @@
 package com.npclo.imeasurer.main.measure;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.npclo.imeasurer.data.measure.Measurement;
@@ -20,10 +19,6 @@ import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
-
-/**
- * Created by Endless on 2017/9/1.
- */
 
 public class MeasurePresenter implements MeasureContract.Presenter {
     private static final String TAG = MeasurePresenter.class.getSimpleName();
@@ -50,7 +45,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void unsubscribe() {
         mSubscriptions.clear();
-        Log.e(TAG, "==================所有观察者清空!!!!!!!!!!==============");
     }
 
     @Override
@@ -74,8 +68,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         int a1 = length ^ code;
         int a2 = angle ^ code;
         int a3 = battery ^ code;
-        Log.e(TAG, "测量原始结果：" + s);
-        Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
+//        Log.e(TAG, "测量原始结果：" + s);
+//        Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
+        a1 += 14;
         fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
     }
 
@@ -93,7 +88,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         try {
             s1 = aesUtils.encryptMsg(s, timeStamp, nonce);
         } catch (AesException e) {
-            Log.e(TAG, "出错啦，" + e.getMessage());
             e.printStackTrace();
         }
         Subscription subscribe = new MeasurementHelper()
@@ -107,5 +101,4 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                 );
         mSubscriptions.add(subscribe);
     }
-
 }
