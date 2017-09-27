@@ -12,13 +12,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +42,7 @@ import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.BitmapUtils;
+import com.npclo.imeasurer.utils.DensityUtil;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
@@ -136,6 +142,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private boolean initUmMeasureListFlag;
     private Uri imageUri;
     private boolean firstHint = true;
+    private PopupWindow popupWindow;
+    private AppCompatTextView popup_content_tv;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -159,9 +167,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    protected void initView(View mRootView) {
+    protected void initView(View mRootView, ViewGroup root) {
         unbinder = ButterKnife.bind(this, mRootView);
-
+        initPopupWindow(root);
         initToolbar();
         //渲染测量部位列表
         initMeasureItemList();
@@ -176,6 +184,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             if (textView.getState() == MeasureStateEnum.MEASURED.ordinal()) {
                 textView.setTextColor(getResources().getColor(R.color.modifying));
                 textView.setState(MeasureStateEnum.MODIFYING.ordinal());
+                popup_content_tv.setText(cn);//设置当前修改部位弹窗显示
                 speechSynthesizer.playText("重新测量部位" + cn);
                 modifyingView = textView;//att 正在修改测量值textview赋值
             }
@@ -184,6 +193,20 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unVisibleView.add(frame_1);
         unVisibleView.add(frame_2);
         unVisibleView.add(frame_3);
+
+    }
+
+    private void initPopupWindow(ViewGroup root) {
+        popupWindow = new PopupWindow(getActivity());
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int widthPixels = displayMetrics.widthPixels;
+        widthPixels -= DensityUtil.dp2px(getActivity(), 20) * 2;
+        popupWindow.setWidth(widthPixels);
+        popupWindow.setHeight(Toolbar.LayoutParams.WRAP_CONTENT);
+        View popup_content = LayoutInflater.from(getActivity()).inflate(R.layout.view_popupwindow, root);
+        popupWindow.setContentView(popup_content);
+        popup_content_tv = (AppCompatTextView) popup_content.findViewById(R.id.tv_item);
+        popupWindow.setFocusable(false);
     }
 
     // FIXME: 2017/9/8 遍历 更好的方式
@@ -376,7 +399,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
                 if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) {
                     showToast(textView.getText().toString() + "部位未完成测量");
-                    break;
+                    return;
                 }
                 float value = textView.getValue();
                 String cn = textView.getText().toString();
@@ -486,6 +509,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         String[] measureSequence = getResources().getStringArray(R.array.items_sequence);
         if (firstHint) {
             speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
+            popup_content_tv.setText(measureSequence[0]);//更新当前测量部位弹窗显示
             firstHint = false;
         }
     }
@@ -617,8 +641,14 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 result = cn + value;
                 unMeasuredList.remove(0);//att 最前的一项测量完毕
             }
-            if (!TextUtils.isEmpty(strings[0])) s = result + "        请测" + strings[0];
-            if (!TextUtils.isEmpty(strings[1])) s = result + strings[1];
+            if (!TextUtils.isEmpty(strings[0])) {
+                s = result + "        请测" + strings[0];
+                popup_content_tv.setText(strings[0]);
+            }
+            if (!TextUtils.isEmpty(strings[1])) {
+                s = result + strings[1];
+                popup_content_tv.setText(strings[1]);
+            }
             speechSynthesizer.playText(s);
         } catch (Exception e) {
             e.printStackTrace();

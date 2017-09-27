@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ public abstract class BaseFragment extends SupportFragment {
         if (null == mRootView) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
-        initView(mRootView);
+        initView(mRootView, container);
         return mRootView;
     }
 
@@ -45,7 +44,7 @@ public abstract class BaseFragment extends SupportFragment {
 
     protected abstract int getLayoutId();
 
-    protected abstract void initView(View mRootView);
+    protected abstract void initView(View mRootView, @Nullable ViewGroup root);
 
     protected void afterCreate(Bundle savedInstanceState) {
     }
