@@ -110,7 +110,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe();
+//        mPresenter.subscribe();
         RxBleDevice rxBleDevice = BaseApplication.getRxBleDevice(getActivity());
         if (rxBleDevice != null && rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
             bleState.setText(getString(R.string.connected));

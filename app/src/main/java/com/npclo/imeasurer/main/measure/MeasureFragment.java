@@ -12,13 +12,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -118,6 +122,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @BindView(R.id.frame_3)
     FrameLayout frame_3;
     Unbinder unbinder;
+    @BindView(R.id.user_layout)
+    LinearLayout userLayout;
+    @BindView(R.id.imageView2)
+    ImageView imageView2;
     private MeasureContract.Presenter measurePresenter;
     private WechatUser user;
     private SpeechSynthesizer speechSynthesizer;
@@ -136,6 +144,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private boolean initUmMeasureListFlag;
     private Uri imageUri;
     private boolean firstHint = true;
+    private PopupWindow popupWindow;
+    private AppCompatTextView popup_content_tv;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -161,7 +171,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-
+        initPopupWindow();
         initToolbar();
         //渲染测量部位列表
         initMeasureItemList();
@@ -176,6 +186,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             if (textView.getState() == MeasureStateEnum.MEASURED.ordinal()) {
                 textView.setTextColor(getResources().getColor(R.color.modifying));
                 textView.setState(MeasureStateEnum.MODIFYING.ordinal());
+                popup_content_tv.setText(cn);//设置当前修改部位弹窗显示
                 speechSynthesizer.playText("重新测量部位" + cn);
                 modifyingView = textView;//att 正在修改测量值textview赋值
             }
@@ -184,6 +195,20 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unVisibleView.add(frame_1);
         unVisibleView.add(frame_2);
         unVisibleView.add(frame_3);
+
+    }
+
+    private void initPopupWindow() {
+        if (popupWindow == null) {
+            popupWindow = new PopupWindow(getActivity());
+            popupWindow.setWidth(Toolbar.LayoutParams.MATCH_PARENT);
+            popupWindow.setHeight(Toolbar.LayoutParams.WRAP_CONTENT);
+            View popup_content = LayoutInflater.from(getActivity()).inflate(R.layout.view_popupwindow, null);
+            popupWindow.setContentView(popup_content);
+            popup_content_tv = (AppCompatTextView) popup_content.findViewById(R.id.tv_item);
+            popupWindow.setFocusable(false);
+            popupWindow.showAtLocation(mRootView, Gravity.CENTER, 0, 0);
+        }
     }
 
     // FIXME: 2017/9/8 遍历 更好的方式
@@ -245,6 +270,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void onPause() {
         super.onPause();
         measurePresenter.unsubscribe();
+        popupWindow.dismiss();
     }
 
     @Override
@@ -265,7 +291,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.wechat_gender_edit:
-                switchGender(view);
+                switchGender();
                 break;
             case R.id.save_measure_result:
                 handleSaveData();
@@ -335,28 +361,22 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unVisibleView.add(0, parent);
     }
 
-    private void switchGender(View view) {
-        TextView genderView = (TextView) view.findViewById(R.id.wechat_gender);
-        String gender = genderView.getText().toString();
+    private void switchGender() {
+        String gender = wechatGender.getText().toString();
         int index = 1;
         if (gender.equals("女")) {
             index = 2;
         }
         //颜色状态列表
-        ColorStateList sl = new ColorStateList(new int[][]{
-                new int[]{-android.R.attr.state_checked},
-                new int[]{android.R.attr.state_checked}
-        }, new int[]{
-                getResources().getColor(R.color.c252527), getResources().getColor(R.color.primary),
-        });
+        ColorStateList sl = new ColorStateList(new int[][]{new int[]{-android.R.attr.state_checked}, new int[]{android.R.attr.state_checked}}, new int[]{getResources().getColor(R.color.c252527), getResources().getColor(R.color.primary),});
         new MaterialDialog.Builder(getActivity())
                 .title("修改性别")
                 .choiceWidgetColor(sl)
                 .titleColor(getResources().getColor(R.color.c252527))
                 .items(R.array.genders)
                 .contentColor(getResources().getColor(R.color.c252527))
-                .itemsCallbackSingleChoice(index, (dialog, itemView, which, text) -> {
-                    genderView.setText(text);
+                .itemsCallbackSingleChoice(index - 1, (dialog, itemView, which, text) -> {
+                    wechatGender.setText(text);
                     return true;
                 })
                 .backgroundColor(getResources().getColor(R.color.white))
@@ -376,7 +396,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
                 if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) {
                     showToast(textView.getText().toString() + "部位未完成测量");
-                    break;
+                    return;
                 }
                 float value = textView.getValue();
                 String cn = textView.getText().toString();
@@ -486,6 +506,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         String[] measureSequence = getResources().getStringArray(R.array.items_sequence);
         if (firstHint) {
             speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
+            popup_content_tv.setText(measureSequence[0]);//更新当前测量部位弹窗显示
             firstHint = false;
         }
     }
@@ -617,8 +638,14 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 result = cn + value;
                 unMeasuredList.remove(0);//att 最前的一项测量完毕
             }
-            if (!TextUtils.isEmpty(strings[0])) s = result + "        请测" + strings[0];
-            if (!TextUtils.isEmpty(strings[1])) s = result + strings[1];
+            if (!TextUtils.isEmpty(strings[0])) {
+                s = result + "        请测" + strings[0];
+                popup_content_tv.setText(strings[0]);
+            }
+            if (!TextUtils.isEmpty(strings[1])) {
+                s = result + strings[1];
+                popup_content_tv.setText(strings[1]);
+            }
             speechSynthesizer.playText(s);
         } catch (Exception e) {
             e.printStackTrace();
