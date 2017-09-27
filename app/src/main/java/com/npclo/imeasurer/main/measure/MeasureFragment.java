@@ -15,10 +15,9 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -42,7 +41,6 @@ import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.BitmapUtils;
-import com.npclo.imeasurer.utils.DensityUtil;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
@@ -124,6 +122,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @BindView(R.id.frame_3)
     FrameLayout frame_3;
     Unbinder unbinder;
+    @BindView(R.id.user_layout)
+    LinearLayout userLayout;
+    @BindView(R.id.imageView2)
+    ImageView imageView2;
     private MeasureContract.Presenter measurePresenter;
     private WechatUser user;
     private SpeechSynthesizer speechSynthesizer;
@@ -167,9 +169,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    protected void initView(View mRootView, ViewGroup root) {
+    protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        initPopupWindow(root);
+        initPopupWindow();
         initToolbar();
         //渲染测量部位列表
         initMeasureItemList();
@@ -196,17 +198,17 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     }
 
-    private void initPopupWindow(ViewGroup root) {
-        popupWindow = new PopupWindow(getActivity());
-        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-        int widthPixels = displayMetrics.widthPixels;
-        widthPixels -= DensityUtil.dp2px(getActivity(), 20) * 2;
-        popupWindow.setWidth(widthPixels);
-        popupWindow.setHeight(Toolbar.LayoutParams.WRAP_CONTENT);
-        View popup_content = LayoutInflater.from(getActivity()).inflate(R.layout.view_popupwindow, root);
-        popupWindow.setContentView(popup_content);
-        popup_content_tv = (AppCompatTextView) popup_content.findViewById(R.id.tv_item);
-        popupWindow.setFocusable(false);
+    private void initPopupWindow() {
+        if (popupWindow == null) {
+            popupWindow = new PopupWindow(getActivity());
+            popupWindow.setWidth(Toolbar.LayoutParams.MATCH_PARENT);
+            popupWindow.setHeight(Toolbar.LayoutParams.WRAP_CONTENT);
+            View popup_content = LayoutInflater.from(getActivity()).inflate(R.layout.view_popupwindow, null);
+            popupWindow.setContentView(popup_content);
+            popup_content_tv = (AppCompatTextView) popup_content.findViewById(R.id.tv_item);
+            popupWindow.setFocusable(false);
+            popupWindow.showAtLocation(mRootView, Gravity.CENTER, 0, 0);
+        }
     }
 
     // FIXME: 2017/9/8 遍历 更好的方式
@@ -268,6 +270,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void onPause() {
         super.onPause();
         measurePresenter.unsubscribe();
+        popupWindow.dismiss();
     }
 
     @Override
@@ -288,7 +291,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.wechat_gender_edit:
-                switchGender(view);
+                switchGender();
                 break;
             case R.id.save_measure_result:
                 handleSaveData();
@@ -358,28 +361,22 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unVisibleView.add(0, parent);
     }
 
-    private void switchGender(View view) {
-        TextView genderView = (TextView) view.findViewById(R.id.wechat_gender);
-        String gender = genderView.getText().toString();
+    private void switchGender() {
+        String gender = wechatGender.getText().toString();
         int index = 1;
         if (gender.equals("女")) {
             index = 2;
         }
         //颜色状态列表
-        ColorStateList sl = new ColorStateList(new int[][]{
-                new int[]{-android.R.attr.state_checked},
-                new int[]{android.R.attr.state_checked}
-        }, new int[]{
-                getResources().getColor(R.color.c252527), getResources().getColor(R.color.primary),
-        });
+        ColorStateList sl = new ColorStateList(new int[][]{new int[]{-android.R.attr.state_checked}, new int[]{android.R.attr.state_checked}}, new int[]{getResources().getColor(R.color.c252527), getResources().getColor(R.color.primary),});
         new MaterialDialog.Builder(getActivity())
                 .title("修改性别")
                 .choiceWidgetColor(sl)
                 .titleColor(getResources().getColor(R.color.c252527))
                 .items(R.array.genders)
                 .contentColor(getResources().getColor(R.color.c252527))
-                .itemsCallbackSingleChoice(index, (dialog, itemView, which, text) -> {
-                    genderView.setText(text);
+                .itemsCallbackSingleChoice(index - 1, (dialog, itemView, which, text) -> {
+                    wechatGender.setText(text);
                     return true;
                 })
                 .backgroundColor(getResources().getColor(R.color.white))

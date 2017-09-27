@@ -32,7 +32,7 @@ public abstract class BaseFragment extends SupportFragment {
         if (null == mRootView) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
-        initView(mRootView, container);
+        initView(mRootView);
         return mRootView;
     }
 
@@ -44,7 +44,7 @@ public abstract class BaseFragment extends SupportFragment {
 
     protected abstract int getLayoutId();
 
-    protected abstract void initView(View mRootView, @Nullable ViewGroup root);
+    protected abstract void initView(View mRootView);
 
     protected void afterCreate(Bundle savedInstanceState) {
     }
