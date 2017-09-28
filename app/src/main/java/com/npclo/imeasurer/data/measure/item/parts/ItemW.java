@@ -14,7 +14,7 @@ public class ItemW extends Part {
     }
 
     public String getCn() {
-        return "通挡";
+        return "通裆";
     }
 
     @Override

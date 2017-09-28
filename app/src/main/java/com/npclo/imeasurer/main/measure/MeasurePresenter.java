@@ -61,17 +61,19 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     private void handleBleResult(byte[] v) {
         String s = HexString.bytesToHex(v);
-        int code = Integer.parseInt("8D6A", 16);
-        int length = Integer.parseInt(s.substring(0, 4), 16);
-        int angle = Integer.parseInt(s.substring(4, 8), 16);
-        int battery = Integer.parseInt(s.substring(8, 12), 16);
-        int a1 = length ^ code;
-        int a2 = angle ^ code;
-        int a3 = battery ^ code;
 //        Log.e(TAG, "测量原始结果：" + s);
-//        Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
-        a1 += 14;
-        fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
+        if (s.length() == 16) { //判断接收到的数据是否准确
+            int code = Integer.parseInt("8D6A", 16);
+            int length = Integer.parseInt(s.substring(0, 4), 16);
+            int angle = Integer.parseInt(s.substring(4, 8), 16);
+            int battery = Integer.parseInt(s.substring(8, 12), 16);
+            int a1 = length ^ code;
+            int a2 = angle ^ code;
+            int a3 = battery ^ code;
+//            Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
+            a1 += 14; //校正数据
+            fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
+        }
     }
 
     private void handleError(Throwable e) {
