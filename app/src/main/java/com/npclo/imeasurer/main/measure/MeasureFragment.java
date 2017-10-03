@@ -769,4 +769,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, CROP_PHOTO); //设置裁剪参数显示图片至ImageView
     }
+
+    @Override
+    protected void toast2Speech(String s) {
+        speechSynthesizer.playText(s);
+    }
 }

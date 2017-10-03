@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.utils.ApiException;
+import com.polidea.rxandroidble.exceptions.BleException;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -76,9 +77,15 @@ public abstract class BaseFragment extends SupportFragment {
             showToast(getString(R.string.service_down));
         } else if (e instanceof ApiException) {
             showToast(e.getMessage());
+        } else if (e instanceof BleException) {
+            showToast("蓝牙设备异常，请重试", Toast.LENGTH_LONG);
+            toast2Speech("蓝牙设备异常，请重试");
         } else {
             showToast(getString(R.string.something_error));
         }
+    }
+
+    protected void toast2Speech(String s) {
     }
 
     protected int getVersionCode() {
