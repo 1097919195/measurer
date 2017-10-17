@@ -15,6 +15,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -346,6 +347,13 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         btnSave.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        // FIXME: 2017/10/17 接收当前fragment开启新意图后的返回数据
+        Log.e(TAG, "measureFragment onFragmentResult=====resultCode" + resultCode);
+    }
+
     private void preview(ImageView view) {
         new MaterialDialog.Builder(getActivity())
                 .customView(view, true)
@@ -377,6 +385,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 .contentColor(getResources().getColor(R.color.c252527))
                 .itemsCallbackSingleChoice(index - 1, (dialog, itemView, which, text) -> {
                     wechatGender.setText(text);
+                    user.setGender(text.toString().equals("男") ? 1 : 2);
                     return true;
                 })
                 .backgroundColor(getResources().getColor(R.color.white))
@@ -384,8 +393,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 .show();
     }
 
+    /**
+     * 处理提交数据逻辑
+     */
     private void handleSaveData() {
-        if (unMeasuredList.size() != 0) { // FIXME: 2017/9/26 这种校验方式不严谨
+        if (unMeasuredList.size() != 0) {
             showToast("量体未完成");
             return;
         }

@@ -118,7 +118,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             bleState.setEnabled(false);
         }
         if (BaseApplication.getFirstCheckHint(getActivity())) {
-            mPresenter.getLatestVersion();
+            mPresenter.getLatestVersion();// FIXME: 2017/10/17 空指针  mPresenter
             BaseApplication.setIsFirstCheck(getActivity());
         }
         LogUtils.upload(getActivity());

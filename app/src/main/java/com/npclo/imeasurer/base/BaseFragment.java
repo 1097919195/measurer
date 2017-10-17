@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +65,8 @@ public abstract class BaseFragment extends SupportFragment {
 
     /**
      * 统一处理错误 RxJava调用
-     *
-     * @param e
-     * @param TAG
+     * @param e 异常
+     * @param TAG 标记
      */
     protected void handleError(Throwable e, String TAG) {
         if (e instanceof SocketTimeoutException) {
@@ -83,6 +83,7 @@ public abstract class BaseFragment extends SupportFragment {
         } else {
             showToast(getString(R.string.something_error));
         }
+        Log.e(TAG, e.toString());
     }
 
     protected void toast2Speech(String s) {
