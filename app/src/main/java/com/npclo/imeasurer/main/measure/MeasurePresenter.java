@@ -1,10 +1,10 @@
 package com.npclo.imeasurer.main.measure;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.npclo.imeasurer.data.measure.Measurement;
+import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.HexString;
 import com.npclo.imeasurer.utils.aes.AesException;
 import com.npclo.imeasurer.utils.aes.AesUtils;
@@ -62,7 +62,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     private void handleBleResult(byte[] v) {
         String s = HexString.bytesToHex(v);
-        Log.e(TAG, "测量原始结果：" + s);
+//        Log.e(TAG, "测量原始结果：" + s);
         if (s.length() == 16) { //判断接收到的数据是否准确
             int code = Integer.parseInt("8D6A", 16);
             int length = Integer.parseInt(s.substring(0, 4), 16);
@@ -71,7 +71,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
             int a1 = length ^ code;
             int a2 = angle ^ code;
             int a3 = battery ^ code;
-            Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
+//            Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
             a1 += 14; //校正数据
             fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
         }
@@ -102,6 +102,34 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                         e -> fragment.showSaveError(e),
                         () -> fragment.showSaveCompleted()
                 );
+        mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void getUserInfoWithOpenID(String id) {
+        Subscription subscribe = new UserRepository()
+                .getUserInfoWithOpenID(id)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(
+                        user -> fragment.onGetWechatUserInfoSuccess(user),
+                        e -> fragment.showGetInfoError(e),
+                        () -> fragment.showCompleteGetInfo());
+        mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void getUserInfoWithCode(String code) {
+        Subscription subscribe = new UserRepository()
+                .getUserInfoWithCode(code)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(
+                        user -> fragment.onGetWechatUserInfoSuccess(user),
+                        e -> fragment.showGetInfoError(e),
+                        () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
     }
 }

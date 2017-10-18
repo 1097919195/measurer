@@ -15,7 +15,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -147,6 +147,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private boolean firstHint = true;
     private PopupWindow popupWindow;
     private AppCompatTextView popup_content_tv;
+    private static final int SCAN_HINT = 1001;
+    private static final int CODE_HINT = 1002;
+    private String[] measureSequence;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -165,7 +168,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        initPopupWindow();
         initToolbar();
         //渲染测量部位列表
         initMeasureItemList();
@@ -189,7 +191,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unVisibleView.add(frame_1);
         unVisibleView.add(frame_2);
         unVisibleView.add(frame_3);
-
+        //初始化需要测量角度的部位
+        String[] angleItems = getResources().getStringArray(R.array.angle_items);
+        angleList = Arrays.asList(angleItems);
+        //初始化所有测量部位
+        measureSequence = getResources().getStringArray(R.array.items_sequence);
     }
 
     private void initPopupWindow() {
@@ -200,9 +206,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             View popup_content = LayoutInflater.from(getActivity()).inflate(R.layout.view_popupwindow, null);
             popupWindow.setContentView(popup_content);
             popup_content_tv = (AppCompatTextView) popup_content.findViewById(R.id.tv_item);
-            popupWindow.setFocusable(false);
-            popupWindow.showAtLocation(mRootView, Gravity.CENTER, 0, 0);
+            popup_content_tv.setTextColor(getResources().getColor(R.color.ff0000));
         }
+        popupWindow.setFocusable(false);
+        popupWindow.showAtLocation(mRootView, Gravity.CENTER, 0, 0);
     }
 
     // FIXME: 2017/9/8 遍历 更好的方式
@@ -232,34 +239,45 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        Bundle bundle = getArguments();
-        user = bundle.getParcelable("user");  // TODO: 2017/10/17 数据来源  有两个地方，当前页面发起的请求和随首页带过来的数据
-        try {
-            wechatNickname.setText(user.getNickname());
-            wechatGender.setText(user.getGender() == 1 ? "男" : "女");
-//            wechatName.setText("微信号：" + user.getName());
-            Glide.with(this).load(user.getAvatar()).into(wechatIcon);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //初始化测量弹窗
+        initPopupWindow();
+        //初始化语音播报
         initSpeech();
-        measurePresenter.subscribe();
-        String[] angleItems = getResources().getStringArray(R.array.angle_items);
-        angleList = Arrays.asList(angleItems);
         try {
             RxBleDevice bleDevice = BaseApplication.getRxBleDevice(getActivity());
             if (bleDevice != null && bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
                 //启动测量
-
                 UUID characteristicUUID = BaseApplication.getUUID(getActivity());
                 Observable<RxBleConnection> connectionObservable = BaseApplication.getConnection(getActivity());
                 measurePresenter.startMeasure(characteristicUUID, connectionObservable);
             }
         } catch (Exception e) {
-            showToast("蓝牙连接异常，请重新连接！");
-            e.printStackTrace();
+            showToast("蓝牙连接异常，请重新连接！", Toast.LENGTH_LONG);
         }
+
+        Bundle bundle = getArguments();
+        user = bundle.getParcelable("user");
+        //接收homefragment传值过来的用户信息
+        if (user != null) {
+            setWechatUserInfo(user);
+        }
+
         initUmMeasureListFlag = true;
+        if (firstHint) {
+            speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
+            popup_content_tv.setText(measureSequence[0]);//更新当前测量部位弹窗显示
+            firstHint = false;
+        }
+    }
+
+    private void setWechatUserInfo(WechatUser u) {
+        wechatNickname.setText(u.getNickname());
+        wechatGender.setText(u.getGender() == 1 ? "男" : "女");
+        if (u.getAvatar() != null) {
+            Glide.with(this).load(u.getAvatar()).into(wechatIcon);
+        } else {
+            wechatIcon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
+        }
     }
 
     @Override
@@ -267,6 +285,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         super.onPause();
         measurePresenter.unsubscribe();
         popupWindow.dismiss();
+        firstHint = true;
     }
 
     @Override
@@ -340,13 +359,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         startActivityForResult(intent, 1001);
         btnNext.setVisibility(View.GONE);
         btnSave.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
-        super.onFragmentResult(requestCode, resultCode, data);
-        // FIXME: 2017/10/17 接收当前fragment开启新意图后的返回数据
-        Log.e(TAG, "measureFragment onFragmentResult=====resultCode" + resultCode);
     }
 
     private void preview(ImageView view) {
@@ -478,7 +490,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private void initMeasureItemList() {
         try {
             MeasurementItem item = (MeasurementItem) Class.forName(ITEM_PACKAGE + ".MeasurementItem").newInstance();
-            Field[] declaredFields = item.getClass().getDeclaredFields();
+            Field[] declaredFields = item.getClass().getDeclaredFields();// FIXME: 2017/10/18 其实可以不用使用反射，整个测量部位作为一个数组结构
             List<String> nameList = new ArrayList<>();
             for (Field field : declaredFields) {
                 String name = field.getName();
@@ -510,12 +522,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void bleDeviceMeasuring() {
-        String[] measureSequence = getResources().getStringArray(R.array.items_sequence);
-        if (firstHint) {
-            speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
-            popup_content_tv.setText(measureSequence[0]);//更新当前测量部位弹窗显示
-            firstHint = false;
-        }
     }
 
     private void initUnMeasureList() {
@@ -560,6 +566,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showSuccessSave() {
         showToast("保存成功");
+        popup_content_tv.setText("保存成功");
+        popup_content_tv.setTextColor(getResources().getColor(R.color.green));
         //清除所有已测量项目
         clearAndMeasureNext();
         btnSave.setVisibility(View.GONE);
@@ -604,6 +612,23 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         } else {
             saveProgressbar.dismiss();
         }
+    }
+
+    @Override
+    public void onGetWechatUserInfoSuccess(WechatUser user) {
+        showLoading(false);
+        setWechatUserInfo(user);
+    }
+
+    @Override
+    public void showGetInfoError(Throwable e) {
+        showLoading(false);
+        handleError(e, TAG);
+    }
+
+    @Override
+    public void showCompleteGetInfo() {
+        showLoading(false);
     }
 
     /**
@@ -726,6 +751,34 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     imageView.setImageBitmap(bitmap);
                     frameLayout.setVisibility(View.VISIBLE);
                     unVisibleView.remove(0);
+                }
+                break;
+            case SCAN_HINT:
+                String id = null;
+                try {
+                    Bundle bundle = data.getExtras();
+                    id = bundle.getString("result");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (id != null) {
+                    measurePresenter.getUserInfoWithOpenID(id);
+                } else {
+                    showToast(getString(R.string.scan_qrcode_failed));
+                }
+                break;
+            case CODE_HINT:
+                String code = null;
+                try {
+                    Bundle bundle = data.getExtras();
+                    code = bundle.getString("result");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (code != null) {
+                    measurePresenter.getUserInfoWithCode(code);
+                } else {
+                    showToast(getString(R.string.enter_qrcode_error));
                 }
                 break;
             default:

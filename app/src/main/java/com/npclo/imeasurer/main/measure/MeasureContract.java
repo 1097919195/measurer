@@ -3,6 +3,7 @@ package com.npclo.imeasurer.main.measure;
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
 import com.npclo.imeasurer.data.measure.Measurement;
+import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.polidea.rxandroidble.RxBleConnection;
 
 import java.util.UUID;
@@ -32,11 +33,21 @@ public interface MeasureContract {
         void showSaveCompleted();
 
         void showLoading(boolean b);
+
+        void onGetWechatUserInfoSuccess(WechatUser user);
+
+        void showGetInfoError(Throwable e);
+
+        void showCompleteGetInfo();
     }
 
     interface Presenter extends BasePresenter {
         void startMeasure(UUID characteristicUUID, Observable<RxBleConnection> connectionObservable);
 
         void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs);
+
+        void getUserInfoWithOpenID(String id);
+
+        void getUserInfoWithCode(String code);
     }
 }
