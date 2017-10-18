@@ -94,6 +94,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initToolbar() {
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.toolbar_text));//设置主标题颜色
         toolbarBase.inflateMenu(R.menu.base_toolbar_menu);
+        //前往设置页面
         toolbarBase.getMenu().getItem(0).setOnMenuItemClickListener(__ -> {
             com.npclo.imeasurer.user.home.HomeFragment fragment = com.npclo.imeasurer.user.home.HomeFragment.newInstance();
             start(fragment);
@@ -110,7 +111,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-//        mPresenter.subscribe();
         RxBleDevice rxBleDevice = BaseApplication.getRxBleDevice(getActivity());
         if (rxBleDevice != null && rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
             bleState.setText(getString(R.string.connected));
@@ -118,7 +118,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             bleState.setEnabled(false);
         }
         if (BaseApplication.getFirstCheckHint(getActivity())) {
-            mPresenter.getLatestVersion();// FIXME: 2017/10/17 空指针  mPresenter
+            if (mPresenter == null) {
+                mPresenter = new com.npclo.imeasurer.main.home.HomePresenter(this, SchedulerProvider.getInstance());
+            }
+            mPresenter.getLatestVersion();// FIXME: 2017/10/17 空指针  mPresenter  方向====>MVC框架
             BaseApplication.setIsFirstCheck(getActivity());
         }
         LogUtils.upload(getActivity());
@@ -142,8 +145,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
     }
 
+    /**
+     * 获取用户数据成功回调
+     *
+     * @param user 微信用户
+     */
     @Override
-    public void showGetInfoSuccess(WechatUser user) {
+    public void onGetWechatUserInfoSuccess(WechatUser user) {
         showLoading(false);
         MeasureFragment measureFragment = findFragment(MeasureFragment.class);
         if (measureFragment == null) {
@@ -175,5 +183,33 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showGetVersionError(Throwable e) {
         handleError(e, TAG);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String result = null;
+        try {
+            Bundle bundle = data.getExtras();
+            result = bundle.getString("result");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        switch (resultCode) {
+            case SCAN_HINT:
+                if (result != null) {
+                    mPresenter.getUserInfoWithOpenID(result);
+                } else {
+                    showToast(getString(R.string.scan_qrcode_failed));
+                }
+                break;
+            case CODE_HINT:
+                if (result != null) {
+                    mPresenter.getUserInfoWithCode(result);
+                } else {
+                    showToast(getString(R.string.enter_qrcode_error));
+                }
+                break;
+        }
     }
 }

@@ -19,7 +19,7 @@ public interface HomeContract {
 
         void showLoading(boolean b);
 
-        void showGetInfoSuccess(WechatUser info);
+        void onGetWechatUserInfoSuccess(WechatUser info);
 
         void showGetInfoError(Throwable e);
 

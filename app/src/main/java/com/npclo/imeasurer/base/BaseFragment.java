@@ -41,15 +41,11 @@ public abstract class BaseFragment extends SupportFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        afterCreate(savedInstanceState);
     }
 
     protected abstract int getLayoutId();
 
     protected abstract void initView(View mRootView);
-
-    protected void afterCreate(Bundle savedInstanceState) {
-    }
 
     protected void showToast(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();

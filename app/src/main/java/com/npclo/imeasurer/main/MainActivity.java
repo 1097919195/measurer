@@ -1,10 +1,8 @@
 package com.npclo.imeasurer.main;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
@@ -22,7 +20,6 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int SCAN_HINT = 1001;
     private static final int CODE_HINT = 1002;
-    private HomePresenter mPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +46,7 @@ public class MainActivity extends BaseActivity {
         if (homeFragment == null) {
             homeFragment = HomeFragment.newInstance();
             loadRootFragment(R.id.content_frame, homeFragment);
-            mPresenter = new HomePresenter(homeFragment, SchedulerProvider.getInstance());
+            HomePresenter mPresenter = new HomePresenter(homeFragment, SchedulerProvider.getInstance());
             homeFragment.setPresenter(mPresenter);
         }
     }
@@ -58,31 +55,31 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.act_main);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        String result = null;
-        try {
-            Bundle bundle = data.getExtras();
-            result = bundle.getString("result");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        switch (resultCode) {
-            case SCAN_HINT:
-                if (result != null) {
-                    mPresenter.getUserInfoWithOpenID(result);
-                } else {
-                    Toast.makeText(MainActivity.this, getString(R.string.scan_qrcode_failed), Toast.LENGTH_LONG).show();
-                }
-                break;
-            case CODE_HINT:
-                if (result != null) {
-                    mPresenter.getUserInfoWithCode(result);
-                } else {
-                    Toast.makeText(MainActivity.this, getString(R.string.enter_qrcode_error), Toast.LENGTH_LONG).show();
-                }
-                break;
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        String result = null;
+//        try {
+//            Bundle bundle = data.getExtras();
+//            result = bundle.getString("result");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        switch (resultCode) {
+//            case SCAN_HINT:
+//                if (result != null) {
+//                    mPresenter.getUserInfoWithOpenID(result);
+//                } else {
+//                    Toast.makeText(MainActivity.this, getString(R.string.scan_qrcode_failed), Toast.LENGTH_LONG).show();
+//                }
+//                break;
+//            case CODE_HINT:
+//                if (result != null) {
+//                    mPresenter.getUserInfoWithCode(result);
+//                } else {
+//                    Toast.makeText(MainActivity.this, getString(R.string.enter_qrcode_error), Toast.LENGTH_LONG).show();
+//                }
+//                break;
+//        }
+//    }
 }

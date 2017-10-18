@@ -57,7 +57,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        user -> fragment.showGetInfoSuccess(user),
+                        user -> fragment.onGetWechatUserInfoSuccess(user),
                         e -> fragment.showGetInfoError(e),
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
@@ -71,7 +71,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        user -> fragment.showGetInfoSuccess(user),
+                        user -> fragment.onGetWechatUserInfoSuccess(user),
                         e -> fragment.showGetInfoError(e),
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);

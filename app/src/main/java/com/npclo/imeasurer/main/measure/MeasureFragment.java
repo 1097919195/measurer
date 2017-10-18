@@ -163,13 +163,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        user = bundle.getParcelable("user");
-    }
-
-    @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         initPopupWindow();
@@ -183,13 +176,13 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             resetTextViewClickState();
             MyTextView textView = (MyTextView) ((LinearLayout) view).getChildAt(0);
             String cn = textView.getText().toString();
-            //att 只有处于已测量的部位才能修改，未测量部位不能修改
+            //只有处于已测量的部位才能修改，未测量部位不能修改
             if (textView.getState() == MeasureStateEnum.MEASURED.ordinal()) {
                 textView.setTextColor(getResources().getColor(R.color.modifying));
                 textView.setState(MeasureStateEnum.MODIFYING.ordinal());
-                popup_content_tv.setText(cn);//设置当前修改部位弹窗显示
+                popup_content_tv.setText(cn);//设置当前修改部位弹窗显示   // FIXME: 2017/10/17 下一个测量弹窗不显示
                 speechSynthesizer.playText("重新测量部位" + cn);
-                modifyingView = textView;//att 正在修改测量值textview赋值
+                modifyingView = textView;
             }
         });
         unVisibleView.clear();
@@ -239,6 +232,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onResume() {
         super.onResume();
+        Bundle bundle = getArguments();
+        user = bundle.getParcelable("user");  // TODO: 2017/10/17 数据来源  有两个地方，当前页面发起的请求和随首页带过来的数据
         try {
             wechatNickname.setText(user.getNickname());
             wechatGender.setText(user.getGender() == 1 ? "男" : "女");
