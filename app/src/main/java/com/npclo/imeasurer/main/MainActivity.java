@@ -35,10 +35,9 @@ public class MainActivity extends BaseActivity {
                         Manifest.permission.LOCATION_HARDWARE,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission_group.LOCATION,
-                        Manifest.permission_group.STORAGE,
-                        Manifest.permission_group.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.CAMERA)
                 .request();
         //加载登录后的欢迎界面
