@@ -23,4 +23,10 @@ public class AppHttpHelper extends HttpHelper {
                 .upload(uFile)
                 .map(new HttpResponseFunc<>());
     }
+
+    public Observable<HttpMsg> fixbug(String s) {
+        return retrofit.create(AppService.class)
+                .fixbug(s)
+                .map(new HttpResponseFunc<>());
+    }
 }

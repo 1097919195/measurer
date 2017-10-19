@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -249,40 +248,38 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
      * @param bleScanException
      */
     public void handleBleScanException(BleScanException bleScanException) {
-
         switch (bleScanException.getReason()) {
             case BleScanException.BLUETOOTH_NOT_AVAILABLE:
-                Toast.makeText(getActivity(), getString(R.string.bluetooth_not_avavilable), Toast.LENGTH_SHORT).show();
+                showToast(getString(R.string.bluetooth_not_avavilable));
                 break;
             case BleScanException.BLUETOOTH_DISABLED:
-                Toast.makeText(getActivity(), getString(R.string.bluetooth_disabled), Toast.LENGTH_SHORT).show();
+                showToast(getString(R.string.bluetooth_disabled));
                 break;
             case BleScanException.LOCATION_PERMISSION_MISSING:
-                Toast.makeText(getActivity(),
-                        "On Android 6.0 location permission is required. Implement Runtime Permissions", Toast.LENGTH_SHORT).show();
+                showToast("未授予获取位置权限");
                 break;
             case BleScanException.LOCATION_SERVICES_DISABLED:
-                Toast.makeText(getActivity(), "Location services needs to be enabled on Android 6.0", Toast.LENGTH_SHORT).show();
+                showToast("6.0以上手机需要开启位置服务");
                 break;
             case BleScanException.SCAN_FAILED_ALREADY_STARTED:
-                Toast.makeText(getActivity(), "Scan with the same filters is already started", Toast.LENGTH_SHORT).show();
+                showToast("Scan with the same filters is already started");
                 break;
             case BleScanException.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                Toast.makeText(getActivity(), "Failed to register application for bluetooth scan", Toast.LENGTH_SHORT).show();
+                showToast("Failed to register application for bluetooth scan");
                 break;
             case BleScanException.SCAN_FAILED_FEATURE_UNSUPPORTED:
-                Toast.makeText(getActivity(), "Scan with specified parameters is not supported", Toast.LENGTH_SHORT).show();
+                showToast("Scan with specified parameters is not supported");
                 break;
             case BleScanException.SCAN_FAILED_INTERNAL_ERROR:
-                Toast.makeText(getActivity(), "Scan failed due to internal error", Toast.LENGTH_SHORT).show();
+                showToast("Scan failed due to internal error");
                 break;
             case BleScanException.SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES:
-                Toast.makeText(getActivity(), "Scan cannot start due to limited hardware resources", Toast.LENGTH_SHORT).show();
+                showToast("Scan cannot start due to limited hardware resources");
                 break;
             case BleScanException.UNKNOWN_ERROR_CODE:
             case BleScanException.BLUETOOTH_CANNOT_START:
             default:
-                Toast.makeText(getActivity(), "Unable to start scanning", Toast.LENGTH_SHORT).show();
+                showToast("不能够扫描外接蓝牙设备");
                 break;
         }
     }

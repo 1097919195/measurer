@@ -18,4 +18,7 @@ public interface AppService {
     @Multipart
     @POST("client/log")
     Observable<HttpResponse<HttpMsg>> upload(@Part("log") RequestBody file);
+
+    @POST("client/bug")
+    Observable<HttpResponse<HttpMsg>> fixbug(@Part("bug") String s);
 }

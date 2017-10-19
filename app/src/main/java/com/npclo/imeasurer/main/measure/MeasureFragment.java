@@ -15,8 +15,10 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -257,10 +259,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
         Bundle bundle = getArguments();
         user = bundle.getParcelable("user");
-        //接收homefragment传值过来的用户信息
-        if (user != null) {
-            setWechatUserInfo(user);
-        }
+        //仅接收homefragment传值过来的用户信息时才赋值，从当前fragment发起的意图返回结果不在此处进行赋值调用
+        if (user != null) setWechatUserInfo(user);
 
         initUmMeasureListFlag = true;
         if (firstHint) {
@@ -541,24 +541,21 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void handleMeasureData(float length, float angle, int battery) {
-        if (battery < 30) baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_low);
-        if (battery >= 30 && battery < 80)
-            baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_mid);
-        if (battery >= 80) baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_high);
+        Log.e(TAG, "处理数据");
+        MenuItem item = baseToolbar.getMenu().getItem(0);
+        if (battery < 30) item.setIcon(R.mipmap.battery_low);
+        if (battery >= 30 && battery < 80) item.setIcon(R.mipmap.battery_mid);
+        if (battery >= 80) item.setIcon(R.mipmap.battery_high);
         if (initUmMeasureListFlag) initUnMeasureList();
         //att 先判断是否有正处于修改状态的textview，有的话，先给其赋值，再给下一个未测量的部位赋值
         if (modifyingView != null) {
             assignValue(length, angle, modifyingView, 1);
         } else {
-            try {
-                MyTextView textView = unMeasuredList.get(0);
-                if (textView != null) {
-                    assignValue(length, angle, textView, 0);
-                }
-            } catch (Exception e) {
+            if (unMeasuredList.size() != 0) {
+                assignValue(length, angle, unMeasuredList.get(0), 0);
+            } else {
                 //无未测项目，提示测量完成，
                 showToast(getString(R.string.measure_completed));
-                e.printStackTrace();
             }
         }
     }
@@ -567,7 +564,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void showSuccessSave() {
         showToast("保存成功");
         popup_content_tv.setText("保存成功");
-        popup_content_tv.setTextColor(getResources().getColor(R.color.green));
         //清除所有已测量项目
         clearAndMeasureNext();
         btnSave.setVisibility(View.GONE);
@@ -645,13 +641,13 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         try {
             Part part = (Part) Class.forName(PART_PACKAGE + "." + tag).newInstance();
             cn = part.getCn();
-            String value;//播报的测量结果
+            String value;  //播报的测量结果
             if (angleList.contains(tag)) {
                 //按要求赋值
                 //                if (angle > 90f) {
                 //                    speechSynthesizer.playText(cn + "测量结果有误，请重新测量");
                 //                    return;
-                //                } //att 这块容易出现错误，角度出现不准的情况
+                //                }
                 textView.setValue(angle);
                 value = angle + "";
             } else {
@@ -665,10 +661,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             String[] strings = getNextString(type);
             if (type == 1) { //修改原有结果
                 result = cn + value;
-                modifyingView = null;//att 重置待修改项
+                modifyingView = null;//重置待修改项
             } else { //按顺序测量
                 result = cn + value;
-                unMeasuredList.remove(0);//att 最前的一项测量完毕
+                unMeasuredList.remove(0);// 最前的一项测量完毕
             }
             if (!TextUtils.isEmpty(strings[0])) {
                 s = result + "        请测" + strings[0];

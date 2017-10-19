@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.utils.ApiException;
+import com.npclo.imeasurer.utils.LogUtils;
 import com.polidea.rxandroidble.exceptions.BleException;
 
 import java.net.ConnectException;
@@ -61,7 +61,8 @@ public abstract class BaseFragment extends SupportFragment {
 
     /**
      * 统一处理错误 RxJava调用
-     * @param e 异常
+     *
+     * @param e   异常
      * @param TAG 标记
      */
     protected void handleError(Throwable e, String TAG) {
@@ -77,9 +78,10 @@ public abstract class BaseFragment extends SupportFragment {
             showToast("蓝牙设备异常，请重试", Toast.LENGTH_LONG);
             toast2Speech("蓝牙设备异常，请重试");
         } else {
-            showToast(getString(R.string.something_error));
+            showToast("出错啦");
+            String message = e.toString();
+            LogUtils.fixBug(message);
         }
-        Log.e(TAG, e.toString());
     }
 
     protected void toast2Speech(String s) {

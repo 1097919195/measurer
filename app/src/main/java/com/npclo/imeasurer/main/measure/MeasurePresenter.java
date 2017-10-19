@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.main.measure;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.npclo.imeasurer.data.measure.Measurement;
@@ -13,6 +14,7 @@ import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleConnection;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MultipartBody;
 import rx.Observable;
@@ -55,14 +57,15 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                 .flatMap(notificationObservable -> notificationObservable)
                 .doOnSubscribe(() -> fragment.bleDeviceMeasuring())
                 .observeOn(schedulerProvider.ui())
-                .doOnNext(notificationObservable -> fragment.showStartReceiveData())
+                .throttleFirst(2000, TimeUnit.MILLISECONDS)
                 .subscribe(this::handleBleResult, this::handleError);
         mSubscriptions.add(subscribe);
     }
 
     private void handleBleResult(byte[] v) {
+        // FIXME: 2017/10/19 接收数据的间隔
         String s = HexString.bytesToHex(v);
-//        Log.e(TAG, "测量原始结果：" + s);
+        Log.e(TAG, "接收原始结果：" + s);
         if (s.length() == 16) { //判断接收到的数据是否准确
             int code = Integer.parseInt("8D6A", 16);
             int length = Integer.parseInt(s.substring(0, 4), 16);
@@ -71,7 +74,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
             int a1 = length ^ code;
             int a2 = angle ^ code;
             int a3 = battery ^ code;
-//            Log.e(TAG, "获得数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
+//            Log.e(TAG, "解析数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
             a1 += 14; //校正数据
             fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
         }

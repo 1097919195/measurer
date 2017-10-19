@@ -13,8 +13,6 @@ import java.io.File;
  */
 
 public class LogUtils {
-    private static final String TAG = LogUtils.class.getSimpleName();
-
     public static void upload(Context context) {
         File dir = new File(context.getExternalFilesDir("log") + "");
         String EXTENSION = "trace";
@@ -39,9 +37,15 @@ public class LogUtils {
 
     private static void upload(File file) {
         new AppHttpHelper().upload(file)
-                .subscribeOn(SchedulerProvider.getInstance().computation())
+                .subscribeOn(SchedulerProvider.getInstance().io())
                 .subscribe(msg -> clear(file), e -> {
                 });
+    }
+
+    public static void fixBug(String s) {
+        new AppHttpHelper().fixbug(s)
+                .subscribeOn(SchedulerProvider.getInstance().io())
+                .subscribe();
     }
 
 }
