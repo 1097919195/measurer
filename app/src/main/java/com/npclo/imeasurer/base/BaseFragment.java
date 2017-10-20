@@ -15,6 +15,7 @@ import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.utils.ApiException;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.polidea.rxandroidble.exceptions.BleException;
+import com.polidea.rxandroidble.exceptions.BleGattException;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -75,8 +76,13 @@ public abstract class BaseFragment extends SupportFragment {
         } else if (e instanceof ApiException) {
             showToast(e.getMessage());
         } else if (e instanceof BleException) {
-            showToast("蓝牙设备异常，请重试", Toast.LENGTH_LONG);
-            toast2Speech("蓝牙设备异常，请重试");
+            if (e instanceof BleGattException) {
+                showToast("蓝牙连接断开", Toast.LENGTH_LONG);
+                toast2Speech("蓝牙连接断开");
+            } else {
+                showToast("蓝牙设备异常，请重试", Toast.LENGTH_LONG);
+                toast2Speech("蓝牙设备异常，请重试");
+            }
         } else {
             showToast("出错啦");
             String message = e.toString();

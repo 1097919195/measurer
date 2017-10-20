@@ -1,7 +1,6 @@
 package com.npclo.imeasurer.main.measure;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.npclo.imeasurer.data.measure.Measurement;
@@ -65,7 +64,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private void handleBleResult(byte[] v) {
         // FIXME: 2017/10/19 接收数据的间隔
         String s = HexString.bytesToHex(v);
-        Log.e(TAG, "接收原始结果：" + s);
+//        Log.e(TAG, "接收原始结果：" + s);
         if (s.length() == 16) { //判断接收到的数据是否准确
             int code = Integer.parseInt("8D6A", 16);
             int length = Integer.parseInt(s.substring(0, 4), 16);

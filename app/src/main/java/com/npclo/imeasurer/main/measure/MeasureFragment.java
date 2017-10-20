@@ -15,7 +15,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -264,9 +263,17 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
         initUmMeasureListFlag = true;
         if (firstHint) {
-            speechSynthesizer.playText("请确定待测人员性别，首先测量部位" + measureSequence[0]);
-            popup_content_tv.setText(measureSequence[0]);//更新当前测量部位弹窗显示
-            firstHint = false;
+            String s, s2;
+            if (unMeasuredList.size() > 0) {
+                s2 = "当前测量部位";
+                s = unMeasuredList.get(0).getText().toString();
+            } else {
+                s2 = "请确定待测人员性别，首先测量部位";
+                s = measureSequence[0];
+                firstHint = false;
+            }
+            speechSynthesizer.playText(s2 + s);
+            popup_content_tv.setText(s);//更新当前测量部位弹窗显示
         }
     }
 
@@ -541,7 +548,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void handleMeasureData(float length, float angle, int battery) {
-        Log.e(TAG, "处理数据");
         MenuItem item = baseToolbar.getMenu().getItem(0);
         if (battery < 30) item.setIcon(R.mipmap.battery_low);
         if (battery >= 30 && battery < 80) item.setIcon(R.mipmap.battery_mid);
