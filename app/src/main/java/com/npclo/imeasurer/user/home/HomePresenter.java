@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothGattService;
 import android.support.annotation.NonNull;
 
 import com.npclo.imeasurer.data.app.AppRepository;
-import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -86,8 +85,7 @@ public class HomePresenter implements HomeContract.Presenter {
         } else if (e instanceof BleAlreadyConnectedException) {
             fragment.showError("重复连接，请检查");
         } else {
-            fragment.showError();
-            LogUtils.fixBug(e.toString());
+            fragment.handleError(e);
         }
     }
 
@@ -125,7 +123,8 @@ public class HomePresenter implements HomeContract.Presenter {
                             if (isCharacteristicNotifiable(characteristic)) {
                                 characteristicUUID = characteristic.getUuid();
                                 connectionObservable = prepareConnectionObservable();
-                                fragment.setNotificationInfo(characteristicUUID, connectionObservable);
+                                fragment.setNotificationUUID(characteristicUUID);
+                                fragment.setBleAddress(s);
                                 connectDevice();
                                 break;
                             }

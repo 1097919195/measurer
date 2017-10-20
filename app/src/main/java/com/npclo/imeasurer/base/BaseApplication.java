@@ -5,14 +5,10 @@ import android.content.Context;
 
 import com.npclo.imeasurer.utils.CrashHandler;
 import com.polidea.rxandroidble.RxBleClient;
-import com.polidea.rxandroidble.RxBleConnection;
-import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.internal.RxBleLog;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.UUID;
-
-import rx.Observable;
 
 /**
  * Created by Endless on 2017/7/19.
@@ -20,11 +16,10 @@ import rx.Observable;
 
 public class BaseApplication extends Application {
     private RxBleClient rxBleClient;
-    private RxBleDevice rxBleDevice;
     private UUID characteristicUUID;
     private boolean haveUpdate = false;
     private boolean isFirstCheckUpdate = true;
-    private Observable<RxBleConnection> connectionObservable;
+    private String macAddress;
 
     public static RxBleClient getRxBleClient(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
@@ -49,30 +44,14 @@ public class BaseApplication extends Application {
         crashHandler.init(this);
     }
 
-    public static RxBleDevice getRxBleDevice(Context context) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        return application.rxBleDevice;
-    }
-
-    public static void setRxBleDevice(Context context, RxBleDevice rxBleDevice) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        application.rxBleDevice = rxBleDevice;
-    }
-
-    public static void setNotificationInfo(Context context, UUID characteristicUUID, Observable<RxBleConnection> connectionObservable) {
+    public static void setNotificationUUID(Context context, UUID characteristicUUID) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         application.characteristicUUID = characteristicUUID;
-        application.connectionObservable = connectionObservable;
     }
 
     public static UUID getUUID(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         return application.characteristicUUID;
-    }
-
-    public static Observable<RxBleConnection> getConnection(Context context) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        return application.connectionObservable;
     }
 
     /*=================TODO  elegant handle this=====================**/
@@ -94,5 +73,15 @@ public class BaseApplication extends Application {
     public static boolean getFirstCheckHint(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         return application.isFirstCheckUpdate;
+    }
+
+    public static void setBleAddress(Context context, String macAddress) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        application.macAddress = macAddress;
+    }
+
+    public static String getMacAddress(Context context) {
+        BaseApplication application = ((BaseApplication) context.getApplicationContext());
+        return application.macAddress;
     }
 }

@@ -11,6 +11,8 @@ import com.npclo.imeasurer.utils.aes.AesUtils;
 import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleConnection;
+import com.polidea.rxandroidble.RxBleDevice;
+import com.polidea.rxandroidble.utils.ConnectionSharingAdapter;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -18,12 +20,12 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.MultipartBody;
 import rx.Observable;
 import rx.Subscription;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasurePresenter implements MeasureContract.Presenter {
-    private static final String TAG = MeasurePresenter.class.getSimpleName();
     @NonNull
     private MeasureFragment fragment;
     @NonNull
@@ -31,6 +33,10 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @NonNull
     private CompositeSubscription mSubscriptions;
     private AesUtils aesUtils;
+    private RxBleDevice device;
+    private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
+    private Observable<RxBleConnection> connectionObservable;
+    private UUID uuid;
 
     public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider) {
         fragment = ((MeasureFragment) checkNotNull(view));
@@ -41,24 +47,12 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     @Override
     public void subscribe() {
-
+        startMeasure();
     }
 
     @Override
     public void unsubscribe() {
         mSubscriptions.clear();
-    }
-
-    @Override
-    public void startMeasure(UUID characteristicUUID, Observable<RxBleConnection> connectionObservable) {
-        Subscription subscribe = connectionObservable
-                .flatMap(rxBleConnection -> rxBleConnection.setupNotification(characteristicUUID))
-                .flatMap(notificationObservable -> notificationObservable)
-                .doOnSubscribe(() -> fragment.bleDeviceMeasuring())
-                .observeOn(schedulerProvider.ui())
-                .throttleFirst(2000, TimeUnit.MILLISECONDS)
-                .subscribe(this::handleBleResult, this::handleError);
-        mSubscriptions.add(subscribe);
     }
 
     private void handleBleResult(byte[] v) {
@@ -133,5 +127,71 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                         e -> fragment.showGetInfoError(e),
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void reConnect() {
+        if (isConnected()) {
+            triggerDisconnect();
+        } else {
+//            triggerDisconnect();
+//            connectionObservable = prepareConnectionObservable();
+//            Subscription subscribe = connectionObservable
+//                    .flatMap(RxBleConnection::discoverServices)
+//                    .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(uuid))
+//                    .observeOn(schedulerProvider.ui())
+//                    .subscribe(characteristic -> {
+//                                Log.d("tag", "reConnect startMeasure");
+            startMeasure();
+//                            },
+//                            this::onConnectionFailure,
+//                            this::onConnectionFinished
+//                    );
+//            mSubscriptions.add(subscribe);
+        }
+    }
+
+    private Observable<RxBleConnection> prepareConnectionObservable() {
+        checkNotNull(device);
+        return device.establishConnection(false)
+                .takeUntil(disconnectTriggerSubject)
+                .compose(new ConnectionSharingAdapter());
+    }
+
+    private void startMeasure() {
+        connectionObservable = prepareConnectionObservable();
+        Subscription subscribe = connectionObservable
+                .flatMap(rxBleConnection -> rxBleConnection.setupNotification(uuid))
+                .flatMap(notificationObservable -> notificationObservable)
+                .observeOn(schedulerProvider.ui())
+                .throttleFirst(2000, TimeUnit.MILLISECONDS)
+                .subscribe(this::handleBleResult, this::handleError);
+        mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void setDevice(RxBleDevice bleDevice) {
+        device = bleDevice;
+    }
+
+    @Override
+    public void setUUID(UUID characteristicUUID) {
+        uuid = characteristicUUID;
+    }
+
+    private void triggerDisconnect() {
+        disconnectTriggerSubject.onNext(null);
+    }
+
+    private boolean isConnected() {
+        checkNotNull(device);
+        return device.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
+    }
+
+    private void onConnectionFailure(Throwable e) {
+        fragment.handleError(e);
+    }
+
+    private void onConnectionFinished() {
     }
 }

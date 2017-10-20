@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -47,8 +46,8 @@ import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
-import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
+import com.polidea.rxandroidble.exceptions.BleGattException;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 import com.unisound.client.SpeechSynthesizerListener;
@@ -75,7 +74,6 @@ import butterknife.Unbinder;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import rx.Observable;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -238,24 +236,26 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        String macAddress = BaseApplication.getMacAddress(getActivity());
+        if (macAddress != null) {
+            RxBleDevice bleDevice = BaseApplication.getRxBleClient(getActivity()).getBleDevice(macAddress);
+            //启动测量
+            UUID characteristicUUID = BaseApplication.getUUID(getActivity());
+            measurePresenter.setDevice(bleDevice);
+            measurePresenter.setUUID(characteristicUUID);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         //初始化测量弹窗
         initPopupWindow();
         //初始化语音播报
         initSpeech();
-        try {
-            RxBleDevice bleDevice = BaseApplication.getRxBleDevice(getActivity());
-            if (bleDevice != null && bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
-                //启动测量
-                UUID characteristicUUID = BaseApplication.getUUID(getActivity());
-                Observable<RxBleConnection> connectionObservable = BaseApplication.getConnection(getActivity());
-                measurePresenter.startMeasure(characteristicUUID, connectionObservable);
-            }
-        } catch (Exception e) {
-            showToast("蓝牙连接异常，请重新连接！", Toast.LENGTH_LONG);
-        }
-
+        measurePresenter.subscribe();
         Bundle bundle = getArguments();
         user = bundle.getParcelable("user");
         //仅接收homefragment传值过来的用户信息时才赋值，从当前fragment发起的意图返回结果不在此处进行赋值调用
@@ -293,12 +293,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         measurePresenter.unsubscribe();
         popupWindow.dismiss();
         firstHint = true;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override
@@ -520,15 +514,25 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void handleError(Throwable e) {
-        handleError(e, TAG);
+        if (e instanceof BleGattException) {
+            toast2Speech("蓝牙连接断开");
+            showReConnectDialog();
+        } else {
+            handleError(e, TAG);
+        }
     }
 
-    @Override
-    public void showStartReceiveData() {
-    }
-
-    @Override
-    public void bleDeviceMeasuring() {
+    private void showReConnectDialog() {
+        new MaterialDialog.Builder(getActivity())
+                .contentColor(getResources().getColor(R.color.primary))
+                .backgroundColor(getResources().getColor(R.color.white))
+                .content("蓝牙连接断开，重新连接蓝牙？")
+                .positiveText("确定")
+                .negativeText("取消")
+                .positiveColor(getResources().getColor(R.color.ff5001))
+                .negativeColor(getResources().getColor(R.color.c252527))
+                .onPositive((dialog, which) -> measurePresenter.reConnect())
+                .show();
     }
 
     private void initUnMeasureList() {

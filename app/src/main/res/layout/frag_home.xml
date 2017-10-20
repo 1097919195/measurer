@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/unconnected"
+                android:text="@string/connect2ble"
                 android:textColor="@color/c252527"
                 android:textSize="16sp" />
             <!--TODO 图标-->
@@ -66,8 +66,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:textAlignment="center"
         android:text="@string/slogan_scan"
+        android:textAlignment="center"
         android:textColor="@color/primary"
         android:textSize="18sp" />
 </LinearLayout>

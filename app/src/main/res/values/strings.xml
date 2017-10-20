@@ -193,4 +193,5 @@
     <string name="measure_completed">测量完毕，检查无误后保存</string>
     <string name="scan_qrcode_failed">扫描失败，请重试</string>
     <string name="enter_qrcode_error">二维码编码有误，请重试</string>
+    <string name="connect2ble">连接蓝牙</string>
 </resources>

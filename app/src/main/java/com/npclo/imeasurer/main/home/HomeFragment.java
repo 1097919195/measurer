@@ -20,8 +20,6 @@ import com.npclo.imeasurer.user.home.HomePresenter;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
-import com.polidea.rxandroidble.RxBleConnection;
-import com.polidea.rxandroidble.RxBleDevice;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,12 +109,18 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        RxBleDevice rxBleDevice = BaseApplication.getRxBleDevice(getActivity());
-        if (rxBleDevice != null && rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
-            bleState.setText(getString(R.string.connected));
-            bleState.setTextColor(getResources().getColor(R.color.green));
-            bleState.setEnabled(false);
-        }
+
+//        String macAddress = BaseApplication.getMacAddress(getActivity());
+//        if (macAddress != null) {
+//            RxBleDevice rxBleDevice = BaseApplication.getRxBleClient(getActivity()).getBleDevice(macAddress);
+//            Log.e(TAG, "rxBleDevice.getConnectionState()==" + rxBleDevice.getConnectionState());
+//            if (rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
+//                bleState.setText(getString(R.string.connected));
+//                bleState.setTextColor(getResources().getColor(R.color.green));
+//                bleState.setEnabled(false);
+//            }
+//        }
+
         if (BaseApplication.getFirstCheckHint(getActivity())) {
             if (mPresenter == null) {
                 mPresenter = new com.npclo.imeasurer.main.home.HomePresenter(this, SchedulerProvider.getInstance());

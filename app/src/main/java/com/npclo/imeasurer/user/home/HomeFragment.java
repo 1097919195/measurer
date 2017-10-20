@@ -39,7 +39,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import rx.Observable;
 
 import static android.content.Context.MODE_APPEND;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
@@ -157,10 +156,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onResume() {
         super.onResume();
         initSpeech();
-        RxBleDevice rxBleDevice = BaseApplication.getRxBleDevice(getActivity());
-        if (rxBleDevice != null &&
-                rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED)
-            updateDeviceState();
+
+        String macAddress = BaseApplication.getMacAddress(getActivity());
+        if (macAddress != null) {
+            RxBleDevice rxBleDevice = BaseApplication.getRxBleClient(getActivity()).getBleDevice(macAddress);
+            if (rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
+                updateDeviceState();
+            }
+        }
         mPresenter.subscribe();
         //att 处理版本更新提示
         if (BaseApplication.canUpdate(getActivity())) {
@@ -245,7 +248,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     /**
-     * @param bleScanException
+     * 处理扫描异常
+     *
+     * @param bleScanException 异常
      */
     public void handleBleScanException(BleScanException bleScanException) {
         switch (bleScanException.getReason()) {
@@ -318,8 +323,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         connectingProgressBar.dismiss();
         updateDeviceState();
         showToast(getString(R.string.device_connected));
+        BaseApplication.setBleAddress(getActivity(), bleDevice.getMacAddress());
         speechSynthesizer.playText("蓝牙连接成功");
-        BaseApplication.setRxBleDevice(getActivity(), bleDevice);
     }
 
     private void updateDeviceState() {
@@ -327,11 +332,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         deviceState.setTextColor(getResources().getColor(R.color.primary));
         deviceState.setEnabled(false);
         actionConnect.setEnabled(false);
-    }
-
-    @Override
-    public void setNotificationInfo(UUID characteristicUUID, Observable<RxBleConnection> connectionObservable) {
-        BaseApplication.setNotificationInfo(getActivity(), characteristicUUID, connectionObservable);
     }
 
     @Override
@@ -381,5 +381,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showGetVersionError(Throwable e) {
         handleError(e, TAG);
+    }
+
+    @Override
+    public void handleError(Throwable e) {
+        handleError(e, TAG);
+    }
+
+    @Override
+    public void setNotificationUUID(UUID characteristicUUID) {
+        BaseApplication.setNotificationUUID(getActivity(), characteristicUUID);
+    }
+
+    @Override
+    public void setBleAddress(String macAddress) {
+        BaseApplication.setBleAddress(getActivity(), macAddress);
     }
 }
