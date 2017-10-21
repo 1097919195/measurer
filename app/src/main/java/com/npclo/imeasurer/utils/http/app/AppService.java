@@ -5,6 +5,8 @@ import com.npclo.imeasurer.data.HttpResponse;
 import com.npclo.imeasurer.data.app.App;
 
 import okhttp3.RequestBody;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -19,6 +21,7 @@ public interface AppService {
     @POST("client/log")
     Observable<HttpResponse<HttpMsg>> upload(@Part("log") RequestBody file);
 
+    @FormUrlEncoded
     @POST("client/bug")
-    Observable<HttpResponse<HttpMsg>> fixbug(@Part("bug") String s);
+    Observable<HttpResponse<HttpMsg>> fixbug(@Field("bug") String s);
 }

@@ -42,4 +42,12 @@ public class UserActivity extends BaseActivity {
     protected void initView() {
         setContentView(R.layout.act_main);
     }
+
+    public RxBleClient getClient() {
+        return client;
+    }
+
+    public void setClient(RxBleClient client) {
+        this.client = client;
+    }
 }

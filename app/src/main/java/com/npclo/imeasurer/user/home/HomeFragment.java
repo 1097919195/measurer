@@ -18,6 +18,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.main.home.HomePresenter;
+import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.user.contact.ContactFragment;
 import com.npclo.imeasurer.user.feedback.FeedbackFragment;
 import com.npclo.imeasurer.user.manage.ManageFragment;
@@ -163,6 +164,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             if (rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
                 updateDeviceState();
             }
+        }
+        if (mPresenter == null) {
+            UserActivity activity = (UserActivity) getActivity();
+            mPresenter = new com.npclo.imeasurer.user.home.HomePresenter(activity.getClient(), this, SchedulerProvider.getInstance());
         }
         mPresenter.subscribe();
         //att 处理版本更新提示

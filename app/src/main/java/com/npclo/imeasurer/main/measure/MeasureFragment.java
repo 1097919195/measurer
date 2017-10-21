@@ -279,7 +279,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     private void setWechatUserInfo(WechatUser u) {
         wechatNickname.setText(u.getNickname());
-        wechatGender.setText(u.getGender() == 1 ? "男" : "女");
+        if (u.getGender() != 0) {
+            wechatGender.setText(u.getGender() == 1 ? "男" : "女");
+        } else {
+            switchGender();
+        }
         if (u.getAvatar() != null) {
             Glide.with(this).load(u.getAvatar()).into(wechatIcon);
         } else {
@@ -635,6 +639,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showCompleteGetInfo() {
         showLoading(false);
+    }
+
+    @Override
+    public void showDeviceError() {
+        showToast("蓝牙状态异常，请重新连接");
     }
 
     /**

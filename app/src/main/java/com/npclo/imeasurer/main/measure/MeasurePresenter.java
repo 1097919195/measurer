@@ -1,8 +1,10 @@
 package com.npclo.imeasurer.main.measure;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.HexString;
@@ -26,6 +28,7 @@ import rx.subscriptions.CompositeSubscription;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasurePresenter implements MeasureContract.Presenter {
+    public static final int MEASURE_DURATION = 1000;
     @NonNull
     private MeasureFragment fragment;
     @NonNull
@@ -35,7 +38,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private AesUtils aesUtils;
     private RxBleDevice device;
     private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
-    private Observable<RxBleConnection> connectionObservable;
     private UUID uuid;
 
     public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider) {
@@ -152,21 +154,31 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private Observable<RxBleConnection> prepareConnectionObservable() {
-        checkNotNull(device);
-        return device.establishConnection(false)
-                .takeUntil(disconnectTriggerSubject)
-                .compose(new ConnectionSharingAdapter());
+        Context context = fragment.getActivity();
+        String macAddress = BaseApplication.getMacAddress(context);
+        if (device == null && macAddress != null) {
+            device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
+            return device.establishConnection(false)
+                    .takeUntil(disconnectTriggerSubject)
+                    .compose(new ConnectionSharingAdapter());  // TODO: 2017/10/21 device 会为空
+        } else {
+            return null;
+        }
     }
 
     private void startMeasure() {
-        connectionObservable = prepareConnectionObservable();
-        Subscription subscribe = connectionObservable
-                .flatMap(rxBleConnection -> rxBleConnection.setupNotification(uuid))
-                .flatMap(notificationObservable -> notificationObservable)
-                .observeOn(schedulerProvider.ui())
-                .throttleFirst(2000, TimeUnit.MILLISECONDS)
-                .subscribe(this::handleBleResult, this::handleError);
-        mSubscriptions.add(subscribe);
+        Observable<RxBleConnection> connectionObservable = prepareConnectionObservable();
+        if (connectionObservable != null) {
+            Subscription subscribe = connectionObservable
+                    .flatMap(rxBleConnection -> rxBleConnection.setupNotification(uuid))
+                    .flatMap(notificationObservable -> notificationObservable)
+                    .observeOn(schedulerProvider.ui())
+                    .throttleFirst(MEASURE_DURATION, TimeUnit.MILLISECONDS)
+                    .subscribe(this::handleBleResult, this::handleError);
+            mSubscriptions.add(subscribe);
+        } else {
+            fragment.showDeviceError();
+        }
     }
 
     @Override
@@ -184,8 +196,14 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private boolean isConnected() {
-        checkNotNull(device);
-        return device.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
+        Context context = fragment.getActivity();
+        String macAddress = BaseApplication.getMacAddress(context);
+        if (device == null && macAddress != null) {
+            device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
+            return device.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
+        } else {
+            return false;
+        }
     }
 
     private void onConnectionFailure(Throwable e) {
