@@ -16,14 +16,14 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class HomePresenter implements HomeContract.Presenter {
     @NonNull
-    private HomeFragment fragment;
+    private HomeContract.View fragment;
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
     private CompositeSubscription mSubscriptions;
 
     public HomePresenter(@NonNull HomeContract.View view, @NonNull BaseSchedulerProvider schedulerProvider) {
-        fragment = ((HomeFragment) checkNotNull(view));
+        fragment = checkNotNull(view);
         mSchedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
         fragment.setPresenter(this);

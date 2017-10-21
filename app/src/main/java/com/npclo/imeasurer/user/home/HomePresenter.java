@@ -31,7 +31,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  */
 
 public class HomePresenter implements HomeContract.Presenter {
-    private static final String TAG = HomePresenter.class.getSimpleName();
     @NonNull
     private final HomeContract.View fragment;
     @NonNull
@@ -85,7 +84,7 @@ public class HomePresenter implements HomeContract.Presenter {
         } else if (e instanceof BleAlreadyConnectedException) {
             fragment.showError("重复连接，请检查");
         } else {
-            fragment.handleError(e);
+            ((HomeFragment) fragment).handleError(e);
         }
     }
 

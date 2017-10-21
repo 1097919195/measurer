@@ -18,7 +18,6 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.main.home.HomePresenter;
-import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.user.contact.ContactFragment;
 import com.npclo.imeasurer.user.feedback.FeedbackFragment;
 import com.npclo.imeasurer.user.manage.ManageFragment;
@@ -45,7 +44,6 @@ import static android.content.Context.MODE_APPEND;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class HomeFragment extends BaseFragment implements HomeContract.View {
-    private static final String TAG = HomeFragment.class.getSimpleName();
     HomeContract.Presenter mPresenter;
     @BindView(R.id.action_logout)
     AppCompatButton actionLogout;
@@ -165,10 +163,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 updateDeviceState();
             }
         }
-        if (mPresenter == null) {
-            UserActivity activity = (UserActivity) getActivity();
-            mPresenter = new com.npclo.imeasurer.user.home.HomePresenter(activity.getClient(), this, SchedulerProvider.getInstance());
-        }
         mPresenter.subscribe();
         //att 处理版本更新提示
         if (BaseApplication.canUpdate(getActivity())) {
@@ -252,11 +246,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
     }
 
-    /**
-     * 处理扫描异常
-     *
-     * @param bleScanException 异常
-     */
     public void handleBleScanException(BleScanException bleScanException) {
         switch (bleScanException.getReason()) {
             case BleScanException.BLUETOOTH_NOT_AVAILABLE:
@@ -376,7 +365,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showGetVersionSuccess(App app) {
-        if (app.getCode() > getVersionCode()) {
+        int code = getVersionCode();
+        if (app.getCode() > code && code != 0) {
             updateApp(app);
         } else {
             showToast(getString(R.string.prompt_latest_version));
@@ -385,12 +375,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showGetVersionError(Throwable e) {
-        handleError(e, TAG);
-    }
-
-    @Override
-    public void handleError(Throwable e) {
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override

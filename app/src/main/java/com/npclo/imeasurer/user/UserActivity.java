@@ -35,19 +35,11 @@ public class UserActivity extends BaseActivity {
         if (homeFragment == null) {
             homeFragment = HomeFragment.newInstance();
             loadRootFragment(R.id.content_frame, homeFragment);
-            homeFragment.setPresenter(new HomePresenter(client, homeFragment, SchedulerProvider.getInstance()));
         }
+        new HomePresenter(client, homeFragment, SchedulerProvider.getInstance());
     }
 
     protected void initView() {
         setContentView(R.layout.act_main);
-    }
-
-    public RxBleClient getClient() {
-        return client;
-    }
-
-    public void setClient(RxBleClient client) {
-        this.client = client;
     }
 }

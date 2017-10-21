@@ -1,11 +1,9 @@
 package com.npclo.imeasurer.base;
 
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +12,9 @@ import android.widget.Toast;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.utils.ApiException;
+import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.polidea.rxandroidble.exceptions.BleException;
-import com.polidea.rxandroidble.exceptions.BleGattException;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -64,10 +62,9 @@ public abstract class BaseFragment extends SupportFragment {
     /**
      * 统一处理错误 RxJava调用
      *
-     * @param e   异常
-     * @param TAG 标记
+     * @param e 异常
      */
-    protected void handleError(Throwable e, String TAG) {
+    public void handleError(Throwable e) {
         if (e instanceof SocketTimeoutException) {
             showToast(getString(R.string.net_connect_timeout));
         } else if (e instanceof ConnectException) {
@@ -77,14 +74,9 @@ public abstract class BaseFragment extends SupportFragment {
         } else if (e instanceof ApiException) {
             showToast(e.getMessage());
         } else if (e instanceof BleException) {
-            if (e instanceof BleGattException) {
-                showToast("蓝牙连接断开", Toast.LENGTH_LONG);
-                toast2Speech("蓝牙连接断开");
-            } else {
-                showToast("蓝牙设备异常，请重试", Toast.LENGTH_LONG);
-                toast2Speech("蓝牙设备异常，请重试");
-                Log.d("tag", "蓝牙异常===" + e.toString());
-            }
+            showToast("蓝牙设备异常，请重试");
+            toast2Speech("蓝牙设备异常，请重试");
+            Gog.e("蓝牙异常===" + e.toString());
         } else {
             showToast("出错啦");
             String message = e.toString();
@@ -97,14 +89,11 @@ public abstract class BaseFragment extends SupportFragment {
 
     protected int getVersionCode() {
         PackageManager manager = getActivity().getPackageManager();
-        PackageInfo info = null;
         try {
-            info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+            return manager.getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            return 0;
         }
-        return info.versionCode;
-
     }
 
     protected void updateApp(App app) {

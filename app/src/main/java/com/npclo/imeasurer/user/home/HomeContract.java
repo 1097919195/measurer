@@ -42,8 +42,6 @@ public interface HomeContract {
 
         void showGetVersionError(Throwable e);
 
-        void handleError(Throwable e);
-
         void setBleAddress(String macAddress);
     }
 

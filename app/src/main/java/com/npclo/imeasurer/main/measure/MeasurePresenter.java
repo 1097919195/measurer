@@ -30,7 +30,7 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 public class MeasurePresenter implements MeasureContract.Presenter {
     public static final int MEASURE_DURATION = 1000;
     @NonNull
-    private MeasureFragment fragment;
+    private MeasureContract.View fragment;
     @NonNull
     private BaseSchedulerProvider schedulerProvider;
     @NonNull
@@ -41,7 +41,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private UUID uuid;
 
     public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider) {
-        fragment = ((MeasureFragment) checkNotNull(view));
+        fragment = checkNotNull(view);
         this.schedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
         fragment.setPresenter(this);
@@ -154,18 +154,21 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private Observable<RxBleConnection> prepareConnectionObservable() {
-        Context context = fragment.getActivity();
+        Context context = ((MeasureFragment) fragment).getActivity();
         String macAddress = BaseApplication.getMacAddress(context);
-        if (device == null && macAddress != null) {
+        if (macAddress != null) {
             device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
             return device.establishConnection(false)
                     .takeUntil(disconnectTriggerSubject)
-                    .compose(new ConnectionSharingAdapter());  // TODO: 2017/10/21 device 会为空
+                    .compose(new ConnectionSharingAdapter());
         } else {
             return null;
         }
     }
 
+    /**
+     * 开启测量，需要检查device的状态
+     */
     private void startMeasure() {
         Observable<RxBleConnection> connectionObservable = prepareConnectionObservable();
         if (connectionObservable != null) {
@@ -182,11 +185,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     @Override
-    public void setDevice(RxBleDevice bleDevice) {
-        device = bleDevice;
-    }
-
-    @Override
     public void setUUID(UUID characteristicUUID) {
         uuid = characteristicUUID;
     }
@@ -196,20 +194,13 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private boolean isConnected() {
-        Context context = fragment.getActivity();
+        Context context = ((MeasureFragment) fragment).getActivity();
         String macAddress = BaseApplication.getMacAddress(context);
-        if (device == null && macAddress != null) {
+        if (macAddress != null) {
             device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
             return device.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
         } else {
             return false;
         }
-    }
-
-    private void onConnectionFailure(Throwable e) {
-        fragment.handleError(e);
-    }
-
-    private void onConnectionFinished() {
     }
 }

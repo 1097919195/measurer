@@ -140,7 +140,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     @Override
     public void showEditError(Throwable e) {
         showLoading(false);
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override

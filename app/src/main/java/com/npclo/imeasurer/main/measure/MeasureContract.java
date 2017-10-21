@@ -4,7 +4,6 @@ import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.wuser.WechatUser;
-import com.polidea.rxandroidble.RxBleDevice;
 
 import java.util.UUID;
 
@@ -46,8 +45,6 @@ public interface MeasureContract {
         void getUserInfoWithCode(String code);
 
         void reConnect();
-
-        void setDevice(RxBleDevice bleDevice);
 
         void setUUID(UUID characteristicUUID);
     }

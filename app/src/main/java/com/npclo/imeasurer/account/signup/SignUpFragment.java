@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static android.content.ContentValues.TAG;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class SignUpFragment extends BaseFragment implements SignUpContract.View {
@@ -108,7 +107,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
 
     @Override
     public void showSignUpError(Throwable e) {
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override
@@ -135,12 +134,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
 
     @Override
     public void showValidCodeSendError(Throwable e) {
-        handleError(e, TAG);
-    }
-
-    @Override
-    protected void handleError(Throwable e, String TAG) {
-        super.handleError(e, TAG);
+        handleError(e);
         dialog.dismiss();
     }
 

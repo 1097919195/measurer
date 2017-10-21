@@ -27,7 +27,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
@@ -46,7 +45,6 @@ import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
-import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleGattException;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
@@ -78,9 +76,6 @@ import okhttp3.RequestBody;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasureFragment extends BaseFragment implements MeasureContract.View {
-    private static final String TAG = MeasureFragment.class.getSimpleName();
-    private static final int MY_PERMISSIONS_REQUEST_CAPTURE = 101;
-    private static final int MY_PERMISSIONS_REQUEST_CHOOSE = 102;
     @BindView(R.id.base_toolbar_title)
     TextView baseToolbarTitle;
     @BindView(R.id.base_toolbar)
@@ -238,14 +233,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onStart() {
         super.onStart();
-        String macAddress = BaseApplication.getMacAddress(getActivity());
-        if (macAddress != null) {
-            RxBleDevice bleDevice = BaseApplication.getRxBleClient(getActivity()).getBleDevice(macAddress);
-            //启动测量
-            UUID characteristicUUID = BaseApplication.getUUID(getActivity());
-            measurePresenter.setDevice(bleDevice);
-            measurePresenter.setUUID(characteristicUUID);
-        }
+        UUID characteristicUUID = BaseApplication.getUUID(getActivity());
+        measurePresenter.setUUID(characteristicUUID);
     }
 
     @Override
@@ -297,11 +286,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         measurePresenter.unsubscribe();
         popupWindow.dismiss();
         firstHint = true;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
         speechSynthesizer = null;
     }
 
@@ -320,23 +304,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 measureNextPerson();
                 break;
             case R.id.camera_add:
-//                new MaterialDialog.Builder(getActivity())
-//                        .items(R.array.picType)
-//                        .itemsColor(getResources().getColor(R.color.c252527))
-//                        .itemsGravity(GravityEnum.CENTER)
-//                        .backgroundColor(getResources().getColor(R.color.white))
-//                        .itemsCallback((dialog, v, which, text) -> {
-//                            switch (which) {
-//                                case 0:
-//                                        capturePic();
-//                                    break;
-//                                case 1:
-//                                        galleryPic();
-//                                default:
-//                                    break;
-//                            }
-//                        })
-//                        .show();
                 capturePic();
                 break;
             case R.id.del_1:
@@ -344,19 +311,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             case R.id.del_3:
                 delPic((ImageView) view);
                 break;
-//            case R.id.img_1:
-//            case R.id.img_2:
-//            case R.id.img_3:// FIXME: 2017/9/12 取消预览
-//                preview(((ImageView) view));
-//                break;
         }
-    }
-
-    private void galleryPic() {
-        Intent intentFromGallery = new Intent();
-        intentFromGallery.setType("image/*"); // 设置文件类型
-        intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intentFromGallery, IMAGE_REQUEST_CODE);
     }
 
     private void measureNextPerson() {
@@ -366,17 +321,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         btnSave.setVisibility(View.VISIBLE);
     }
 
-    private void preview(ImageView view) {
-        new MaterialDialog.Builder(getActivity())
-                .customView(view, true)
-                .contentGravity(GravityEnum.CENTER)
-                .show();
-    }
-
     private void delPic(ImageView view) {
         FrameLayout parent = (FrameLayout) view.getParent();
         ImageView img = (ImageView) parent.getChildAt(0);
-        img.setImageDrawable(null);// FIXME: 2017/9/11
+        img.setImageDrawable(null);
         parent.setVisibility(View.INVISIBLE);
         unVisibleView.add(0, parent);
     }
@@ -388,7 +336,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             index = 2;
         }
         //颜色状态列表
-        ColorStateList sl = new ColorStateList(new int[][]{new int[]{-android.R.attr.state_checked}, new int[]{android.R.attr.state_checked}}, new int[]{getResources().getColor(R.color.c252527), getResources().getColor(R.color.primary),});
+        ColorStateList sl = new ColorStateList(new int[][]{
+                new int[]{-android.R.attr.state_checked},
+                new int[]{android.R.attr.state_checked}},
+                new int[]{getResources().getColor(R.color.c252527), getResources().getColor(R.color.primary)});
         new MaterialDialog.Builder(getActivity())
                 .title("修改性别")
                 .choiceWidgetColor(sl)
@@ -522,7 +473,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             toast2Speech("蓝牙连接断开");
             showReConnectDialog();
         } else {
-            handleError(e, TAG);
+            super.handleError(e);
         }
     }
 
@@ -604,7 +555,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showSaveError(Throwable e) {
         showLoading(false);
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override
@@ -633,7 +584,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showGetInfoError(Throwable e) {
         showLoading(false);
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override

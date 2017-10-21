@@ -39,7 +39,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @BindView(R.id.ble_state)
     TextView bleState;
     Unbinder unbinder;
-    private static final String TAG = HomeFragment.class.getSimpleName();
     private HomeContract.Presenter mPresenter;
     private MaterialDialog dialog;
     private static final int SCAN_HINT = 1001;
@@ -86,46 +85,29 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    /**
-     * 初始化toolbar的一些默认属性
-     */
     protected void initToolbar() {
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.toolbar_text));//设置主标题颜色
         toolbarBase.inflateMenu(R.menu.base_toolbar_menu);
         //前往设置页面
         toolbarBase.getMenu().getItem(0).setOnMenuItemClickListener(__ -> {
-            com.npclo.imeasurer.user.home.HomeFragment fragment = com.npclo.imeasurer.user.home.HomeFragment.newInstance();
-            start(fragment);
-            fragment.setPresenter(new HomePresenter(RxBleClient.create(getActivity()), fragment, SchedulerProvider.getInstance()));
+            startUserHomeFrag();
             return true;
         });
-        bleState.setOnClickListener(__ -> {
-            com.npclo.imeasurer.user.home.HomeFragment fragment = com.npclo.imeasurer.user.home.HomeFragment.newInstance();
-            start(fragment);
-            fragment.setPresenter(new HomePresenter(RxBleClient.create(getActivity()), fragment, SchedulerProvider.getInstance()));
-        });
+        bleState.setOnClickListener(__ -> startUserHomeFrag());
+    }
+
+    private void startUserHomeFrag() {
+        com.npclo.imeasurer.user.home.HomeFragment fragment = com.npclo.imeasurer.user.home.HomeFragment.newInstance();
+        start(fragment);
+        new HomePresenter(RxBleClient.create(getActivity()), fragment, SchedulerProvider.getInstance());
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-//        String macAddress = BaseApplication.getMacAddress(getActivity());
-//        if (macAddress != null) {
-//            RxBleDevice rxBleDevice = BaseApplication.getRxBleClient(getActivity()).getBleDevice(macAddress);
-//            Log.e(TAG, "rxBleDevice.getConnectionState()==" + rxBleDevice.getConnectionState());
-//            if (rxBleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED) {
-//                bleState.setText(getString(R.string.connected));
-//                bleState.setTextColor(getResources().getColor(R.color.green));
-//                bleState.setEnabled(false);
-//            }
-//        }
-
         if (BaseApplication.getFirstCheckHint(getActivity())) {
-            if (mPresenter == null) {
-                mPresenter = new com.npclo.imeasurer.main.home.HomePresenter(this, SchedulerProvider.getInstance());
-            }
-            mPresenter.getLatestVersion();// FIXME: 2017/10/17 空指针  mPresenter  方向====>MVC框架
+            mPresenter.getLatestVersion();
             BaseApplication.setIsFirstCheck(getActivity());
         }
         LogUtils.upload(getActivity());
@@ -163,15 +145,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             Bundle bundle = new Bundle();
             bundle.putParcelable("user", user);
             measureFragment.setArguments(bundle);
-            measureFragment.setPresenter(new MeasurePresenter(measureFragment, SchedulerProvider.getInstance()));
-            start(measureFragment, SINGLETASK);
+            new MeasurePresenter(measureFragment, SchedulerProvider.getInstance());
+            start(measureFragment);
         }
     }
 
     @Override
     public void showGetInfoError(Throwable e) {
         showLoading(false);
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override
@@ -181,24 +163,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showGetVersionSuccess(App app) {
-        if (app.getCode() > getVersionCode()) updateApp(app);
+        int code = getVersionCode();
+        if (app.getCode() > code && code != 0) updateApp(app);
     }
 
     @Override
     public void showGetVersionError(Throwable e) {
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String result = null;
-        try {
-            Bundle bundle = data.getExtras();
-            result = bundle.getString("result");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Bundle bundle = data.getExtras();
+        String result = bundle.getString("result");
         switch (resultCode) {
             case SCAN_HINT:
                 if (result != null) {

@@ -190,7 +190,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     public void showSignInError(Throwable e) {
         signInLoadingDialog.dismiss();
-        handleError(e, TAG);
+        handleError(e);
     }
 
     @Override
