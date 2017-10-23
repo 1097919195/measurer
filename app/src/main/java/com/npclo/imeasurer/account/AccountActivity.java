@@ -15,7 +15,6 @@ import me.yokeyword.fragmentation.SupportActivity;
  * 管理用户登录和注册的界面，使用两个不同的fragment来分别承载
  */
 public class AccountActivity extends SupportActivity {
-    private static final String TAG = AccountActivity.class.getSimpleName();
     // 再点一次退出程序时间设置
     private static final long WAIT_TIME = 2000L;
     private long TOUCH_TIME = 0;
@@ -31,7 +30,7 @@ public class AccountActivity extends SupportActivity {
         if (fragment == null) {
             fragment = SignInFragment.newInstance();
             loadRootFragment(R.id.content_frame, fragment);
-            fragment.setPresenter(new SignInPresenter(fragment, SchedulerProvider.getInstance()));
+            new SignInPresenter(fragment, SchedulerProvider.getInstance());
         }
     }
 

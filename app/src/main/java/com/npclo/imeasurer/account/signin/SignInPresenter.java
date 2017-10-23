@@ -11,7 +11,7 @@ import rx.subscriptions.CompositeSubscription;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class SignInPresenter implements SignInContract.Presenter {
-    private SignInFragment mView;
+    private SignInContract.View mView;
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
@@ -22,7 +22,7 @@ public class SignInPresenter implements SignInContract.Presenter {
         signinView = checkNotNull(signinView);
         mSchedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
-        mView = (SignInFragment) signinView;
+        mView = signinView;
         mView.setPresenter(this);
     }
 

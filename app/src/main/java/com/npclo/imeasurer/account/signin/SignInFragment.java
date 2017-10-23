@@ -57,7 +57,6 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     ScrollView signInFrag;
 
     private SignInContract.Presenter signinPresenter;
-    private static final String TAG = SignInFragment.class.getSimpleName();
     private boolean pwd_label = true;
     @NonNull
     private Boolean isUserRememberPwd = true;
