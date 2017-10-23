@@ -39,7 +39,7 @@ public class SignInPresenter implements SignInContract.Presenter {
     @Override
     public void signIn(String name, String pwd) {
         Subscription subscribe = new UserRepository().signIn(name, pwd)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> mView.showLoading(true))
                 .subscribe(user -> mView.showSignInSuccess(user),

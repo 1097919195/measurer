@@ -43,7 +43,7 @@ public class ManagePresenter implements ManageContract.Presenter {
     public void resetPwd(String id, String old, String newpwd) {
         Subscription subscribe = new UserRepository()
                 .editPwd(id, old, newpwd)
-                .subscribeOn(provider.computation())
+                .subscribeOn(provider.io())
                 .observeOn(provider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(

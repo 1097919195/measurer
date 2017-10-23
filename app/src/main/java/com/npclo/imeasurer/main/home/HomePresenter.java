@@ -2,6 +2,7 @@ package com.npclo.imeasurer.main.home;
 
 import android.support.annotation.NonNull;
 
+import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 
@@ -35,12 +36,12 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void getLatestVersion() {
-//        new AppRepository()
-//                .getLatestVersion()
-//                .subscribeOn(mSchedulerProvider.computation())
-//                .observeOn(mSchedulerProvider.ui())
-//                .subscribe(app -> fragment.showGetVersionSuccess(app),
-//                        e -> fragment.showGetVersionError(e));
+        new AppRepository()
+                .getLatestVersion()
+                .subscribeOn(mSchedulerProvider.io())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(app -> fragment.showGetVersionSuccess(app),
+                        e -> fragment.showGetVersionError(e));
     }
 
     @Override
@@ -52,7 +53,7 @@ public class HomePresenter implements HomeContract.Presenter {
     public void getUserInfoWithCode(String result) {
         Subscription subscribe = new UserRepository()
                 .getUserInfoWithCode(result)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
@@ -66,7 +67,7 @@ public class HomePresenter implements HomeContract.Presenter {
     public void getUserInfoWithOpenID(String id) {
         Subscription subscribe = new UserRepository()
                 .getUserInfoWithOpenID(id)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(

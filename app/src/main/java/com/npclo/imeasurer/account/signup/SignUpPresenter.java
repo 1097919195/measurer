@@ -30,7 +30,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public void signUp(String name, String pwd, String code) {
         Subscription subscribe = new UserRepository()
                 .signUp(name, pwd, code)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> mView.showLoading(true))
                 .subscribe(
@@ -54,7 +54,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public void getValidCode(String mobile, String type) {
         Subscription subscribe = new UserRepository()
                 .getValidCode(mobile, type)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> mView.showLoading(true))
                 .subscribe(

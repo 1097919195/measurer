@@ -38,7 +38,7 @@ public class ForgetPwdPresenter implements ForgetPwdContract.Presenter {
     public void getValidCode(String s) {
         Subscription subscribe = new UserRepository()
                 .getValidCode(s, "reset")
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
@@ -52,7 +52,7 @@ public class ForgetPwdPresenter implements ForgetPwdContract.Presenter {
     public void resetPwd(String mobile, String pwd, String code) {
         Subscription subscribe = new UserRepository()
                 .resetPwd(mobile, pwd, code)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(

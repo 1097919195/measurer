@@ -178,7 +178,7 @@ public class HomePresenter implements HomeContract.Presenter {
     public void checkVersion() {
         new AppRepository()
                 .getLatestVersion()
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(fragment::showGetVersionSuccess,
                         fragment::showGetVersionError);

@@ -28,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class MeasurePresenter implements MeasureContract.Presenter {
-    public static final int MEASURE_DURATION = 1000;
+    private static final int MEASURE_DURATION = 500;
     @NonNull
     private MeasureContract.View fragment;
     @NonNull
