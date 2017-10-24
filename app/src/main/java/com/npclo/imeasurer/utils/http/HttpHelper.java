@@ -22,15 +22,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rx.functions.Func1;
 
 /**
- * Created by Endless on 2017/7/19.
+ * @author Endless
+ * @date 2017/7/19
  */
 
 public class HttpHelper {
-    private static final String BASE_URL = "http://www.npclo.com/api/";
+    private static final String BASE_URL = "https://www.npclo.com/api/";
     private static final int DEFAULT_TIMEOUT = 600;
     protected Retrofit retrofit;
 
-    //构造方法私有
     protected HttpHelper() {
         //手动创建一个OkHttpClient并设置超时时间
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
