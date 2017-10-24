@@ -82,7 +82,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs) {
         String s = (new Gson()).toJson(measurement);
-        if (aesUtils == null) aesUtils = new AesUtils();
+        if (aesUtils == null) {
+            aesUtils = new AesUtils();
+        }
         String s1 = null;
         String nonce = aesUtils.getRandomStr();
         String timeStamp = Long.toString(System.currentTimeMillis());
@@ -96,7 +98,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
-                .subscribe(__ -> fragment.showSuccessSave(),
+                .subscribe(v -> fragment.showSuccessSave(),
                         e -> fragment.showSaveError(e),
                         () -> fragment.showSaveCompleted()
                 );

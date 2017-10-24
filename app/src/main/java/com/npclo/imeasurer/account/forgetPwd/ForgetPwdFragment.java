@@ -93,7 +93,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
         baseToolbar.setNavigationIcon(R.mipmap.left);
         baseToolbarTitle.setText(getString(R.string.forget_pwd));
         //返回登录界面
-        baseToolbar.setNavigationOnClickListener(__ -> {
+        baseToolbar.setNavigationOnClickListener(v -> {
             SignInFragment signInFragment = SignInFragment.newInstance();
             start(signInFragment, SINGLETASK);
             signInFragment.setPresenter(new SignInPresenter(signInFragment,
@@ -120,8 +120,12 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
                 mPresenter.getValidCode(s);
                 break;
             case R.id.action_submit:
-                if (checkInput()) return;
+                if (checkInput()) {
+                    return;
+                }
                 mPresenter.resetPwd(mobile, pwd1, code);
+                break;
+            default:
                 break;
         }
     }

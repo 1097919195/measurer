@@ -15,6 +15,10 @@ import com.npclo.imeasurer.utils.views.MyTextView;
 
 import java.util.ArrayList;
 
+/**
+ * @author Endless
+ *         gridview 适配器
+ */
 public class ItemAdapter extends ArrayAdapter<Part> {
     private static final String TAG = ItemAdapter.class.getSimpleName();
     private Context mContext;
@@ -40,7 +44,7 @@ public class ItemAdapter extends ArrayAdapter<Part> {
 
         if (convertView == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            convertView = inflater.inflate(layoutResourceId, parent, false);
+            convertView = inflater.inflate(layoutResourceId, null, false);
             holder = new ViewHolder();
             holder.textView = (MyTextView) convertView.findViewById(R.id.tv);
             convertView.setTag(holder);

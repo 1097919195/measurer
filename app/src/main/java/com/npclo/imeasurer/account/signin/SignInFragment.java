@@ -140,7 +140,9 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
                 RxCompoundButton.checkedChanges(actionRememberPwd).subscribe(bool -> isUserRememberPwd = bool);
                 break;
             case R.id.action_sign_in:
-                if (!validate()) return;
+                if (!validate()) {
+                    return;
+                }
                 signinPresenter.signIn(name, password);
                 break;
             case R.id.forget_pwd_tv:
@@ -177,10 +179,14 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
-        if (isUserRememberPwd) edit.putBoolean("loginState", true);//att 是否记住密码
+        if (isUserRememberPwd) {
+            edit.putBoolean("loginState", true);//att 是否记住密码
+        }
 
         edit.putString("id", user.get_id());
         edit.putString("name", user.getName());
+        edit.putString("nickname", user.getNickname());
+        edit.putString("orgId", user.getOrgId());
         edit.putString("currTimes", user.getCurrTimes() + "");
         edit.putString("totalTimes", user.getTotalTimes() + "");
         edit.apply();

@@ -100,6 +100,8 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
         edit.putBoolean("loginState", true);
         edit.putString("id", user.get_id());
         edit.putString("name", user.getName());
+        edit.putString("nickname", user.getNickname());
+        edit.putString("orgId", user.getOrgId());
         edit.putString("curr_times", user.getCurrTimes() + "");
         edit.putString("total_times", user.getTotalTimes() + "");
         edit.apply();
@@ -108,6 +110,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     @Override
     public void showSignUpError(Throwable e) {
         handleError(e);
+        showLoading(false);
     }
 
     @Override
@@ -176,7 +179,9 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
                 }
                 break;
             case R.id.action_sign_up:
-                if (!checkInputValid()) return;
+                if (!checkInputValid()) {
+                    return;
+                }
                 signUpPresenter.signUp(name, pwd, code);
                 break;
             case R.id.to_sign_in:
@@ -184,6 +189,8 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
                 start(fragment, SINGLETASK);
                 fragment.setPresenter(new SignInPresenter(fragment,
                         SchedulerProvider.getInstance()));
+                break;
+            default:
                 break;
         }
     }

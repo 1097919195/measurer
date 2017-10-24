@@ -5,11 +5,14 @@ import com.npclo.imeasurer.utils.http.app.AppHttpHelper;
 import rx.Observable;
 
 /**
- * Created by Endless on 2017/9/19.
+ *
+ * @author Endless
+ * @date 2017/9/19
  */
 
 public class AppRepository implements AppDataSource {
 
+    @Override
     public Observable<App> getLatestVersion() {
         return new AppHttpHelper().getLatestVersion();
     }

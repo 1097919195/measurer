@@ -45,7 +45,7 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
         unbinder = ButterKnife.bind(this, mRootView);
         baseToolbarTitle.setText(getString(R.string.prompt_contact));
         baseToolbar.setNavigationIcon(R.mipmap.left);
-        baseToolbar.setNavigationOnClickListener(__ -> {
+        baseToolbar.setNavigationOnClickListener(v -> {
             HomeFragment homeFragment = HomeFragment.newInstance();
             start(homeFragment, SINGLETASK);
             homeFragment.setPresenter(new HomePresenter(

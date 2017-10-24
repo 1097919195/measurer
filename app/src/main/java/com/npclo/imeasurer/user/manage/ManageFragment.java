@@ -61,7 +61,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
         unbinder = ButterKnife.bind(this, mRootView);
         baseToolbarTitle.setText(getString(R.string.edit_pwd));
         baseToolbar.setNavigationIcon(R.mipmap.left);
-        baseToolbar.setNavigationOnClickListener(__ -> {
+        baseToolbar.setNavigationOnClickListener(v -> {
             HomeFragment homeFragment = HomeFragment.newInstance();
             start(homeFragment, SINGLETASK);
             homeFragment.setPresenter(new HomePresenter(
@@ -109,9 +109,10 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     }
 
     private boolean checkInput(String field) {
-        if (TextUtils.isEmpty(field)) return true;
-        if (field.length() < 6) return true;
-        return false;
+        if (TextUtils.isEmpty(field)) {
+            return true;
+        }
+        return field.length() < 6;
     }
 
 

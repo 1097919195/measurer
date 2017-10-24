@@ -87,11 +87,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText("扫描二维码");
         item.setTitle("帮助");
-        item.setOnMenuItemClickListener(__ -> {
+        item.setOnMenuItemClickListener(v -> {
             Toast.makeText(CaptureActivity.this, "前往帮助界面", Toast.LENGTH_SHORT).show();
             return false;
         });
-        toolbar.setNavigationOnClickListener(__ -> {
+        toolbar.setNavigationOnClickListener(v -> {
             Intent intent = new Intent(CaptureActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -139,11 +139,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         //手动输入二维码编号
         view_enter_qrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
         to_manual_enter_qrcode = (RelativeLayout) findViewById(R.id.to_manual_enter_qrcode);
-        findViewById(R.id.enter_qrcode_img).setOnClickListener(__ -> showEnterCodeView());
-        findViewById(R.id.enter_qrcode_tv).setOnClickListener(__ -> showEnterCodeView());
+        findViewById(R.id.enter_qrcode_img).setOnClickListener(v -> showEnterCodeView());
+        findViewById(R.id.enter_qrcode_tv).setOnClickListener(v -> showEnterCodeView());
         AppCompatButton btnEnterCode = (AppCompatButton) findViewById(R.id.action_enter_qrcode);
         final EditText inputQrcode = (EditText) findViewById(R.id.input_qrcode);
-        btnEnterCode.setOnClickListener(__ -> {
+        btnEnterCode.setOnClickListener(v -> {
             String code = inputQrcode.getText().toString();
             if (!TextUtils.isEmpty(code)) {
                 Intent resultIntent = new Intent();

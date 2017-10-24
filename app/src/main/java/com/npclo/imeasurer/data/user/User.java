@@ -67,6 +67,24 @@ public class User implements Parcelable {
     @Nullable
     private int totalTimes;
     private int code;
+    private String orgId;
+    private String nickname;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
+    }
 
     @Nullable
     public int getCurrTimes() {

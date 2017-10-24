@@ -53,7 +53,7 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
         unbinder = ButterKnife.bind(this, mRootView);
         baseToolbar.setNavigationIcon(R.mipmap.left);
         baseToolbarTitle.setText(getString(R.string.prompt_feedback));
-        baseToolbar.setNavigationOnClickListener(__ -> {
+        baseToolbar.setNavigationOnClickListener(v -> {
             HomeFragment homeFragment = HomeFragment.newInstance();
             start(homeFragment, SINGLETASK);
             homeFragment.setPresenter(new HomePresenter(

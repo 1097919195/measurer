@@ -76,9 +76,9 @@ public abstract class BaseFragment extends SupportFragment {
         } else if (e instanceof BleException) {
             showToast("蓝牙设备异常，请重试");
             toast2Speech("蓝牙设备异常，请重试");
-            Gog.e("蓝牙异常===" + e.toString());
+            Gog.d("蓝牙异常===" + e.toString());
         } else {
-            showToast("出错啦");
+//            showToast("出错啦");
             String message = e.toString();
             LogUtils.fixBug(message);
         }

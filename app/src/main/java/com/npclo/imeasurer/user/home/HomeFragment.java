@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,6 +44,9 @@ import butterknife.Unbinder;
 import static android.content.Context.MODE_APPEND;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
+/**
+ * @author Endless
+ */
 public class HomeFragment extends BaseFragment implements HomeContract.View {
     HomeContract.Presenter mPresenter;
     @BindView(R.id.action_logout)
@@ -100,7 +104,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         baseToolbar.setNavigationIcon(R.mipmap.left);
-        baseToolbar.setNavigationOnClickListener(__ -> {
+        baseToolbar.setNavigationOnClickListener(c -> {
             com.npclo.imeasurer.main.home.HomeFragment fragment = com.npclo.imeasurer.main.home.HomeFragment.newInstance();
             start(fragment);
             fragment.setPresenter(new HomePresenter(fragment, SchedulerProvider.getInstance()));
@@ -108,7 +112,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         currTimes.setText(preferences.getString("currTimes", "N/A"));
         totalTimes.setText(preferences.getString("totalTimes", "N/A"));
-        userName.setText(preferences.getString("name", "N/A"));
+        String name = preferences.getString("name", "N/A");
+        String nickname = preferences.getString("nickname", "");
+        userName.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
 
         configureResultList();
     }
@@ -134,8 +140,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private void initSpeech() {
         String APPKEY = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
         String APPSECRET = "29aa998c451d64d9334269546a4021b8";
-        if (speechSynthesizer == null)
+        if (speechSynthesizer == null) {
             speechSynthesizer = new SpeechSynthesizer(getActivity(), APPKEY, APPSECRET);
+        }
         speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
         speechSynthesizer.setTTSListener(new SpeechSynthesizerListener() {
             @Override
@@ -243,9 +250,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 ContactFragment contactFragment = ContactFragment.newInstance();
                 start(contactFragment, SINGLETASK);
                 break;
+            default:
+                break;
         }
     }
 
+    @Override
     public void handleBleScanException(BleScanException bleScanException) {
         switch (bleScanException.getReason()) {
             case BleScanException.BLUETOOTH_NOT_AVAILABLE:
@@ -283,6 +293,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
     }
 
+    @Override
     public void handleScanResult(ScanResult result) {
         if (scanningProgressBar != null) {
             scanningProgressBar.dismiss();

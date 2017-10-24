@@ -19,8 +19,9 @@ public class LogUtils {
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isFile()) {
-                if (file.getPath().substring(file.getPath().length() - EXTENSION.length()).equals(EXTENSION))
+                if (file.getPath().substring(file.getPath().length() - EXTENSION.length()).equals(EXTENSION)) {
                     upload(file);
+                }
             }
         }
     }

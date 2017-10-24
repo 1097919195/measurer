@@ -1,7 +1,9 @@
 package com.npclo.imeasurer.data.measure.item.parts;
 
 /**
- * Created by Endless on 2017/8/5.
+ *
+ * @author Endless
+ * @date 2017/8/5
  */
 
 public class ItemV extends Part {
@@ -14,6 +16,7 @@ public class ItemV extends Part {
 //    private String cn = "脚踝围";
 //    private String en = "ItemV";
 
+    @Override
     public String getCn() {
         return "脚踝围";
     }

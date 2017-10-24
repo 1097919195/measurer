@@ -7,16 +7,17 @@ import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 
 public class Measurement {
-    public Measurement(@Nullable WechatUser wechatUser, @Nullable MeasurementItem data, @NonNull String userid,
-                       @NonNull String id) {
+    public Measurement(@NonNull WechatUser wechatUser, @NonNull MeasurementItem data, @NonNull String userid,
+                       @Nullable String id, @Nullable String oid) {
         _id = id;
         mData = data;
         uid = userid;
         user = wechatUser;
+        orgId = oid;
     }
 
-    public Measurement(@Nullable WechatUser user, @Nullable MeasurementItem data, @NonNull String userid) {
-        this(user, data, userid, "");
+    public Measurement(@NonNull WechatUser user, @NonNull MeasurementItem data, @NonNull String userid, @Nullable String oid) {
+        this(user, data, userid, "", oid);
     }
 
     @Nullable
@@ -24,6 +25,15 @@ public class Measurement {
     private MeasurementItem mData;
     private WechatUser user;
     private String uid;
+    private String orgId;
+
+    public String getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
+    }
 
     @Nullable
     public String get_id() {

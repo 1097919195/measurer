@@ -110,7 +110,7 @@ public class AesUtils {
             return EncodeUtils.base64Encode2String(encrypted);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new AesException(AesException.EncryptAESError);
+            throw new AesException(AesException.ENCRYPT_AES_ERROR);
         }
     }
 
@@ -137,7 +137,7 @@ public class AesUtils {
             original = cipher.doFinal(encrypted);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new AesException(AesException.DecryptAESError);
+            throw new AesException(AesException.DECRYPT_AES_ERROR);
         }
 
         String xmlContent, from_appid;
@@ -155,12 +155,12 @@ public class AesUtils {
                     CHARSET);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new AesException(AesException.IllegalBuffer);
+            throw new AesException(AesException.ILLEGAL_BUFFER);
         }
 
         // appid不相同的情况
         if (!from_appid.equals(key)) {
-            throw new AesException(AesException.ValidateAppidError);
+            throw new AesException(AesException.VALIDATE_APPID_ERROR);
         }
         return xmlContent;
 
@@ -219,7 +219,7 @@ public class AesUtils {
 
         // 和URL中的签名比较是否相等
         if (!signature.equals(msgSignature)) {
-            throw new AesException(AesException.ValidateSignatureError);
+            throw new AesException(AesException.VALIDATE_SIGNATURE_ERROR);
         }
 
         // 解密
@@ -241,7 +241,7 @@ public class AesUtils {
         String signature = SHA1.getSHA1(token, timeStamp, nonce, echoStr);
 
         if (!signature.equals(msgSignature)) {
-            throw new AesException(AesException.ValidateSignatureError);
+            throw new AesException(AesException.VALIDATE_SIGNATURE_ERROR);
         }
 
         return decrypt(echoStr);

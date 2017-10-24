@@ -1,7 +1,9 @@
 package com.npclo.imeasurer.data.measure.item.parts;
 
 /**
- * Created by Endless on 2017/8/5.
+ *
+ * @author Endless
+ * @date 2017/8/5
  */
 
 public class ItemF extends Part {
@@ -12,6 +14,7 @@ public class ItemF extends Part {
         super(cn, en);
     }
 
+    @Override
     public String getCn() {
         return "弯背角度";
     }

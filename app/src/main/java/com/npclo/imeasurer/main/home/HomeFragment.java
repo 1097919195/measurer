@@ -77,6 +77,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             case R.id.scan_hint:
                 startScan();
                 break;
+            default:
+                break;
         }
     }
 
@@ -89,11 +91,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.toolbar_text));//设置主标题颜色
         toolbarBase.inflateMenu(R.menu.base_toolbar_menu);
         //前往设置页面
-        toolbarBase.getMenu().getItem(0).setOnMenuItemClickListener(__ -> {
+        toolbarBase.getMenu().getItem(0).setOnMenuItemClickListener(v -> {
             startUserHomeFrag();
             return true;
         });
-        bleState.setOnClickListener(__ -> startUserHomeFrag());
+        bleState.setOnClickListener(v -> startUserHomeFrag());
     }
 
     private void startUserHomeFrag() {
@@ -105,7 +107,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-
         if (BaseApplication.getFirstCheckHint(getActivity())) {
             mPresenter.getLatestVersion();
             BaseApplication.setIsFirstCheck(getActivity());
@@ -164,7 +165,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showGetVersionSuccess(App app) {
         int code = getVersionCode();
-        if (app.getCode() > code && code != 0) updateApp(app);
+        if (app.getCode() > code && code != 0) {
+            updateApp(app);
+        }
     }
 
     @Override
@@ -191,6 +194,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 } else {
                     showToast(getString(R.string.enter_qrcode_error));
                 }
+                break;
+            default:
                 break;
         }
     }

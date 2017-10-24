@@ -5,12 +5,13 @@ import com.npclo.imeasurer.base.BaseView;
 import com.npclo.imeasurer.data.user.User;
 
 /**
- * Created by Endless on 2017/7/20.
+ * @author Endless
+ * @date 2017/7/20
  */
 
 public interface SignInContract {
     interface View extends BaseView<Presenter> {
-        void showSignInSuccess(User __);
+        void showSignInSuccess(User v);
 
         void showSignInError(Throwable e);
 

@@ -23,10 +23,12 @@ public class BitmapUtils {
         //计算实际缩放比例， att 宽高分别的缩放比例  // FIXME: 2017/9/26 是否需要动态计算缩放比例
         int scale = 1;
         for (int i = 0; i < Integer.MAX_VALUE; i++) {
-            if ((options.outWidth / scale > maxWidth &&
-                    options.outWidth / scale > maxWidth * 1.4) ||
-                    (options.outHeight / scale > maxHeight &&
-                            options.outHeight / scale > maxHeight * 1.4)) {
+
+            boolean widthRadio = options.outWidth / scale > maxWidth &&
+                    options.outWidth / scale > maxWidth * 1.4;
+            boolean heightRadio = options.outHeight / scale > maxHeight &&
+                    options.outHeight / scale > maxHeight * 1.4;
+            if (widthRadio || heightRadio) {
                 scale++;
             } else {
                 break;
@@ -46,7 +48,9 @@ public class BitmapUtils {
     }
 
     private static void resolveUri(Context context, Uri uri, BitmapFactory.Options options) {
-        if (uri == null) return;
+        if (uri == null) {
+            return;
+        }
 
         String scheme = uri.getScheme();
         if (ContentResolver.SCHEME_CONTENT.equals(scheme) ||

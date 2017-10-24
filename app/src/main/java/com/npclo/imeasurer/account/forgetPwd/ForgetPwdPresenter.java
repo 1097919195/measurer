@@ -56,7 +56,7 @@ public class ForgetPwdPresenter implements ForgetPwdContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        __ -> fragment.showResetPwdSuccess(),
+                        v -> fragment.showResetPwdSuccess(),
                         e -> fragment.showResetPwdError(e),
                         () -> fragment.showResetPwdComplete());
         mSubscriptions.add(subscribe);

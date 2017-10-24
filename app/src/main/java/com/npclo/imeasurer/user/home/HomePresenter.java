@@ -101,6 +101,7 @@ public class HomePresenter implements HomeContract.Presenter {
         return bleDevice.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
     }
 
+    @Override
     public void connectDevice(String s) {
         try {
             if (scanSubscribe != null || scanSubscribe.isUnsubscribed()) {
@@ -149,6 +150,7 @@ public class HomePresenter implements HomeContract.Presenter {
         fragment.isConnecting();
     }
 
+    @Override
     public void startScan() {
         scanSubscribe = rxBleClient.scanBleDevices(new ScanSettings.Builder()
                         .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
