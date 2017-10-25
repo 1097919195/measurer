@@ -25,6 +25,9 @@ import util.UpdateAppUtils;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
+/**
+ * @author Endless
+ */
 public abstract class BaseFragment extends SupportFragment {
     protected View mRootView;
 
@@ -77,10 +80,13 @@ public abstract class BaseFragment extends SupportFragment {
             showToast("蓝牙设备异常，请重试");
             toast2Speech("蓝牙设备异常，请重试");
             Gog.d("蓝牙异常===" + e.toString());
+            String message = getStackMsg(e);
+            LogUtils.fixBug(message);
         } else {
 //            showToast("出错啦");
-            String message = e.toString();
+            String message = getStackMsg(e);
             LogUtils.fixBug(message);
+            Gog.d(message);
         }
     }
 
@@ -104,5 +110,25 @@ public abstract class BaseFragment extends SupportFragment {
                 .apkPath(app.getPath() + app.getVersion())
                 .updateInfo(app.getInfo())
                 .update();
+    }
+
+    private String getStackMsg(Exception e) {
+
+        StringBuffer sb = new StringBuffer();
+        StackTraceElement[] stackArray = e.getStackTrace();
+        for (int i = 0; i < stackArray.length; i++) {
+            StackTraceElement element = stackArray[i];
+            sb.append(element.toString() + "\n");
+        }
+        return sb.toString();
+    }
+
+    private String getStackMsg(Throwable e) {
+        StringBuilder sb = new StringBuilder();
+        StackTraceElement[] stackArray = e.getStackTrace();
+        for (StackTraceElement el : stackArray) {
+            sb.append(el.toString() + "\n");
+        }
+        return sb.toString();
     }
 }

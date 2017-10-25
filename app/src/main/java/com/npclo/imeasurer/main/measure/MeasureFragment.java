@@ -489,7 +489,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void handleError(Throwable e) {
         if (e instanceof BleGattException) {
             toast2Speech("蓝牙连接断开");
-            showReConnectDialog();
+//             showReConnectDialog();
+            measurePresenter.reConnect();
         } else {
             super.handleError(e);
         }
