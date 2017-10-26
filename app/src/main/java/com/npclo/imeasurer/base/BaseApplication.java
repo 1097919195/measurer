@@ -11,7 +11,9 @@ import com.squareup.leakcanary.LeakCanary;
 import java.util.UUID;
 
 /**
- * Created by Endless on 2017/7/19.
+ *
+ * @author Endless
+ * @date 2017/7/19
  */
 
 public class BaseApplication extends Application {

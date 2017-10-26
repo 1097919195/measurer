@@ -42,6 +42,7 @@ import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Gog;
+import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
@@ -105,25 +106,25 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @BindView(R.id.measure_table_layout)
     MyGridView gridView;
     @BindView(R.id.wechat_gender_edit)
-    LinearLayout gender_line;
+    LinearLayout genderLine;
     @BindView(R.id.img_1)
-    ImageView img_1;
+    ImageView img1;
     @BindView(R.id.img_2)
-    ImageView img_2;
+    ImageView img2;
     @BindView(R.id.img_3)
-    ImageView img_3;
+    ImageView img3;
     @BindView(R.id.del_1)
-    ImageView del_1;
+    ImageView del1;
     @BindView(R.id.del_2)
-    ImageView del_2;
+    ImageView del2;
     @BindView(R.id.del_3)
-    ImageView del_3;
+    ImageView del3;
     @BindView(R.id.frame_1)
-    FrameLayout frame_1;
+    FrameLayout frame1;
     @BindView(R.id.frame_2)
-    FrameLayout frame_2;
+    FrameLayout frame2;
     @BindView(R.id.frame_3)
-    FrameLayout frame_3;
+    FrameLayout frame3;
     Unbinder unbinder;
     @BindView(R.id.user_layout)
     LinearLayout userLayout;
@@ -190,9 +191,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             }
         });
         unVisibleView.clear();
-        unVisibleView.add(frame_1);
-        unVisibleView.add(frame_2);
-        unVisibleView.add(frame_3);
+        unVisibleView.add(frame1);
+        unVisibleView.add(frame2);
+        unVisibleView.add(frame3);
         //初始化需要测量角度的部位
         String[] angleItems = getResources().getStringArray(R.array.angle_items);
         angleList = Arrays.asList(angleItems);
@@ -404,17 +405,17 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 startActivity(new Intent(getActivity(), AccountActivity.class));
                 return;
             }
-            Gog.d("onsave<=>" + user.getName());
+            Gog.d("onSave==>" + user.getName());
             Measurement measurement = new Measurement(user, item, cid, oid);
             MultipartBody.Part[] imgs = new MultipartBody.Part[3];
-            if (img_1.getDrawable() != null) {
-                imgs[0] = drawable2file(img_1, "img1");
+            if (img1.getDrawable() != null) {
+                imgs[0] = drawable2file(img1, "img1");
             }
-            if (img_2.getDrawable() != null) {
-                imgs[1] = drawable2file(img_2, "img2");
+            if (img2.getDrawable() != null) {
+                imgs[1] = drawable2file(img2, "img2");
             }
-            if (img_3.getDrawable() != null) {
-                imgs[2] = drawable2file(img_3, "img3");
+            if (img3.getDrawable() != null) {
+                imgs[2] = drawable2file(img3, "img3");
             }
 
             measurePresenter.saveMeasurement(measurement, imgs);
@@ -491,6 +492,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             toast2Speech("蓝牙连接断开");
 //             showReConnectDialog();
             measurePresenter.reConnect();
+            LogUtils.fixBug("蓝牙断开=>" + e.toString());
         } else {
             super.handleError(e);
         }
@@ -572,12 +574,12 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             textView.setTextColor(getResources().getColor(R.color.unmeasured));
             textView.setValue(0.0f);
         }
-        frame_1.setVisibility(View.INVISIBLE);
-        frame_2.setVisibility(View.INVISIBLE);
-        frame_3.setVisibility(View.INVISIBLE);
-        img_1.setImageDrawable(null);
-        img_2.setImageDrawable(null);
-        img_3.setImageDrawable(null);
+        frame1.setVisibility(View.INVISIBLE);
+        frame2.setVisibility(View.INVISIBLE);
+        frame3.setVisibility(View.INVISIBLE);
+        img1.setImageDrawable(null);
+        img2.setImageDrawable(null);
+        img3.setImageDrawable(null);
     }
 
     @Override
