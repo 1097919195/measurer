@@ -170,7 +170,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 updateDeviceState();
             }
         }
-        mPresenter.subscribe();
+        if (mPresenter != null) {
+            mPresenter.subscribe();
+        }
         //att 处理版本更新提示
         if (BaseApplication.canUpdate(getActivity())) {
             actionConnect.setEnabled(true);
@@ -187,7 +189,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.unsubscribe();
+        if (mPresenter != null) {
+            mPresenter.unsubscribe();
+        }
     }
 
     @Override

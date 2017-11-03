@@ -108,7 +108,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onResume() {
         super.onResume();
         if (BaseApplication.getFirstCheckHint(getActivity())) {
-            mPresenter.getLatestVersion();
+            if (mPresenter != null) mPresenter.getLatestVersion();
             BaseApplication.setIsFirstCheck(getActivity());
         }
         LogUtils.upload(getActivity());
@@ -117,7 +117,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.unsubscribe();
+        if (mPresenter != null) {
+            mPresenter.unsubscribe();
+        }
     }
 
     @Override
