@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
@@ -57,7 +56,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -375,9 +373,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             showToast("量体未完成");
             return;
         }
+        List<Part> data = new ArrayList<>();
         try {
-            Class class2 = Class.forName(itemPackage + ".MeasurementItem");
-            MeasurementItem item = (MeasurementItem) class2.newInstance();
+//            Class class2 = Class.forName(itemPackage + ".MeasurementItem");
+//            MeasurementItem item = (MeasurementItem) class2.newInstance();
             for (int i = 0, count = gridView.getCount(); i < count; i++) {
                 MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
                 if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) {
@@ -390,23 +389,23 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 Class<?> aClass = Class.forName(partPackage + "." + en);
                 Part part = (Part) aClass.newInstance();
                 part.setValue(value + "");
-                part.setCn(cn); //att 不存储当前部位的
+                part.setCn(cn);
                 part.setEn(en);
-                Method method = class2.getMethod("set" + en, aClass);
-                method.invoke(item, part);
+//                Method method = class2.getMethod("set" + en, aClass);
+//                method.invoke(item, part);
+                data.add(part);
             }
 
             SharedPreferences sharedPreferences = getActivity()
                     .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
             String cid = sharedPreferences.getString("id", "");
             String oid = sharedPreferences.getString("orgId", "");
-            if (TextUtils.isEmpty(cid)) {
-                showToast("账号异常，请重新登录");
-                startActivity(new Intent(getActivity(), AccountActivity.class));
-                return;
-            }
-            Gog.d("onSave==>" + user.getName());
-            Measurement measurement = new Measurement(user, item, cid, oid);
+//            if (TextUtils.isEmpty(cid)) {
+//                showToast("账号异常，请重新登录");
+//                startActivity(new Intent(getActivity(), AccountActivity.class));
+//                return;
+//            }
+            Measurement measurement = new Measurement(user, data, cid, oid);
             MultipartBody.Part[] imgs = new MultipartBody.Part[3];
             if (img1.getDrawable() != null) {
                 imgs[0] = drawable2file(img1, "img1");
