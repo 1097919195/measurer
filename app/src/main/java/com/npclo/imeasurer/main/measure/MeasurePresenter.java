@@ -72,6 +72,8 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 //            Log.e(TAG, "解析数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
             a1 += 14; //校正数据
             fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
+        } else {
+            fragment.handleMeasureError();
         }
     }
 

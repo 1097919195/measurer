@@ -629,6 +629,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         showToast("蓝牙状态异常，请重新连接");
     }
 
+    @Override
+    public void handleMeasureError() {
+        speechSynthesizer.playText(getString(R.string.measure_error));
+    }
+
     /**
      * 结果赋值，有几个字段需要的结果为角度
      *

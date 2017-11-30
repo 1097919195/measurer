@@ -35,6 +35,8 @@ public interface MeasureContract {
         void showCompleteGetInfo();
 
         void showDeviceError();
+
+        void handleMeasureError();
     }
 
     interface Presenter extends BasePresenter {
