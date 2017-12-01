@@ -377,6 +377,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         try {
 //            Class class2 = Class.forName(itemPackage + ".MeasurementItem");
 //            MeasurementItem item = (MeasurementItem) class2.newInstance();
+
             for (int i = 0, count = gridView.getCount(); i < count; i++) {
                 MyTextView textView = (MyTextView) ((LinearLayout) gridView.getChildAt(i)).getChildAt(0);
                 if (textView.getState() == MeasureStateEnum.UNMEASUED.ordinal()) {
@@ -386,14 +387,17 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 float value = textView.getValue();
                 String cn = textView.getText().toString();
                 String en = textView.getTag().toString();
-                Class<?> aClass = Class.forName(partPackage + "." + en);
-                Part part = (Part) aClass.newInstance();
-                part.setValue(value + "");
-                part.setCn(cn);
-                part.setEn(en);
+                Part part = new Part(cn, en, value + "");
+                data.add(part);
+
+//                Class<?> aClass = Class.forName(partPackage + "." + en);
+//                Part part = (Part) aClass.newInstance();
+//                part.setValue(value + "");
+//                part.setCn(cn);
+//                part.setEn(en);
 //                Method method = class2.getMethod("set" + en, aClass);
 //                method.invoke(item, part);
-                data.add(part);
+
             }
 
             SharedPreferences sharedPreferences = getActivity()

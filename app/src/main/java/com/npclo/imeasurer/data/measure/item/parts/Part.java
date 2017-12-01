@@ -12,6 +12,12 @@ public class Part {
     public Part() {
     }
 
+    public Part(String cn, String en, String value) {
+        this.cn = cn;
+        this.en = en;
+        this.value = value;
+    }
+
     public Part(String cn, String en) {
         this.cn = cn;
         this.en = en;

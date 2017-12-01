@@ -22,6 +22,7 @@ public class BaseApplication extends Application {
     private boolean haveUpdate = false;
     private boolean isFirstCheckUpdate = true;
     private String macAddress;
+    public static Context AppContext;
 
     public static RxBleClient getRxBleClient(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
@@ -31,6 +32,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        AppContext = getApplicationContext();
         // TODO: 2017/8/2 判断当前手机API版本
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.

@@ -15,10 +15,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        mavenCentral()
-    }
-    dependencies {
-//        classpath "com.fernandocejas.frodo:frodo-plugin:0.8.1"
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }
 task clean(type: Delete) {
