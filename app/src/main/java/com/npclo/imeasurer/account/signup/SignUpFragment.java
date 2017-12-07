@@ -109,7 +109,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
 
     @Override
     public void showSignUpError(Throwable e) {
-        handleError(e);
+        onHandleError(e);
         showLoading(false);
     }
 
@@ -137,7 +137,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
 
     @Override
     public void showValidCodeSendError(Throwable e) {
-        handleError(e);
+        onHandleError(e);
         dialog.dismiss();
     }
 

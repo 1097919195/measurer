@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.main;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,30 +9,66 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
+import com.npclo.imeasurer.base.BaseApplication;
+import com.npclo.imeasurer.main.contact.ContactFragment;
+import com.npclo.imeasurer.main.feedback.FeedbackFragment;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
+import com.npclo.imeasurer.main.manage.ManageFragment;
+import com.npclo.imeasurer.main.manage.ManagePresenter;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
+import com.unisound.client.SpeechConstants;
+import com.unisound.client.SpeechSynthesizer;
 
 import kr.co.namee.permissiongen.PermissionGen;
 
+import static me.yokeyword.fragmentation.ISupportFragment.SINGLETASK;
+
 /**
- * Created by Endless on 2017/9/1.
+ * @author Endless
+ * @date 2017/9/1
  */
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
-    private NavigationView nav_view;
-    private DrawerLayout drawer_layout;
+    private NavigationView navView;
+    private DrawerLayout drawerLayout;
+    private HomePresenter homePresenter;
+    private String macAddress;
+    private String deviceName;
+    public SpeechSynthesizer speechSynthesizer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
         init();
+        initSpeech();
+    }
+
+    private void initSpeech() {
+        String appkey = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
+        String appsecret = "29aa998c451d64d9334269546a4021b8";
+        if (speechSynthesizer == null) {
+            speechSynthesizer = new SpeechSynthesizer(this, appkey, appsecret);
+        }
+        speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
+        speechSynthesizer.init(null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        speechSynthesizer = null;
     }
 
     private void init() {
@@ -51,27 +88,130 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (homeFragment == null) {
             homeFragment = HomeFragment.newInstance();
             loadRootFragment(R.id.content_frame, homeFragment);
-            new HomePresenter(homeFragment, SchedulerProvider.getInstance());
+            homePresenter = new HomePresenter(BaseApplication.getRxBleClient(this),
+                    homeFragment, SchedulerProvider.getInstance());
+            toolbar.setTitle("首页");// FIXME: 2017/12/7 不起作用
         }
     }
 
     protected void initView() {
         setContentView(R.layout.act_main_new);
         toolbar = (Toolbar) findViewById(R.id.basetoolbar);
-//        toolbar.setNavigationIcon(R.drawable.more_horiz);
-        drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer_layout.addDrawerListener(toggle);
-        toggle.syncState();
         setSupportActionBar(toolbar);
-        nav_view = (NavigationView) findViewById(R.id.nav_view);
-        nav_view.setNavigationItemSelectedListener(this);
-        initToolBar(toolbar, true, "首页");
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
+        navView.getMenu().removeItem(R.id.nav_device);
+        initDrawerMenuContent();
+    }
+
+    private void initDrawerMenuContent() {
+        //判断是否已绑定设备
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name), MODE_APPEND);
+        macAddress = preferences.getString("mac_address", null);
+        if (TextUtils.isEmpty(macAddress)) {
+            navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备").setIcon(R.drawable.ic_blueteeth_unconnected);
+        } else {
+            deviceName = preferences.getString("device_name", null);
+            setBlueTooth();
+        }
+        View headerView = navView.getHeaderView(0);
+        TextView currTimes = (TextView) headerView.findViewById(R.id.curr_times);
+        TextView totalTimes = (TextView) headerView.findViewById(R.id.total_times);
+        TextView userName = (TextView) headerView.findViewById(R.id.user_name);
+        // FIXME: 2017/12/5 非永久性数据应使用缓存
+        currTimes.setText(preferences.getString("currTimes", "N/A"));
+        totalTimes.setText(preferences.getString("totalTimes", "N/A"));
+        String name = preferences.getString("name", "N/A");
+        String nickname = preferences.getString("nickname", "");
+        userName.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
+    }
+
+    public void setBlueTooth() {
+        //先清除蓝牙设备信息菜单项
+        navView.getMenu().removeItem(R.id.nav_device);
+        navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备(已绑定: " + deviceName + ")")
+                .setIcon(R.drawable.ic_blueteeth_connected);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.nav_logout:
+                new MaterialDialog.Builder(this)
+                        .title("确定要退出登录？")
+                        .titleColor(getResources().getColor(R.color.ff5001))
+                        .positiveText(R.string.sure)
+                        .negativeText(R.string.cancel)
+                        .backgroundColor(getResources().getColor(R.color.white))
+                        .onPositive((dialog, which) -> {
+                            dialog.dismiss();
+                            homePresenter.logout();
+                        })
+                        .show();
+                drawerLayout.closeDrawers();
+                break;
+            case R.id.nav_instruction:
+                break;
+            case R.id.nav_device:
+                if (TextUtils.isEmpty(macAddress)) {
+                    homePresenter.startScan();
+                    drawerLayout.closeDrawers();
+                } else {
+                    new MaterialDialog.Builder(this)
+                            .title("已绑定设备" + deviceName + "，需要更换设备？")
+                            .titleColor(getResources().getColor(R.color.ff5001))
+                            .positiveText(R.string.sure)
+                            .negativeText(R.string.cancel)
+                            .backgroundColor(getResources().getColor(R.color.white))
+                            .onPositive((dialog, which) -> {
+                                drawerLayout.closeDrawers();
+                                homePresenter.startScan();
+                            })
+                            .show();
+                }
+                break;
+            case R.id.nav_offset_setting:
+                new MaterialDialog.Builder(this)
+                        .content(R.string.input_offset)
+                        .inputType(InputType.TYPE_CLASS_NUMBER)
+                        .input(R.string.input_offset_hint, R.string.default_value, (dialog, offset) -> {
+                            dialog.dismiss();
+                            SharedPreferences.Editor edit = getSharedPreferences(getString(R.string.app_name),
+                                    MODE_APPEND).edit();
+                            edit.putInt("measure_offset", Integer.parseInt(offset.toString()));
+                            edit.apply();
+                        }).show();
+                drawerLayout.closeDrawers();
+                break;
+            case R.id.nav_account:
+                drawerLayout.closeDrawers();
+                ManageFragment manageFragment = ManageFragment.newInstance();
+                start(manageFragment, SINGLETASK);
+                manageFragment.setPresenter(new ManagePresenter(manageFragment, SchedulerProvider.getInstance()));
+                break;
+            case R.id.nav_feedback:
+                drawerLayout.closeDrawers();
+                FeedbackFragment feedbackFragment = FeedbackFragment.newInstance();
+                start(feedbackFragment, SINGLETASK);
+                break;
+            case R.id.nav_link:
+                drawerLayout.closeDrawers();
+                ContactFragment contactFragment = ContactFragment.newInstance();
+                start(contactFragment, SINGLETASK);
+                break;
+            case R.id.nav_version:
+                drawerLayout.closeDrawers();
+                homePresenter.getLatestVersion();
+                break;
+            default:
+                break;
+        }
         return false;
     }
 }

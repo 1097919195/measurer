@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.user.manage;
+package com.npclo.imeasurer.main.manage;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;

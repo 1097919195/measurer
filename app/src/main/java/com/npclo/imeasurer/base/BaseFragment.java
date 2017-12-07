@@ -67,7 +67,7 @@ public abstract class BaseFragment extends SupportFragment {
      *
      * @param e 异常
      */
-    public void handleError(Throwable e) {
+    public void onHandleError(Throwable e) {
         if (e instanceof SocketTimeoutException) {
             showToast(getString(R.string.net_connect_timeout));
         } else if (e instanceof ConnectException) {

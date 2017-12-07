@@ -1,23 +1,17 @@
-package com.npclo.imeasurer.user.manage;
+package com.npclo.imeasurer.main.manage;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseFragment;
-import com.npclo.imeasurer.user.home.HomeFragment;
-import com.npclo.imeasurer.user.home.HomePresenter;
-import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
-import com.polidea.rxandroidble.RxBleClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,12 +21,11 @@ import butterknife.Unbinder;
 import static android.content.Context.MODE_PRIVATE;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
+/**
+ * @author Endless
+ */
 public class ManageFragment extends BaseFragment implements ManageContract.View {
     private static final String TAG = ManageFragment.class.getSimpleName();
-    @BindView(R.id.base_toolbar_title)
-    TextView baseToolbarTitle;
-    @BindView(R.id.base_toolbar)
-    Toolbar baseToolbar;
     @BindView(R.id.input_old_pwd)
     AppCompatEditText inputOldPwd;
     @BindView(R.id.input_new_pwd1)
@@ -59,16 +52,6 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        baseToolbarTitle.setText(getString(R.string.edit_pwd));
-        baseToolbar.setNavigationIcon(R.mipmap.left);
-        baseToolbar.setNavigationOnClickListener(v -> {
-            HomeFragment homeFragment = HomeFragment.newInstance();
-            start(homeFragment, SINGLETASK);
-            homeFragment.setPresenter(new HomePresenter(
-                    RxBleClient.create(getActivity()),
-                    homeFragment,
-                    SchedulerProvider.getInstance()));
-        });
     }
 
     @Override
@@ -141,7 +124,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     @Override
     public void showEditError(Throwable e) {
         showLoading(false);
-        handleError(e);
+        onHandleError(e);
     }
 
     @Override

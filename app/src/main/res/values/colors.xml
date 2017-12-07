@@ -63,7 +63,9 @@
     <color name="scan_label_color">#fff</color>
     <color name="scan_input_color">#fff</color>
     <color name="c999">#999999</color>
+    <color name="color_on_primary">#bc9016</color>
     <color name="ccc">#cccccc</color>
     <color name="textColorPrimary">#616161</color>
+    <color name="gray">#9cffffff</color>
     <!--QRCode scanner color end-->
 </resources>

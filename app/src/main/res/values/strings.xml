@@ -134,4 +134,18 @@
     <string name="measure_error">测量失败，请重试</string>
     <string name="navigation_drawer_open">打开侧栏</string>
     <string name="navigation_drawer_close">关闭侧栏</string>
+    <string name="changeLogo">点击头像修改logo</string>
+    <string name="offset_setting">偏移设置</string>
+    <string name="instruction">使用说明</string>
+    <string name="change_pwd">修改密码</string>
+    <string name="account_feedback">使用反馈</string>
+    <string name="app_link">联系我们</string>
+    <string name="app_update">检查更新</string>
+    <string name="account_logout">退出登录</string>
+    <string name="zhanwei" />
+    <string name="integer">integer</string>
+    <string name="input_offset">更新测量尺偏移数据(单位: mm)</string>
+    <string name="input_offset_hint">请输入正确的量尺偏移数据</string>
+    <string name="btn_save">保存</string>
+    <string name="default_value">14</string>
 </resources>

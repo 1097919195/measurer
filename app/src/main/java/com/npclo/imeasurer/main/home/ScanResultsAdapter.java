@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.user.home;
+package com.npclo.imeasurer.main.home;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.ble.BleDevice;
 
 import java.util.List;
@@ -18,12 +19,15 @@ import butterknife.ButterKnife;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
+/**
+ * @author Endless
+ */
+public class ScanResultsAdapter extends RecyclerView.Adapter<ScanResultsAdapter.ViewHolder> {
 
     private List<BleDevice> mDatas;
-    private HomeFragment mFragment;
+    private BaseFragment mFragment;
 
-    public ScanResultsAdapter(@NonNull HomeFragment fragment, @NonNull List<BleDevice> devices) {
+    public ScanResultsAdapter(@NonNull BaseFragment fragment, @NonNull List<BleDevice> devices) {
         mDatas = checkNotNull(devices);
         mFragment = checkNotNull(fragment);
     }

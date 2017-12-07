@@ -1,9 +1,11 @@
 package com.npclo.imeasurer.main.measure;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.user.UserRepository;
@@ -39,6 +41,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private RxBleDevice device;
     private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
     private UUID uuid;
+    private String macAddress;
 
     public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider) {
         fragment = checkNotNull(view);
@@ -159,7 +162,8 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     private Observable<RxBleConnection> prepareConnectionObservable() {
         Context context = ((MeasureFragment) fragment).getActivity();
-        String macAddress = BaseApplication.getMacAddress(context);
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_APPEND);
+        macAddress = preferences.getString("mac_address", null);
         if (macAddress != null) {
             device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
             return device.establishConnection(false)
@@ -199,7 +203,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     private boolean isConnected() {
         Context context = ((MeasureFragment) fragment).getActivity();
-        String macAddress = BaseApplication.getMacAddress(context);
         if (macAddress != null) {
             device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
             return device.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;

@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.user.contact;
+package com.npclo.imeasurer.main.contact;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseFragment;
-import com.npclo.imeasurer.user.home.HomeFragment;
-import com.npclo.imeasurer.user.home.HomePresenter;
+import com.npclo.imeasurer.main.home.HomeFragment;
+import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
 

@@ -178,7 +178,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
 
     @Override
     public void showValidCodeSendError(Throwable e) {
-        handleError(e);
+        onHandleError(e);
         dialog.dismiss();
     }
 
@@ -202,7 +202,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
 
     @Override
     public void showResetPwdError(Throwable e) {
-        handleError(e);
+        onHandleError(e);
         dialog.dismiss();
     }
 

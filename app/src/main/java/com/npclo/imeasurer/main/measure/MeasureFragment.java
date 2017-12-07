@@ -229,7 +229,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         baseToolbar.setNavigationOnClickListener(c -> {
             HomeFragment homeFragment = HomeFragment.newInstance();
             start(homeFragment, SINGLETASK);
-            homeFragment.setPresenter(new HomePresenter(homeFragment, SchedulerProvider.getInstance()));
+            homeFragment.setPresenter(new HomePresenter(BaseApplication.getRxBleClient(getActivity()),
+                    homeFragment, SchedulerProvider.getInstance()));
         });
         baseToolbar.inflateMenu(R.menu.base_toolbar_menu);
         baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
@@ -490,14 +491,14 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void handleError(Throwable e) {
+    public void onHandleError(Throwable e) {
         if (e instanceof BleGattException) {
             toast2Speech("蓝牙连接断开");
 //             showReConnectDialog();
             measurePresenter.reConnect();
             LogUtils.fixBug("蓝牙断开=>" + e.toString());
         } else {
-            super.handleError(e);
+            super.onHandleError(e);
         }
     }
 
@@ -528,6 +529,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             e.printStackTrace();
         }
         initUmMeasureListFlag = false;
+    }
+
+    @Override
+    public void handleError(Throwable e) {
+
     }
 
     @Override
@@ -588,7 +594,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showSaveError(Throwable e) {
         showLoading(false);
-        handleError(e);
+        onHandleError(e);
     }
 
     @Override
@@ -619,7 +625,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showGetInfoError(Throwable e) {
         showLoading(false);
-        handleError(e);
+        onHandleError(e);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.user.feedback;
+package com.npclo.imeasurer.main.contact;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
@@ -7,7 +7,7 @@ import com.npclo.imeasurer.base.BaseView;
  * Created by Endless on 2017/9/4.
  */
 
-public interface FeedbackContract {
+public interface ContactContract {
     interface Presenter extends BasePresenter {
     }
 

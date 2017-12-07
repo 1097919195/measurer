@@ -21,7 +21,6 @@ public class BaseApplication extends Application {
     private UUID characteristicUUID;
     private boolean haveUpdate = false;
     private boolean isFirstCheckUpdate = true;
-    private String macAddress;
     public static Context AppContext;
 
     public static RxBleClient getRxBleClient(Context context) {
@@ -77,15 +76,5 @@ public class BaseApplication extends Application {
     public static boolean getFirstCheckHint(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         return application.isFirstCheckUpdate;
-    }
-
-    public static void setBleAddress(Context context, String macAddress) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        application.macAddress = macAddress;
-    }
-
-    public static String getMacAddress(Context context) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        return application.macAddress;
     }
 }
