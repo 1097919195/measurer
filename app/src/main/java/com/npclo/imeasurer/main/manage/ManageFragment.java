@@ -25,7 +25,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * @author Endless
  */
 public class ManageFragment extends BaseFragment implements ManageContract.View {
-    private static final String TAG = ManageFragment.class.getSimpleName();
     @BindView(R.id.input_old_pwd)
     AppCompatEditText inputOldPwd;
     @BindView(R.id.input_new_pwd1)
@@ -52,6 +51,11 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
+    }
+
+    @Override
+    protected String setFragmentTitle() {
+        return "修改密码";
     }
 
     @Override

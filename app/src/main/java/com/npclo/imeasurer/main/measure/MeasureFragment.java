@@ -37,13 +37,10 @@ import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
-import com.npclo.imeasurer.main.home.HomeFragment;
-import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
-import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.exceptions.BleGattException;
@@ -83,10 +80,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public static final int BATTERY_HIGH = 80;
     public static final String FEMALE = "女";
     public static final String MALE = "男";
-    @BindView(R.id.base_toolbar_title)
-    TextView baseToolbarTitle;
-    @BindView(R.id.base_toolbar)
-    Toolbar baseToolbar;
+    //    @BindView(R.id.base_toolbar_title)
+//    TextView baseToolbarTitle;
+//    @BindView(R.id.base_toolbar)
+//    Toolbar baseToolbar;
     @BindView(R.id.wechat_icon)
     ImageView wechatIcon;
     @BindView(R.id.wechat_nickname)
@@ -162,6 +159,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
+    protected String setFragmentTitle() {
+        return "量体";
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.frag_measure;
     }
@@ -224,16 +226,17 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void initToolbar() {
-        baseToolbarTitle.setText("量体");
-        baseToolbar.setNavigationIcon(R.mipmap.left);
-        baseToolbar.setNavigationOnClickListener(c -> {
-            HomeFragment homeFragment = HomeFragment.newInstance();
-            start(homeFragment, SINGLETASK);
-            homeFragment.setPresenter(new HomePresenter(BaseApplication.getRxBleClient(getActivity()),
-                    homeFragment, SchedulerProvider.getInstance()));
-        });
-        baseToolbar.inflateMenu(R.menu.base_toolbar_menu);
-        baseToolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
+//        baseToolbarTitle.setText("量体");
+//        baseToolbar.setNavigationIcon(R.mipmap.left);
+//        baseToolbar.setNavigationOnClickListener(c -> {
+//            HomeFragment homeFragment = HomeFragment.newInstance();
+//            start(homeFragment, SINGLETASK);
+//            homeFragment.setPresenter(new HomePresenter(BaseApplication.getRxBleClient(getActivity()),
+//                    homeFragment, SchedulerProvider.getInstance()));
+//        });
+
+        toolbar.inflateMenu(R.menu.base_toolbar_menu);
+        toolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
     }
 
     @Override
@@ -491,7 +494,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void onHandleError(Throwable e) {
+    public void onHandleMeasureError(Throwable e) {
         if (e instanceof BleGattException) {
             toast2Speech("蓝牙连接断开");
 //             showReConnectDialog();
@@ -532,13 +535,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void handleError(Throwable e) {
-
-    }
-
-    @Override
     public void handleMeasureData(float length, float angle, int battery) {
-        MenuItem item = baseToolbar.getMenu().getItem(0);
+        MenuItem item = toolbar.getMenu().getItem(0);
         if (battery < BATTERY_LOW) {
             item.setIcon(R.mipmap.battery_low);
         }
@@ -594,7 +592,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showSaveError(Throwable e) {
         showLoading(false);
-        onHandleError(e);
+        onHandleMeasureError(e);
     }
 
     @Override
@@ -625,7 +623,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void showGetInfoError(Throwable e) {
         showLoading(false);
-        onHandleError(e);
+        onHandleMeasureError(e);
     }
 
     @Override
@@ -634,12 +632,12 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void showDeviceError() {
+    public void onShowDevicePrepareConnectionError() {
         showToast("蓝牙状态异常，请重新连接");
     }
 
     @Override
-    public void handleMeasureError() {
+    public void onHandleMeasureError() {
         speechSynthesizer.playText(getString(R.string.measure_error));
     }
 

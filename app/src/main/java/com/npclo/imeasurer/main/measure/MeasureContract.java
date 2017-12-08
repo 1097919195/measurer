@@ -16,8 +16,6 @@ import okhttp3.MultipartBody;
 public interface MeasureContract {
     interface View extends BaseView<Presenter> {
 
-        void handleError(Throwable e);
-
         void handleMeasureData(float v, float a2, int a3);
 
         void showSuccessSave();
@@ -34,9 +32,11 @@ public interface MeasureContract {
 
         void showCompleteGetInfo();
 
-        void showDeviceError();
+        void onShowDevicePrepareConnectionError();
 
-        void handleMeasureError();
+        void onHandleMeasureError();
+
+        void onHandleMeasureError(Throwable e);
     }
 
     interface Presenter extends BasePresenter {

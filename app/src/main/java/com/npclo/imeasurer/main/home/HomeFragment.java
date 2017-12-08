@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.main.measure.MeasureFragment;
 import com.npclo.imeasurer.main.measure.MeasurePresenter;
+import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -109,11 +111,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onResume() {
         super.onResume();
 //        if (BaseApplication.getFirstCheckHint(getActivity())) {
-//            if (mPresenter != null) {
-        mPresenter.subscribe();
-//                mPresenter.getLatestVersion();
-
-//            }
+        if (mPresenter != null) {
+            mPresenter.subscribe(); // FIXME: 2017/12/8 app闲置后  mPresenter对象为空
+        }
 //            BaseApplication.setIsFirstCheck(getActivity());
 //        }
         LogUtils.upload(getActivity());
@@ -122,9 +122,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-//        if (mPresenter != null) {
-        mPresenter.unsubscribe();
-//        }
+        if (mPresenter != null) {
+            mPresenter.unsubscribe();
+        }
+    }
+
+    @Override
+    protected String setFragmentTitle() {
+        return getString(R.string.app_name);
+        // FIXME: 2017/12/8 按返回键后title不会修改
     }
 
     @Override
@@ -134,6 +140,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                     .progress(true, 100)
                     .backgroundColor(getResources().getColor(R.color.white))
                     .show();
+            Gog.e(cirProgressBar.toString());
         } else {
             cirProgressBar.dismiss();
         }
@@ -145,7 +152,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
      * @param user 微信用户
      */
     @Override
-    public void onGetWechatUserInfoSuccess(WechatUser user) {
+    public void onGetWechatUserInfo(WechatUser user) {
         showLoading(false);
         MeasureFragment measureFragment = findFragment(MeasureFragment.class);
         if (measureFragment == null) {
@@ -153,8 +160,17 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             Bundle bundle = new Bundle();
             bundle.putParcelable("user", user);
             measureFragment.setArguments(bundle);
-            new MeasurePresenter(measureFragment, SchedulerProvider.getInstance());
-            start(measureFragment);
+            SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name),
+                    Context.MODE_APPEND);
+            int offsetMeasure = preferences.getInt("measure_offset", 14);
+            String address = preferences.getString("mac_address", null);
+            if (!TextUtils.isEmpty(address)) {
+                RxBleDevice device = BaseApplication.getRxBleClient(getActivity()).getBleDevice(address);
+                new MeasurePresenter(measureFragment, SchedulerProvider.getInstance(), offsetMeasure, address, device);
+                start(measureFragment);
+            } else {
+                showToast("未连接蓝牙设备");
+            }
         }
     }
 
@@ -170,20 +186,22 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showGetVersionSuccess(App app) {
+    public void onGetVersionInfo(App app) {
         int code = getVersionCode();
         if (app.getCode() > code && code != 0) {
             updateApp(app);
+        } else {
+            showToast("已经是最新版");
         }
     }
 
     @Override
-    public void showGetVersionError(Throwable e) {
+    public void onGetVersionError(Throwable e) {
         onHandleError(e);
     }
 
     @Override
-    public void logout() {
+    public void onLogout() {
         // FIXME: 2017/12/5 修改保存登录状态
         SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND).edit();
         edit.putBoolean("loginState", false);

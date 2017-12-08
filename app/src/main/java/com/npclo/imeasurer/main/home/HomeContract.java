@@ -17,30 +17,32 @@ public interface HomeContract {
 
         void getUserInfoWithOpenID(String result);
 
-        void getLatestVersion();
+        void autoGetLatestVersion();
 
         void logout();
 
         void startScan();
 
         void connectDevice(String s);
+
+        void manuallyGetLatestVersion();
     }
 
     interface View extends BaseView<Presenter> {
 
         void showLoading(boolean b);
 
-        void onGetWechatUserInfoSuccess(WechatUser info);
+        void onGetWechatUserInfo(WechatUser info);
 
         void showGetInfoError(Throwable e);
 
         void showCompleteGetInfo();
 
-        void showGetVersionSuccess(App app);
+        void onGetVersionInfo(App app);
 
-        void showGetVersionError(Throwable e);
+        void onGetVersionError(Throwable e);
 
-        void logout();
+        void onLogout();
 
         void onHandleScanResult(ScanResult scanResult);
 

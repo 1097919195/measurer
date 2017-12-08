@@ -56,23 +56,23 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void subscribe() {
         // TODO: 2017/12/5 获取用户最新量体统计数据   使用token
-        getLatestVersion();
+        autoGetLatestVersion();
     }
 
     @Override
-    public void getLatestVersion() {
+    public void autoGetLatestVersion() {
         Subscription subscribe = new AppRepository()
                 .getLatestVersion()
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(app -> fragment.showGetVersionSuccess(app),
-                        e -> fragment.showGetVersionError(e));
+                .subscribe(app -> fragment.onGetVersionInfo(app),
+                        e -> fragment.onGetVersionError(e));
         mSubscriptions.add(subscribe);
     }
 
     @Override
     public void logout() {
-        fragment.logout();
+        fragment.onLogout();
     }
 
     @Override
@@ -125,7 +125,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        user -> fragment.onGetWechatUserInfoSuccess(user),
+                        user -> fragment.onGetWechatUserInfo(user),
                         e -> fragment.showGetInfoError(e),
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
@@ -139,7 +139,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        user -> fragment.onGetWechatUserInfoSuccess(user),
+                        user -> fragment.onGetWechatUserInfo(user),
                         e -> fragment.showGetInfoError(e),
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
@@ -194,6 +194,18 @@ public class HomePresenter implements HomeContract.Presenter {
                         }
                     }
                 }, this::onHandleConnectError);
+    }
+
+    @Override
+    public void manuallyGetLatestVersion() {
+        Subscription subscribe = new AppRepository()
+                .getLatestVersion()
+                .subscribeOn(mSchedulerProvider.io())
+                .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(app -> fragment.onGetVersionInfo(app),
+                        e -> fragment.onGetVersionError(e), () -> fragment.showLoading(false));
+        mSubscriptions.add(subscribe);
     }
 
     private void onHandleConnectError(Throwable e) {

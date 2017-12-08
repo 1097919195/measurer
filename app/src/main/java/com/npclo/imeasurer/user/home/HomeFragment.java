@@ -264,7 +264,7 @@
 //    }
 //
 //    @Override
-//    public void showGetVersionSuccess(App app) {
+//    public void onGetVersionInfo(App app) {
 //        int code = getVersionCode();
 //        if (app.getCode() > code && code != 0) {
 //            updateApp(app);
@@ -274,7 +274,7 @@
 //    }
 //
 //    @Override
-//    public void showGetVersionError(Throwable e) {
-//        onHandleError(e);
+//    public void onGetVersionError(Throwable e) {
+//        onHandleMeasureError(e);
 //    }
 //}

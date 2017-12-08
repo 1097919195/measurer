@@ -5,8 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <!--<include layout="@layout/base_toolbar" />-->
-
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/input_old_pwd"
         android:layout_width="match_parent"
@@ -20,6 +18,8 @@
         android:gravity="center_vertical"
         android:hint="@string/enter_old_pwd"
         android:inputType="textWebPassword"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
         android:textColor="@color/c333"
         android:textColorHint="@color/dfdfdf"
         android:textSize="18sp" />
@@ -37,6 +37,8 @@
         android:gravity="center_vertical"
         android:hint="@string/enter_new_pwd"
         android:inputType="textWebPassword"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
         android:textColor="@color/c333"
         android:textColorHint="@color/dfdfdf"
         android:textSize="18sp" />
@@ -54,6 +56,8 @@
         android:gravity="center_vertical"
         android:hint="@string/enter_new_pwd2"
         android:inputType="textWebPassword"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
         android:textColor="@color/c333"
         android:textColorHint="@color/dfdfdf"
         android:textSize="18sp" />

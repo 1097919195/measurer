@@ -1,12 +1,9 @@
 package com.npclo.imeasurer.main.measure;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.HexString;
@@ -29,8 +26,12 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
+/**
+ * @author Endless
+ */
 public class MeasurePresenter implements MeasureContract.Presenter {
     private static final int MEASURE_DURATION = 500;
+    public static final int STANDARD_BYTE = 16;
     @NonNull
     private MeasureContract.View fragment;
     @NonNull
@@ -42,12 +43,17 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
     private UUID uuid;
     private String macAddress;
+    private int offset;
 
-    public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider) {
+    public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider,
+                            int offsetMeasure, String address, RxBleDevice bleDevice) {
         fragment = checkNotNull(view);
         this.schedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
         fragment.setPresenter(this);
+        offset = offsetMeasure;
+        macAddress = address;
+        device = checkNotNull(bleDevice);
     }
 
     @Override
@@ -60,11 +66,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         mSubscriptions.clear();
     }
 
-    private void handleBleResult(byte[] v) {
-        // FIXME: 2017/10/19 接收数据的间隔
+    private void onHandleMeasureResult(byte[] v) {
         String s = HexString.bytesToHex(v);
-//        Log.e(TAG, "接收原始结果：" + s);
-        if (s.length() == 16) { //判断接收到的数据是否准确
+        if (s.length() == STANDARD_BYTE) {
             int code = Integer.parseInt("8D6A", 16);
             int length = Integer.parseInt(s.substring(0, 4), 16);
             int angle = Integer.parseInt(s.substring(4, 8), 16);
@@ -73,15 +77,15 @@ public class MeasurePresenter implements MeasureContract.Presenter {
             int a2 = angle ^ code;
             int a3 = battery ^ code;
 //            Log.e(TAG, "解析数据：长度: " + a1 + "; 角度:  " + a2 + "; 电量: " + a3);
-            a1 += 14; //校正数据
+            a1 += offset;
             fragment.handleMeasureData((float) a1 / 10, (float) a2 / 10, a3);
         } else {
-            fragment.handleMeasureError();
+            fragment.onHandleMeasureError();
         }
     }
 
-    private void handleError(Throwable e) {
-        fragment.handleError(e);
+    private void onHandleMeasureError(Throwable e) {
+        fragment.onHandleMeasureError(e);
     }
 
     @Override
@@ -161,11 +165,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private Observable<RxBleConnection> prepareConnectionObservable() {
-        Context context = ((MeasureFragment) fragment).getActivity();
-        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_APPEND);
-        macAddress = preferences.getString("mac_address", null);
         if (macAddress != null) {
-            device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
             return device.establishConnection(false)
                     .takeUntil(disconnectTriggerSubject)
                     .compose(new ConnectionSharingAdapter());
@@ -185,10 +185,10 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                     .flatMap(notificationObservable -> notificationObservable)
                     .observeOn(schedulerProvider.ui())
                     .throttleFirst(MEASURE_DURATION, TimeUnit.MILLISECONDS)
-                    .subscribe(this::handleBleResult, this::handleError);
+                    .subscribe(this::onHandleMeasureResult, this::onHandleMeasureError);
             mSubscriptions.add(subscribe);
         } else {
-            fragment.showDeviceError();
+            fragment.onShowDevicePrepareConnectionError();
         }
     }
 
@@ -202,12 +202,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private boolean isConnected() {
-        Context context = ((MeasureFragment) fragment).getActivity();
-        if (macAddress != null) {
-            device = BaseApplication.getRxBleClient(context).getBleDevice(macAddress);
-            return device.getConnectionState() == RxBleConnection.RxBleConnectionState.CONNECTED;
-        } else {
-            return false;
-        }
+        return !TextUtils.isEmpty(macAddress) && device.getConnectionState()
+                == RxBleConnection.RxBleConnectionState.CONNECTED;
     }
 }

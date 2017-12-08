@@ -67,8 +67,8 @@
 //    }
 //
 //    @Override
-//    public void logout() {
-//        fragment.logout();
+//    public void onLogout() {
+//        fragment.onLogout();
 //    }
 //
 //    private Observable<RxBleConnection> prepareConnectionObservable() {
@@ -85,7 +85,7 @@
 //        } else if (e instanceof BleAlreadyConnectedException) {
 //            fragment.showError("重复连接，请检查");
 //        } else {
-//            ((HomeFragment) fragment).onHandleError(e);
+//            ((HomeFragment) fragment).onHandleMeasureError(e);
 //        }
 //    }
 //
@@ -180,10 +180,10 @@
 //    @Override
 //    public void checkVersion() {
 //        new AppRepository()
-//                .getLatestVersion()
+//                .autoGetLatestVersion()
 //                .subscribeOn(mSchedulerProvider.io())
 //                .observeOn(mSchedulerProvider.ui())
-//                .subscribe(fragment::showGetVersionSuccess,
-//                        fragment::showGetVersionError);
+//                .subscribe(fragment::onGetVersionInfo,
+//                        fragment::onGetVersionError);
 //    }
 //}

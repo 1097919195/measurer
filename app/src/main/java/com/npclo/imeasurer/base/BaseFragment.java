@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  */
 public abstract class BaseFragment extends SupportFragment {
     protected View mRootView;
+    protected Toolbar toolbar;
 
     @Nullable
     @Override
@@ -38,7 +40,17 @@ public abstract class BaseFragment extends SupportFragment {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
         initView(mRootView);
+        initComToolbar();
         return mRootView;
+    }
+
+    void initComToolbar() {
+        toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
+        toolbar.setTitle(setFragmentTitle());
+    }
+
+    protected String setFragmentTitle() {
+        return null;
     }
 
     @Override

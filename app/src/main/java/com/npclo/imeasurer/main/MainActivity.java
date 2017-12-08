@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_version:
                 drawerLayout.closeDrawers();
-                homePresenter.getLatestVersion();
+                homePresenter.manuallyGetLatestVersion();
                 break;
             default:
                 break;
