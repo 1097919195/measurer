@@ -79,6 +79,7 @@ public class HttpHelper {
     public class HttpResponseFunc<T> implements Func1<HttpResponse<T>, T> {
         @Override
         public T call(HttpResponse<T> httpResponse) {
+            //att 显示错误信息
             if (httpResponse.getStatus() >= 1000) {
                 throw new ApiException(httpResponse.getMsg());
             }

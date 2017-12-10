@@ -36,7 +36,7 @@ public interface UserService {
                                                @Field("code") String code);
 
     @GET("clientUser/getInfoWithQrcode")
-    Observable<HttpResponse<WechatUser>> getUserInfoWithCode(@Query("code") String code);
+    Observable<HttpResponse<WechatUser>> getUserInfoWithCode(@Query("code") String code, @Query("uid") String uid);
 
     @FormUrlEncoded
     @POST("clientUser/editPwd")
@@ -44,5 +44,5 @@ public interface UserService {
                                               @Field("new") String newpwd);
 
     @GET("clientUser/getInfoWithOpenID")
-    Observable<HttpResponse<WechatUser>> getUserInfoWithOpenID(@Query("openid") String id);
+    Observable<HttpResponse<WechatUser>> getUserInfoWithOpenID(@Query("openid") String id, @Query("uid") String uid);
 }

@@ -38,12 +38,10 @@ import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.main.home.HomeFragment;
-import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
-import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.exceptions.BleGattException;
@@ -289,11 +287,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
         toolbar.setTitle("量体");
         toolbar.setNavigationIcon(R.mipmap.left);
+//         FIXME: 10/12/2017 导航问题
         toolbar.setNavigationOnClickListener(c -> {
             HomeFragment homeFragment = HomeFragment.newInstance();
             start(homeFragment, SINGLETASK);
-            homeFragment.setPresenter(new HomePresenter(BaseApplication.getRxBleClient(getActivity()),
-                    homeFragment, SchedulerProvider.getInstance()));
         });
 
         toolbar.inflateMenu(R.menu.base_toolbar_menu);
@@ -713,6 +710,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String uid = getActivity().getSharedPreferences(getString(R.string.app_name),
+                Context.MODE_APPEND).getString("id", null);
         switch (requestCode) {
             case IMAGE_REQUEST_CODE:
                 startPhotoCrop(data.getData());
@@ -768,7 +767,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     e.printStackTrace();
                 }
                 if (id != null) {
-                    measurePresenter.getUserInfoWithOpenID(id);
+                    measurePresenter.getUserInfoWithOpenID(id, uid);
                 } else {
                     showToast(getString(R.string.scan_qrcode_failed));
                 }
@@ -782,7 +781,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     e.printStackTrace();
                 }
                 if (code != null) {
-                    measurePresenter.getUserInfoWithCode(code);
+                    measurePresenter.getUserInfoWithCode(code, uid);
                 } else {
                     showToast(getString(R.string.enter_qrcode_error));
                 }

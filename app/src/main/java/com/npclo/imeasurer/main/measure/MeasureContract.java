@@ -42,9 +42,9 @@ public interface MeasureContract {
     interface Presenter extends BasePresenter {
         void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs);
 
-        void getUserInfoWithOpenID(String id);
+        void getUserInfoWithOpenID(String id, String uid);
 
-        void getUserInfoWithCode(String code);
+        void getUserInfoWithCode(String code, String uid);
 
         void reConnect();
 

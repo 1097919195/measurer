@@ -182,7 +182,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         if (isUserRememberPwd) {
             edit.putBoolean("loginState", true);//att 是否记住密码
         }
-
+        // FIXME: 10/12/2017 时效性 数据永久性？
         edit.putString("id", user.get_id());
         edit.putString("name", user.getName());
         edit.putString("nickname", user.getNickname());

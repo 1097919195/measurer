@@ -340,17 +340,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle bundle = data.getExtras();
         String result = bundle.getString("result");
+        String uid = getActivity().getSharedPreferences(getString(R.string.app_name),
+                Context.MODE_APPEND).getString("id", null);
+        // FIXME: 10/12/2017 是否为永久性数据
         switch (resultCode) {
             case SCAN_HINT:
                 if (result != null) {
-                    mPresenter.getUserInfoWithOpenID(result);
+                    mPresenter.getUserInfoWithOpenID(result, uid);
                 } else {
                     showToast(getString(R.string.scan_qrcode_failed));
                 }
                 break;
             case CODE_HINT:
                 if (result != null) {
-                    mPresenter.getUserInfoWithCode(result);
+                    mPresenter.getUserInfoWithCode(result, uid);
                 } else {
                     showToast(getString(R.string.enter_qrcode_error));
                 }

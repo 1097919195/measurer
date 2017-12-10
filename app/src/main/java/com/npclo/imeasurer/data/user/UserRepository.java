@@ -31,16 +31,16 @@ public class UserRepository implements UserDataSource {
         return new UserHttpHelper().resetPwd(mobile, pwd, code);
     }
 
-    public Observable<WechatUser> getUserInfoWithCode(String code) {
-        return new UserHttpHelper().getUserInfoWithCode(code);
+    public Observable<WechatUser> getUserInfoWithCode(String code, String uid) {
+        return new UserHttpHelper().getUserInfoWithCode(code, uid);
     }
 
     public Observable<HttpMsg> editPwd(String id, String old, String newpwd) {
         return new UserHttpHelper().editPwd(id, old, newpwd);
     }
 
-    public Observable<WechatUser> getUserInfoWithOpenID(String id) {
-        return new UserHttpHelper().getUserInfoWithOpenID(id);
+    public Observable<WechatUser> getUserInfoWithOpenID(String oid, String uid) {
+        return new UserHttpHelper().getUserInfoWithOpenID(oid, uid);
     }
 
 }

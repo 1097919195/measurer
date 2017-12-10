@@ -115,9 +115,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     @Override
-    public void getUserInfoWithOpenID(String id) {
+    public void getUserInfoWithOpenID(String id, String uid) {
         Subscription subscribe = new UserRepository()
-                .getUserInfoWithOpenID(id)
+                .getUserInfoWithOpenID(id, uid)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
@@ -129,9 +129,9 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     @Override
-    public void getUserInfoWithCode(String code) {
+    public void getUserInfoWithCode(String code, String uid) {
         Subscription subscribe = new UserRepository()
-                .getUserInfoWithCode(code)
+                .getUserInfoWithCode(code, uid)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))

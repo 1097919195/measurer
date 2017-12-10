@@ -33,9 +33,9 @@ public class UserHttpHelper extends HttpHelper {
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<WechatUser> getUserInfoWithCode(String code) {
+    public Observable<WechatUser> getUserInfoWithCode(String code, String uid) {
         return retrofit.create(UserService.class)
-                .getUserInfoWithCode(code)
+                .getUserInfoWithCode(code, uid)
                 .map(new HttpResponseFunc<>());
     }
 
@@ -45,9 +45,9 @@ public class UserHttpHelper extends HttpHelper {
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<WechatUser> getUserInfoWithOpenID(String id) {
+    public Observable<WechatUser> getUserInfoWithOpenID(String oid, String uid) {
         return retrofit.create(UserService.class)
-                .getUserInfoWithOpenID(id)
+                .getUserInfoWithOpenID(oid, uid)
                 .map(new HttpResponseFunc<>());
     }
 }
