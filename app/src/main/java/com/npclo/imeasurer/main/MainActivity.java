@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
@@ -155,9 +156,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_instruction:
                 drawerLayout.closeDrawers();
-                Intent instructionIntent = new Intent(this, UserActivity.class);
-                instructionIntent.putExtra("support_type", Constant.UserInstruction);
-                startActivity(instructionIntent);
+                Toast.makeText(this, "暂无使用说明", Toast.LENGTH_SHORT).show();
+//              Intent instructionIntent = new Intent(this, UserActivity.class);
+//                instructionIntent.putExtra("support_type", Constant.UserInstruction);
+//                startActivity(instructionIntent);
                 break;
             case R.id.nav_device:
                 if (TextUtils.isEmpty(macAddress)) {

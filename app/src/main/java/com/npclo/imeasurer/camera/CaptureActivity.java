@@ -34,6 +34,9 @@ import com.npclo.imeasurer.main.MainActivity;
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * @author Endless
+ */
 public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
@@ -50,8 +53,8 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     private BeepManager beepManager;
     private AmbientLightManager ambientLightManager;
     private TextView toolbarTitle;
-    private LinearLayout view_enter_qrcode;
-    private RelativeLayout to_manual_enter_qrcode;
+    private LinearLayout viewEnterQrcode;
+    private RelativeLayout toManualEnterQrcode;
     private SurfaceView surfaceView;
 
     public ViewfinderView getViewfinderView() {
@@ -137,8 +140,8 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
 
     private void handleEnterCode() {
         //手动输入二维码编号
-        view_enter_qrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
-        to_manual_enter_qrcode = (RelativeLayout) findViewById(R.id.to_manual_enter_qrcode);
+        viewEnterQrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
+        toManualEnterQrcode = (RelativeLayout) findViewById(R.id.to_manual_enter_qrcode);
         findViewById(R.id.enter_qrcode_img).setOnClickListener(v -> showEnterCodeView());
         findViewById(R.id.enter_qrcode_tv).setOnClickListener(v -> showEnterCodeView());
         AppCompatButton btnEnterCode = (AppCompatButton) findViewById(R.id.action_enter_qrcode);
@@ -161,9 +164,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     private void showEnterCodeView() {
         surfaceView.setVisibility(View.GONE);
         viewfinderView.setVisibility(View.GONE);
-        view_enter_qrcode.setVisibility(View.VISIBLE);
+        viewEnterQrcode.setVisibility(View.VISIBLE);
         toolbarTitle.setText("输入二维码编号");
-        to_manual_enter_qrcode.setVisibility(View.GONE);
+        toManualEnterQrcode.setVisibility(View.GONE);
     }
 
     @Override
