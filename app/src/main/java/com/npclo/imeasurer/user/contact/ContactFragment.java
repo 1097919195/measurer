@@ -1,21 +1,24 @@
-package com.npclo.imeasurer.main.contact;
+package com.npclo.imeasurer.user.contact;
 
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- *
  * @author Endless
  * @date 2017/9/4
  */
 
 public class ContactFragment extends BaseFragment implements ContactContract.View {
     Unbinder unbinder;
+    @BindView(R.id.support_frag_toolbar)
+    Toolbar toolbar;
 
     public static ContactFragment newInstance() {
         return new ContactFragment();
@@ -34,11 +37,8 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-    }
-
-    @Override
-    protected String setFragmentTitle() {
-        return getString(R.string.prompt_contact);
+        toolbar.setTitle(getString(R.string.prompt_contact));
+        initToolbar(toolbar);
     }
 
     @Override

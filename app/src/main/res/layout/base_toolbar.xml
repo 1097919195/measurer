@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/base_toolbar"
+    android:id="@+id/support_frag_toolbar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
     android:background="@color/primary"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-    <TextView
-        android:id="@+id/base_toolbar_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
-</android.support.v7.widget.Toolbar>
+    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:titleTextColor="@color/white" />

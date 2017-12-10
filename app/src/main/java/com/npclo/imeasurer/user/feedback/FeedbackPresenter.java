@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.feedback;
+package com.npclo.imeasurer.user.feedback;
 
 /**
  * Created by Endless on 2017/9/4.

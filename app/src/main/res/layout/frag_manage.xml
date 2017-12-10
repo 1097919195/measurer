@@ -5,6 +5,8 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <include layout="@layout/base_toolbar" />
+
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/input_old_pwd"
         android:layout_width="match_parent"

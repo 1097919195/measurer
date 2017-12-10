@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.manage;
+package com.npclo.imeasurer.user.manage;
 
 import android.support.annotation.NonNull;
 

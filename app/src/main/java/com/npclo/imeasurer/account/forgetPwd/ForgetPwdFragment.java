@@ -28,9 +28,12 @@ import butterknife.Unbinder;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 
+/**
+ * @author Endless
+ */
 public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract.View {
     private static String TAG = ForgetPwdFragment.class.getSimpleName();
-    @BindView(R.id.base_toolbar_title)
+    @BindView(R.id.support_frag_toolbar)
     TextView baseToolbarTitle;
     @BindView(R.id.base_toolbar)
     Toolbar baseToolbar;

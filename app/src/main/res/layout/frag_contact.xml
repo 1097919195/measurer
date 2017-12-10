@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--<include layout="@layout/base_toolbar" />-->
+            <include layout="@layout/base_toolbar" />
 
             <ImageView
                 android:layout_width="157dp"

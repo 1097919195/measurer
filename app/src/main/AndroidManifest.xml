@@ -45,6 +45,9 @@
         <activity
             android:name=".camera.CaptureActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".user.UserActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

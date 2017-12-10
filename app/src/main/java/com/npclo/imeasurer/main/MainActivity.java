@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.main;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,19 +20,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
-import com.npclo.imeasurer.main.contact.ContactFragment;
-import com.npclo.imeasurer.main.feedback.FeedbackFragment;
 import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.main.home.HomePresenter;
-import com.npclo.imeasurer.main.manage.ManageFragment;
-import com.npclo.imeasurer.main.manage.ManagePresenter;
+import com.npclo.imeasurer.user.UserActivity;
+import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 
 import kr.co.namee.permissiongen.PermissionGen;
-
-import static me.yokeyword.fragmentation.ISupportFragment.SINGLETASK;
 
 /**
  * @author Endless
@@ -117,7 +114,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备").setIcon(R.drawable.ic_blueteeth_unconnected);
         } else {
             deviceName = preferences.getString("device_name", null);
-            setBlueTooth();
+            updateBlueToothState();
         }
         View headerView = navView.getHeaderView(0);
         TextView currTimes = (TextView) headerView.findViewById(R.id.curr_times);
@@ -131,7 +128,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userName.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
     }
 
-    public void setBlueTooth() {
+    public void updateBlueToothState() {
         //先清除蓝牙设备信息菜单项
         navView.getMenu().removeItem(R.id.nav_device);
         navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备(已绑定: " + deviceName + ")")
@@ -157,6 +154,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 drawerLayout.closeDrawers();
                 break;
             case R.id.nav_instruction:
+                drawerLayout.closeDrawers();
+                Intent instructionIntent = new Intent(this, UserActivity.class);
+                instructionIntent.putExtra("support_type", Constant.UserInstruction);
+                startActivity(instructionIntent);
                 break;
             case R.id.nav_device:
                 if (TextUtils.isEmpty(macAddress)) {
@@ -191,19 +192,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_account:
                 drawerLayout.closeDrawers();
-                ManageFragment manageFragment = ManageFragment.newInstance();
-                start(manageFragment, SINGLETASK);
-                manageFragment.setPresenter(new ManagePresenter(manageFragment, SchedulerProvider.getInstance()));
+                Intent pwdIntent = new Intent(this, UserActivity.class);
+                pwdIntent.putExtra("support_type", Constant.UserPwd);
+                startActivity(pwdIntent);
                 break;
             case R.id.nav_feedback:
                 drawerLayout.closeDrawers();
-                FeedbackFragment feedbackFragment = FeedbackFragment.newInstance();
-                start(feedbackFragment, SINGLETASK);
+                Intent feedbackIntent = new Intent(this, UserActivity.class);
+                feedbackIntent.putExtra("support_type", Constant.UserFeedback);
+                startActivity(feedbackIntent);
                 break;
             case R.id.nav_link:
                 drawerLayout.closeDrawers();
-                ContactFragment contactFragment = ContactFragment.newInstance();
-                start(contactFragment, SINGLETASK);
+                Intent contactIntent = new Intent(this, UserActivity.class);
+                contactIntent.putExtra("support_type", Constant.UserContact);
+                startActivity(contactIntent);
                 break;
             case R.id.nav_version:
                 drawerLayout.closeDrawers();

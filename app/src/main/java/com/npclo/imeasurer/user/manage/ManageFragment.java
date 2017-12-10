@@ -1,10 +1,11 @@
-package com.npclo.imeasurer.main.manage;
+package com.npclo.imeasurer.user.manage;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -25,6 +26,8 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * @author Endless
  */
 public class ManageFragment extends BaseFragment implements ManageContract.View {
+    @BindView(R.id.support_frag_toolbar)
+    Toolbar toolbar;
     @BindView(R.id.input_old_pwd)
     AppCompatEditText inputOldPwd;
     @BindView(R.id.input_new_pwd1)
@@ -51,11 +54,8 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-    }
-
-    @Override
-    protected String setFragmentTitle() {
-        return "修改密码";
+        toolbar.setTitle("修改密码");
+        initToolbar(toolbar);
     }
 
     @Override
@@ -101,7 +101,6 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
         }
         return field.length() < 6;
     }
-
 
     public static ManageFragment newInstance() {
         return new ManageFragment();

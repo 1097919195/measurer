@@ -1,7 +1,8 @@
-package com.npclo.imeasurer.main.feedback;
+package com.npclo.imeasurer.user.feedback;
 
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -14,12 +15,13 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- *
  * @author Endless
  * @date 2017/9/4
  */
 
 public class FeedbackFragment extends BaseFragment implements FeedbackContract.View {
+    @BindView(R.id.support_frag_toolbar)
+    Toolbar toolbar;
     @BindView(R.id.input_content)
     AppCompatEditText inputContent;
     //    @BindView(R.id.action_add_feedback_img)
@@ -43,11 +45,8 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-    }
-
-    @Override
-    protected String setFragmentTitle() {
-        return getString(R.string.prompt_feedback);
+        toolbar.setTitle(getString(R.string.prompt_feedback));
+        initToolbar(toolbar);
     }
 
     @Override

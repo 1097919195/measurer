@@ -1,5 +1,6 @@
 package com.npclo.imeasurer.base;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.data.app.App;
+import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.ApiException;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
@@ -31,7 +33,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  */
 public abstract class BaseFragment extends SupportFragment {
     protected View mRootView;
-    protected Toolbar toolbar;
 
     @Nullable
     @Override
@@ -44,13 +45,14 @@ public abstract class BaseFragment extends SupportFragment {
         return mRootView;
     }
 
-    void initComToolbar() {
-        toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
-        toolbar.setTitle(setFragmentTitle());
+    protected void initComToolbar() {
     }
 
-    protected String setFragmentTitle() {
-        return null;
+    protected void initToolbar(Toolbar toolbar) {
+        toolbar.setNavigationIcon(R.mipmap.left);
+        toolbar.setNavigationOnClickListener(view ->
+                startActivity(new Intent(getActivity(), MainActivity.class))
+        );
     }
 
     @Override

@@ -37,10 +37,13 @@ import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
+import com.npclo.imeasurer.main.home.HomeFragment;
+import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
+import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.exceptions.BleGattException;
@@ -148,6 +151,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private static final int SCAN_HINT = 1001;
     private static final int CODE_HINT = 1002;
     private String[] measureSequence;
+    private Toolbar toolbar;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -159,11 +163,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    protected String setFragmentTitle() {
-        return "量体";
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.frag_measure;
     }
@@ -171,7 +170,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        initToolbar();
         //渲染测量部位列表
         initMeasureItemList();
         ItemAdapter adapter = new ItemAdapter(getActivity(), R.layout.list_measure_item, (ArrayList<Part>) partList);
@@ -223,20 +221,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 textView.setTextColor(getResources().getColor(R.color.measured));
             }
         }
-    }
-
-    private void initToolbar() {
-//        baseToolbarTitle.setText("量体");
-//        baseToolbar.setNavigationIcon(R.mipmap.left);
-//        baseToolbar.setNavigationOnClickListener(c -> {
-//            HomeFragment homeFragment = HomeFragment.newInstance();
-//            start(homeFragment, SINGLETASK);
-//            homeFragment.setPresenter(new HomePresenter(BaseApplication.getRxBleClient(getActivity()),
-//                    homeFragment, SchedulerProvider.getInstance()));
-//        });
-
-        toolbar.inflateMenu(R.menu.base_toolbar_menu);
-        toolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
     }
 
     @Override
@@ -298,6 +282,22 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         popupWindow.dismiss();
         firstHint = true;
         speechSynthesizer = null;
+    }
+
+    @Override
+    protected void initComToolbar() {
+        toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
+        toolbar.setTitle("量体");
+        toolbar.setNavigationIcon(R.mipmap.left);
+        toolbar.setNavigationOnClickListener(c -> {
+            HomeFragment homeFragment = HomeFragment.newInstance();
+            start(homeFragment, SINGLETASK);
+            homeFragment.setPresenter(new HomePresenter(BaseApplication.getRxBleClient(getActivity()),
+                    homeFragment, SchedulerProvider.getInstance()));
+        });
+
+        toolbar.inflateMenu(R.menu.base_toolbar_menu);
+        toolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
     }
 
     @OnClick({R.id.save_measure_result, R.id.wechat_gender_edit, R.id.camera_add, R.id.next_person,

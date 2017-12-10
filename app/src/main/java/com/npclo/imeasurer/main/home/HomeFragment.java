@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -110,12 +111,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-//        if (BaseApplication.getFirstCheckHint(getActivity())) {
-        if (mPresenter != null) {
-            mPresenter.subscribe(); // FIXME: 2017/12/8 app闲置后  mPresenter对象为空
+        if (BaseApplication.getFirstCheckHint(getActivity())) {
+            if (mPresenter != null) {
+                mPresenter.subscribe(); // FIXME: 2017/12/8 app闲置后  mPresenter对象为空
+            }
+            BaseApplication.setIsFirstCheck(getActivity());
         }
-//            BaseApplication.setIsFirstCheck(getActivity());
-//        }
         LogUtils.upload(getActivity());
     }
 
@@ -128,9 +129,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    protected String setFragmentTitle() {
-        return getString(R.string.app_name);
-        // FIXME: 2017/12/8 按返回键后title不会修改
+    protected void initComToolbar() {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
+        toolbar.setTitle(getString(R.string.app_name));
     }
 
     @Override
@@ -319,7 +320,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         setBleDeviceName(bleDevice.getName());
         setBleAddress(bleDevice.getMacAddress());
         //更新设备连接信息状态
-        ((MainActivity) getActivity()).setBlueTooth();
+        ((MainActivity) getActivity()).updateBlueToothState();
     }
 
     @Override
