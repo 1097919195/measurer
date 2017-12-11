@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.measure;
+package com.npclo.imeasurer.measure;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
@@ -37,6 +37,8 @@ public interface MeasureContract {
         void onHandleMeasureError();
 
         void onHandleMeasureError(Throwable e);
+
+        void showPopWindow();
     }
 
     interface Presenter extends BasePresenter {

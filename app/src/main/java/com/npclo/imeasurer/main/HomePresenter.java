@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.home;
+package com.npclo.imeasurer.main;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -188,7 +188,8 @@ public class HomePresenter implements HomeContract.Presenter {
                             if (isCharacteristicNotifiable(characteristic)) {
                                 UUID uuid = characteristic.getUuid();
                                 fragment.onSetNotificationUUID(uuid);
-                                connectDevice(uuid);
+//                                connectDevice(uuid);
+                                fragment.onDeviceChoose(bleDevice);
                                 break;
                             }
                         }
@@ -222,7 +223,7 @@ public class HomePresenter implements HomeContract.Presenter {
                     .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(uuid))
                     .observeOn(mSchedulerProvider.ui())
                     .doOnSubscribe(this::connecting)
-                    .subscribe(c -> fragment.onShowConnected(bleDevice), this::onHandleConnectError);
+                    .subscribe(c -> fragment.onDeviceChoose(bleDevice), this::onHandleConnectError);
         }
     }
 

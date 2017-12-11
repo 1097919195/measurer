@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.measure;
+package com.npclo.imeasurer.measure;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +20,6 @@ import java.util.ArrayList;
  *         gridview 适配器
  */
 public class ItemAdapter extends ArrayAdapter<Part> {
-    private static final String TAG = ItemAdapter.class.getSimpleName();
     private Context mContext;
     private int layoutResourceId;
     private ArrayList<Part> mGridData = new ArrayList<>();

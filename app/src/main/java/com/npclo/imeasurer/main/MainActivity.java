@@ -21,8 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
-import com.npclo.imeasurer.main.home.HomeFragment;
-import com.npclo.imeasurer.main.home.HomePresenter;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
@@ -37,7 +35,6 @@ import kr.co.namee.permissiongen.PermissionGen;
  */
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private Toolbar toolbar;
     private NavigationView navView;
     private DrawerLayout drawerLayout;
     private HomePresenter homePresenter;
@@ -54,10 +51,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initSpeech() {
-        String appkey = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
-        String appsecret = "29aa998c451d64d9334269546a4021b8";
         if (speechSynthesizer == null) {
-            speechSynthesizer = new SpeechSynthesizer(this, appkey, appsecret);
+            speechSynthesizer = new SpeechSynthesizer(this, Constant.APP_KEY, Constant.APP_SECRET);
         }
         speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
         speechSynthesizer.init(null);
@@ -88,13 +83,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             loadRootFragment(R.id.content_frame, homeFragment);
             homePresenter = new HomePresenter(BaseApplication.getRxBleClient(this),
                     homeFragment, SchedulerProvider.getInstance());
-            toolbar.setTitle("首页");// FIXME: 2017/12/7 不起作用
         }
     }
 
     protected void initView() {
         setContentView(R.layout.act_main_new);
-        toolbar = (Toolbar) findViewById(R.id.basetoolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.basetoolbar);
         setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -115,7 +109,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备").setIcon(R.drawable.ic_blueteeth_unconnected);
         } else {
             deviceName = preferences.getString("device_name", null);
-            updateBlueToothState();
+            updateBlueToothState(deviceName);
         }
         View headerView = navView.getHeaderView(0);
         TextView currTimes = (TextView) headerView.findViewById(R.id.curr_times);
@@ -129,10 +123,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userName.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
     }
 
-    public void updateBlueToothState() {
+    public void updateBlueToothState(String name) {
         //先清除蓝牙设备信息菜单项
         navView.getMenu().removeItem(R.id.nav_device);
-        navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备(已绑定: " + deviceName + ")")
+        navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备(已绑定: " + name + ")")
                 .setIcon(R.drawable.ic_blueteeth_connected);
     }
 
@@ -158,7 +152,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 drawerLayout.closeDrawers();
                 Toast.makeText(this, "暂无使用说明", Toast.LENGTH_SHORT).show();
 //              Intent instructionIntent = new Intent(this, UserActivity.class);
-//                instructionIntent.putExtra("support_type", Constant.UserInstruction);
+//                instructionIntent.putExtra("support_type", Constant.USER_INSTRUCTION);
 //                startActivity(instructionIntent);
                 break;
             case R.id.nav_device:
@@ -195,19 +189,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_account:
                 drawerLayout.closeDrawers();
                 Intent pwdIntent = new Intent(this, UserActivity.class);
-                pwdIntent.putExtra("support_type", Constant.UserPwd);
+                pwdIntent.putExtra("support_type", Constant.USER_PWD);
                 startActivity(pwdIntent);
                 break;
             case R.id.nav_feedback:
                 drawerLayout.closeDrawers();
                 Intent feedbackIntent = new Intent(this, UserActivity.class);
-                feedbackIntent.putExtra("support_type", Constant.UserFeedback);
+                feedbackIntent.putExtra("support_type", Constant.USER_FEEDBACK);
                 startActivity(feedbackIntent);
                 break;
             case R.id.nav_link:
                 drawerLayout.closeDrawers();
                 Intent contactIntent = new Intent(this, UserActivity.class);
-                contactIntent.putExtra("support_type", Constant.UserContact);
+                contactIntent.putExtra("support_type", Constant.USER_CONTACT);
                 startActivity(contactIntent);
                 break;
             case R.id.nav_version:

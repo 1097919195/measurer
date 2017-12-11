@@ -46,7 +46,7 @@ public class FeedbackFragment extends BaseFragment implements FeedbackContract.V
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         toolbar.setTitle(getString(R.string.prompt_feedback));
-        initToolbar(toolbar);
+        navOfToolbar(toolbar);
     }
 
     @Override

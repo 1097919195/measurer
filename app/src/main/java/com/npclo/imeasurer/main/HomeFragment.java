@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.home;
+package com.npclo.imeasurer.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,12 +21,8 @@ import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.data.wuser.WechatUser;
-import com.npclo.imeasurer.main.MainActivity;
-import com.npclo.imeasurer.main.measure.MeasureFragment;
-import com.npclo.imeasurer.main.measure.MeasurePresenter;
-import com.npclo.imeasurer.utils.Gog;
+import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.LogUtils;
-import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
@@ -141,7 +136,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                     .progress(true, 100)
                     .backgroundColor(getResources().getColor(R.color.white))
                     .show();
-            Gog.e(cirProgressBar.toString());
         } else {
             cirProgressBar.dismiss();
         }
@@ -155,24 +149,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onGetWechatUserInfo(WechatUser user) {
         showLoading(false);
-        MeasureFragment measureFragment = findFragment(MeasureFragment.class);
-        if (measureFragment == null) {
-            measureFragment = MeasureFragment.newInstance();
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("user", user);
-            measureFragment.setArguments(bundle);
-            SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name),
-                    Context.MODE_APPEND);
-            int offsetMeasure = preferences.getInt("measure_offset", 14);
-            String address = preferences.getString("mac_address", null);
-            if (!TextUtils.isEmpty(address)) {
-                RxBleDevice device = BaseApplication.getRxBleClient(getActivity()).getBleDevice(address);
-                new MeasurePresenter(measureFragment, SchedulerProvider.getInstance(), offsetMeasure, address, device);
-                start(measureFragment);
-            } else {
-                showToast("未连接蓝牙设备");
-            }
-        }
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("user", user);
+        Intent intent = new Intent(getActivity(), MeasureActivity.class);
+        intent.putExtra("userBundle", bundle);
+        startActivity(intent);
     }
 
     @Override
@@ -294,8 +275,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void onSetNotificationUUID(UUID characteristicUUID) {
-        BaseApplication.setNotificationUUID(getActivity(), characteristicUUID);
+    public void onSetNotificationUUID(UUID uuid) {
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+                Context.MODE_APPEND).edit();
+        edit.putString("uuid", uuid.toString());
+        edit.apply();
     }
 
     private void setBleAddress(String s) {
@@ -313,14 +297,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void onShowConnected(RxBleDevice bleDevice) {
-        cirProgressBar.dismiss();
+    public void onDeviceChoose(RxBleDevice bleDevice) {
         showToast(getString(R.string.device_connected));
         getSynthesizer().playText("蓝牙连接成功");
         setBleDeviceName(bleDevice.getName());
         setBleAddress(bleDevice.getMacAddress());
         //更新设备连接信息状态
-        ((MainActivity) getActivity()).updateBlueToothState();
+        ((MainActivity) getActivity()).updateBlueToothState(bleDevice.getName());
     }
 
     @Override

@@ -15,7 +15,7 @@
             android:background="@color/eee"
             android:orientation="vertical">
 
-            <!--<include layout="@layout/base_toolbar" />-->
+            <include layout="@layout/base_toolbar" />
 
             <include layout="@layout/view_wechat_user_info" />
 

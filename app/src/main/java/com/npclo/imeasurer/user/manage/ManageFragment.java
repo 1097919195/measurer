@@ -55,7 +55,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         toolbar.setTitle("修改密码");
-        initToolbar(toolbar);
+        navOfToolbar(toolbar);
     }
 
     @Override

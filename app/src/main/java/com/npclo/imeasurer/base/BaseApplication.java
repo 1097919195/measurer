@@ -8,8 +8,6 @@ import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.internal.RxBleLog;
 import com.squareup.leakcanary.LeakCanary;
 
-import java.util.UUID;
-
 /**
  *
  * @author Endless
@@ -18,7 +16,6 @@ import java.util.UUID;
 
 public class BaseApplication extends Application {
     private RxBleClient rxBleClient;
-    private UUID characteristicUUID;
     private boolean haveUpdate = false;
     private boolean isFirstCheckUpdate = true;
     public static Context AppContext;
@@ -47,17 +44,12 @@ public class BaseApplication extends Application {
         crashHandler.init(this);
     }
 
-    public static void setNotificationUUID(Context context, UUID characteristicUUID) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        application.characteristicUUID = characteristicUUID;
-    }
-
-    public static UUID getUUID(Context context) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        return application.characteristicUUID;
-    }
-
     /*=================TODO  elegant handle this=====================**/
+
+    /**
+     * @param context
+     * @param b
+     */
     public static void haveUpdate(Context context, boolean b) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
         application.haveUpdate = b;

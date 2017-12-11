@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.measure;
+package com.npclo.imeasurer.measure;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -44,9 +44,10 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private UUID uuid;
     private String macAddress;
     private int offset;
+    private Observable<RxBleConnection> connectionObservable;
 
     public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider,
-                            int offsetMeasure, String address, RxBleDevice bleDevice) {
+                            int offsetMeasure, String address, RxBleDevice bleDevice, @NonNull UUID u) {
         fragment = checkNotNull(view);
         this.schedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
@@ -54,11 +55,12 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         offset = offsetMeasure;
         macAddress = address;
         device = checkNotNull(bleDevice);
+        uuid = u;
     }
 
     @Override
     public void subscribe() {
-        startMeasure();
+        reConnect();
     }
 
     @Override
@@ -144,52 +146,47 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     @Override
     public void reConnect() {
+        //att 判断之前是否已连接测量设备
+//        if (!isConnected()) {
+//            startMeasure();
+//        }
         if (isConnected()) {
             triggerDisconnect();
-        } else {
-//            triggerDisconnect();
-//            connectionObservable = prepareConnectionObservable();
-//            Subscription subscribe = connectionObservable
+//            Subscription subscribe = prepareConnectionObservable()
 //                    .flatMap(RxBleConnection::discoverServices)
 //                    .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(uuid))
 //                    .observeOn(schedulerProvider.ui())
 //                    .subscribe(characteristic -> {
 //                                Log.d("tag", "reConnect startMeasure");
-            startMeasure();
+//                                startMeasure();
 //                            },
-//                            this::onConnectionFailure,
-//                            this::onConnectionFinished
+//                            e -> fragment.onHandleMeasureError(e),
+//                            () -> fragment.showLoading(false)
 //                    );
 //            mSubscriptions.add(subscribe);
+        } else {
+            startMeasure();
         }
     }
 
     private Observable<RxBleConnection> prepareConnectionObservable() {
-        if (macAddress != null) {
-            return device.establishConnection(false)
-                    .takeUntil(disconnectTriggerSubject)
-                    .compose(new ConnectionSharingAdapter());
-        } else {
-            return null;
-        }
+        return device.establishConnection(false)
+                .takeUntil(disconnectTriggerSubject)
+                .compose(new ConnectionSharingAdapter());
     }
 
     /**
      * 开启测量，需要检查device的状态
      */
     private void startMeasure() {
-        Observable<RxBleConnection> connectionObservable = prepareConnectionObservable();
-        if (connectionObservable != null) {
-            Subscription subscribe = connectionObservable
-                    .flatMap(rxBleConnection -> rxBleConnection.setupNotification(uuid))
-                    .flatMap(notificationObservable -> notificationObservable)
-                    .observeOn(schedulerProvider.ui())
-                    .throttleFirst(MEASURE_DURATION, TimeUnit.MILLISECONDS)
-                    .subscribe(this::onHandleMeasureResult, this::onHandleMeasureError);
-            mSubscriptions.add(subscribe);
-        } else {
-            fragment.onShowDevicePrepareConnectionError();
-        }
+        connectionObservable = prepareConnectionObservable();
+        Subscription subscribe = connectionObservable
+                .flatMap(rxBleConnection -> rxBleConnection.setupNotification(uuid))
+                .flatMap(notificationObservable -> notificationObservable)
+                .observeOn(schedulerProvider.ui())
+                .throttleFirst(MEASURE_DURATION, TimeUnit.MILLISECONDS)
+                .subscribe(this::onHandleMeasureResult, this::onHandleMeasureError);
+        mSubscriptions.add(subscribe);
     }
 
     @Override
@@ -198,7 +195,10 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private void triggerDisconnect() {
-        disconnectTriggerSubject.onNext(null);
+//        disconnectTriggerSubject.onNext(null);
+//        connectionObservable = null;
+        device.establishConnection(false);
+        startMeasure();
     }
 
     private boolean isConnected() {

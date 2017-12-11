@@ -38,7 +38,7 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         toolbar.setTitle(getString(R.string.prompt_contact));
-        initToolbar(toolbar);
+        navOfToolbar(toolbar);
     }
 
     @Override

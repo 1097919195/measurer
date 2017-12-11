@@ -45,10 +45,19 @@ public abstract class BaseFragment extends SupportFragment {
         return mRootView;
     }
 
+    /**
+     * app默认页面的沉寂式toolbar的初始化
+     * 目前暂无更多的导航需要
+     */
     protected void initComToolbar() {
     }
 
-    protected void initToolbar(Toolbar toolbar) {
+    /**
+     * 其他页面的toolbar一些共同设置
+     *
+     * @param toolbar
+     */
+    protected void navOfToolbar(Toolbar toolbar) {
         toolbar.setNavigationIcon(R.mipmap.left);
         toolbar.setNavigationOnClickListener(view ->
                 startActivity(new Intent(getActivity(), MainActivity.class))
@@ -145,4 +154,5 @@ public abstract class BaseFragment extends SupportFragment {
         }
         return sb.toString();
     }
+
 }

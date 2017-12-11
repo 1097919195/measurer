@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.home;
+package com.npclo.imeasurer.main;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
@@ -54,7 +54,7 @@ public interface HomeContract {
 
         void onSetNotificationUUID(UUID characteristicUUID);
 
-        void onShowConnected(RxBleDevice bleDevice);
+        void onDeviceChoose(RxBleDevice bleDevice);
 
         void onCloseScanResultDialog();
     }

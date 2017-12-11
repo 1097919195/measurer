@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.main.measure;
+package com.npclo.imeasurer.measure;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -30,15 +31,14 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.item.MeasurementItem;
 import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
-import com.npclo.imeasurer.main.home.HomeFragment;
 import com.npclo.imeasurer.utils.BitmapUtils;
+import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
@@ -47,7 +47,6 @@ import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.exceptions.BleGattException;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
-import com.unisound.client.SpeechSynthesizerListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,10 +79,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public static final int BATTERY_HIGH = 80;
     public static final String FEMALE = "女";
     public static final String MALE = "男";
-    //    @BindView(R.id.base_toolbar_title)
-//    TextView baseToolbarTitle;
-//    @BindView(R.id.base_toolbar)
-//    Toolbar baseToolbar;
+    @BindView(R.id.support_frag_toolbar)
+    Toolbar toolbar;
     @BindView(R.id.wechat_icon)
     ImageView wechatIcon;
     @BindView(R.id.wechat_nickname)
@@ -149,7 +145,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private static final int SCAN_HINT = 1001;
     private static final int CODE_HINT = 1002;
     private String[] measureSequence;
-    private Toolbar toolbar;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -195,13 +190,22 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         angleList = Arrays.asList(angleItems);
         //初始化所有测量部位
         measureSequence = getResources().getStringArray(R.array.items_sequence);
+
+        initToolbar();
+    }
+
+    private void initToolbar() {
+        toolbar.setTitle("量体");
+        navOfToolbar(toolbar);
+        toolbar.inflateMenu(R.menu.base_toolbar_menu);
+        toolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
     }
 
     private void initPopupWindow() {
         if (popupWindow == null) {
             popupWindow = new PopupWindow(getActivity());
-            popupWindow.setWidth(Toolbar.LayoutParams.MATCH_PARENT);
-            popupWindow.setHeight(Toolbar.LayoutParams.WRAP_CONTENT);
+            popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             View popupContent = LayoutInflater.from(getActivity()).inflate(R.layout.view_popupwindow, null);
             popupWindow.setContentView(popupContent);
             popupContentTv = (AppCompatTextView) popupContent.findViewById(R.id.tv_item);
@@ -222,22 +226,15 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        UUID characteristicUUID = BaseApplication.getUUID(getActivity());
-        measurePresenter.setUUID(characteristicUUID);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        //初始化测量弹窗
-        initPopupWindow();
         //初始化语音播报
         initSpeech();
-        measurePresenter.subscribe();
-        Bundle bundle = getArguments();
-        user = bundle.getParcelable("user");
+        if (measurePresenter != null) {
+            measurePresenter.subscribe();
+        }
+
+        user = getActivity().getIntent().getBundleExtra("userBundle").getParcelable("user");
         //仅接收homefragment传值过来的用户信息时才赋值，从当前fragment发起的意图返回结果不在此处进行赋值调用
         if (user != null) {
             setWechatUserInfo(user);
@@ -255,7 +252,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 firstHint = false;
             }
             speechSynthesizer.playText(s2 + s);
-            popupContentTv.setText(s);//更新当前测量部位弹窗显示
+            if (popupContentTv != null) {
+                popupContentTv.setText(s);//更新当前测量部位弹窗显示
+            }
         }
     }
 
@@ -277,24 +276,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void onPause() {
         super.onPause();
         measurePresenter.unsubscribe();
-        popupWindow.dismiss();
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+        }
         firstHint = true;
         speechSynthesizer = null;
-    }
-
-    @Override
-    protected void initComToolbar() {
-        toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
-        toolbar.setTitle("量体");
-        toolbar.setNavigationIcon(R.mipmap.left);
-//         FIXME: 10/12/2017 导航问题
-        toolbar.setNavigationOnClickListener(c -> {
-            HomeFragment homeFragment = HomeFragment.newInstance();
-            start(homeFragment, SINGLETASK);
-        });
-
-        toolbar.inflateMenu(R.menu.base_toolbar_menu);
-        toolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
     }
 
     @OnClick({R.id.save_measure_result, R.id.wechat_gender_edit, R.id.camera_add, R.id.next_person,
@@ -445,25 +431,12 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void initSpeech() {
-        String appkey = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
-        String appsecret = "29aa998c451d64d9334269546a4021b8";
         if (speechSynthesizer == null) {
-            speechSynthesizer = new SpeechSynthesizer(getActivity(), appkey, appsecret);
+            speechSynthesizer = new SpeechSynthesizer(getActivity(), Constant.APP_KEY, Constant.APP_SECRET);
         }
         speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
         speechSynthesizer.setOption(SpeechConstants.TTS_KEY_VOICE_SPEED, 70);
-        speechSynthesizer.setTTSListener(new SpeechSynthesizerListener() {
-            @Override
-            public void onEvent(int i) {
-
-            }
-
-            @Override
-            public void onError(int i, String s) {
-
-            }
-        });
-        speechSynthesizer.init(null);// FIXME: 2017/8/24 语音播报需要联网
+        speechSynthesizer.init(null);
     }
 
     private void initMeasureItemList() {
@@ -492,6 +465,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void onHandleMeasureError(Throwable e) {
+        Gog.e("出错了======" + e.toString());
         if (e instanceof BleGattException) {
             toast2Speech("蓝牙连接断开");
 //             showReConnectDialog();
@@ -500,6 +474,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         } else {
             super.onHandleError(e);
         }
+    }
+
+    @Override
+    public void showPopWindow() {
+        initPopupWindow();
     }
 
     private void showReConnectDialog() {
@@ -726,17 +705,18 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             case CROP_PHOTO:
                 try {
                     if (data != null) {
+                        // FIXME: 11/12/2017 获取大图（根据图片文件名获取大图）
                         Bundle bundle = data.getExtras();
-                        Bitmap bm = bundle.getParcelable("data");
+                        Bitmap bitmap = bundle.getParcelable("data");
                         FrameLayout frameLayout = unVisibleView.get(0);
                         ImageView imageView = (ImageView) frameLayout.getChildAt(0);
-                        Matrix matrix = new Matrix();// att 裁剪压缩图片
+                        Matrix matrix = new Matrix();
                         matrix.setScale(0.5f, 0.5f);
-                        Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(),
-                                bm.getHeight(), matrix, true);// FIXME: 2017/9/11 bitmap为空
-                        bm.recycle();
-                        imageView.setImageBitmap(bm1);
-                        frameLayout.setVisibility(View.VISIBLE);
+                        Bitmap bm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                                bitmap.getHeight(), matrix, true);
+                        bitmap.recycle();
+                        imageView.setImageBitmap(bm);
+                        frameLayout.getChildAt(1).setVisibility(View.VISIBLE);
                         unVisibleView.remove(0);
                     }
                 } catch (Exception e) {

@@ -26,20 +26,20 @@ public class UserActivity extends BaseActivity {
 
     private void initFragment(int supportType) {
         switch (supportType) {
-            case Constant.UserPwd:
+            case Constant.USER_PWD:
                 ManageFragment manageFragment = ManageFragment.newInstance();
                 loadRootFragment(R.id.content_frame, manageFragment);
                 manageFragment.setPresenter(new ManagePresenter(manageFragment, SchedulerProvider.getInstance()));
                 break;
-            case Constant.UserFeedback:
+            case Constant.USER_FEEDBACK:
                 FeedbackFragment feedbackFragment = FeedbackFragment.newInstance();
                 loadRootFragment(R.id.content_frame, feedbackFragment);
                 break;
-            case Constant.UserContact:
+            case Constant.USER_CONTACT:
                 ContactFragment contactFragment = ContactFragment.newInstance();
                 loadRootFragment(R.id.content_frame, contactFragment);
                 break;
-            case Constant.UserInstruction:
+            case Constant.USER_INSTRUCTION:
                 break;
             default:
                 break;
