@@ -3,6 +3,7 @@ package com.npclo.imeasurer.measure;
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
 import com.npclo.imeasurer.data.measure.Measurement;
+import com.npclo.imeasurer.data.measure.Result;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 
 import java.util.UUID;
@@ -18,7 +19,7 @@ public interface MeasureContract {
 
         void handleMeasureData(float v, float a2, int a3);
 
-        void onSaveSuccess();
+        void onSaveSuccess(Result result);
 
         void showSaveError(Throwable e);
 

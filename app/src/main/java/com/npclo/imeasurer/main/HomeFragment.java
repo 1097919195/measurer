@@ -20,6 +20,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
+import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.measure.MeasureActivity;
@@ -335,8 +336,31 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         edit.putString("items", arr.trim());
         //置空量体合同号
         edit.putString("contractName", null);
+        edit.putString("cid", null);
+        edit.putInt("num", 0);
+        edit.putInt("measured", 0);
         edit.apply();
         showToast("设置默认量体项目成功");
+    }
+
+    @Override
+    public void onHandleContractInfo(Contract contract) {
+        // FIXME: 11/12/2017 更好的解决方法，存储到数据库中
+        String arr = "";
+        List<Item> list = contract.getData();
+        for (int i = 0, l = list.size(); i < l; i++) {
+            arr += list.get(i).getCn() + ",";
+        }
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+                Context.MODE_APPEND).edit();
+        edit.putString("items", arr.trim());
+        //设置量体合同号信息
+        edit.putString("contractName", contract.getName());
+        edit.putString("cid", contract.getId());
+        edit.putInt("num", contract.getNum());
+        edit.putInt("measured", 0);
+        edit.apply();
+        showToast("合同: " + contract.getName() + "量体项目加载成功");
     }
 
     /**
@@ -359,14 +383,22 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         switch (resultCode) {
             case SCAN_HINT:
                 if (result != null) {
-                    mPresenter.getUserInfoWithOpenID(result, uid);
+                    if (requestCode == REQUEST_CODE_CONTRACT) {
+                        mPresenter.getContractInfoWithCode(result);
+                    } else if (requestCode == REQUEST_CODE_WECHATUSER) {
+                        mPresenter.getUserInfoWithOpenID(result, uid);
+                    }
                 } else {
                     showToast(getString(R.string.scan_qrcode_failed));
                 }
                 break;
             case CODE_HINT:
                 if (result != null) {
-                    mPresenter.getUserInfoWithCode(result, uid);
+                    if (requestCode == REQUEST_CODE_CONTRACT) {
+                        mPresenter.getContractInfoWithNum(result);
+                    } else if (requestCode == REQUEST_CODE_WECHATUSER) {
+                        mPresenter.getUserInfoWithCode(result, uid);
+                    }
                 } else {
                     showToast(getString(R.string.enter_qrcode_error));
                 }

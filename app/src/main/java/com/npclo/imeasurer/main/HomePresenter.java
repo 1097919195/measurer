@@ -218,7 +218,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        partList -> fragment.onDefaultMeasureParts(partList),
+                        list -> fragment.onDefaultMeasureParts(list),
                         e -> fragment.showGetInfoError(e),
                         () -> fragment.showLoading(false));
         mSubscriptions.add(subscribe);
@@ -227,6 +227,35 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void getThirdOrgMeasurePartByContractNum() {
         fragment.startScanContractNum();
+    }
+
+    /**
+     * 扫码获取合同量体部位
+     *
+     * @param result 扫码结果
+     */
+    @Override
+    public void getContractInfoWithCode(String result) {
+        Subscription subscribe = new MeasurementHelper()
+                .getContractInfoWithCode(result)
+                .subscribeOn(mSchedulerProvider.io())
+                .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(
+                        contract -> fragment.onHandleContractInfo(contract),
+                        e -> fragment.showGetInfoError(e),
+                        () -> fragment.showLoading(false));
+        mSubscriptions.add(subscribe);
+    }
+
+    /**
+     * 输入编号获取合同量体部位
+     *
+     * @param result 输入编号
+     */
+    @Override
+    public void getContractInfoWithNum(String result) {
+
     }
 
     private void onHandleConnectError(Throwable e) {
@@ -250,4 +279,5 @@ public class HomePresenter implements HomeContract.Presenter {
     private void connecting() {
         fragment.showLoading(true);
     }
+
 }

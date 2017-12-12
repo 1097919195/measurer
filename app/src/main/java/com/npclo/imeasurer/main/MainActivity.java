@@ -37,7 +37,7 @@ import kr.co.namee.permissiongen.PermissionGen;
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private NavigationView navView;
     private DrawerLayout drawerLayout;
-    private HomePresenter homePresenter;
+    private HomeContract.Presenter homePresenter;
     private String macAddress;
     private String deviceName;
     public SpeechSynthesizer speechSynthesizer;
@@ -191,7 +191,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .backgroundColor(getResources().getColor(R.color.white))
                         .title(R.string.contract_setting)
                         .content(R.string.contract_instruction)
-//                        .contentColor(getResources().getColor(R.color.ff5001))
                         .positiveText(R.string.new_contract)
                         .negativeText(R.string.default_contract)
                         .onPositive((dialog, action) ->

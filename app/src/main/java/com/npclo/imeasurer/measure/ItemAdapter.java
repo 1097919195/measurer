@@ -66,7 +66,6 @@ public class ItemAdapter extends ArrayAdapter<Part> {
         holder.img1.setFocusable(false);
         holder.img2.setFocusable(false);
 
-        // FIXME: 12/12/2017 使用rxbinding
         holder.img1.setOnClickListener(i -> {
                     float o;
                     String s = offsetView.getText().toString();

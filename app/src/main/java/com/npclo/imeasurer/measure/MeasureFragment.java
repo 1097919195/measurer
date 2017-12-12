@@ -32,7 +32,9 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.Part;
+import com.npclo.imeasurer.data.measure.Result;
 import com.npclo.imeasurer.data.wuser.WechatUser;
+import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;
@@ -65,6 +67,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
+import static com.npclo.imeasurer.R.id.measure_stat_al;
 
 /**
  * @author Endless
@@ -117,7 +120,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     ImageView imageView2;
     @BindView(R.id.measure_type)
     TextView measureType;
-    @BindView(R.id.measure_stat_al)
+    @BindView(measure_stat_al)
     TextView measureStatAl;
     @BindView(R.id.measure_stat_no)
     TextView measureStatNo;
@@ -194,18 +197,22 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         initToolbar();
 
         String contractName = preferences.getString("contractName", null);
+        int unMeasuredPersons = preferences.getInt("num", 0);
+        int measured = preferences.getInt("measured", 0);
         if (!TextUtils.isEmpty(contractName)) {
             contractStat.setVisibility(View.VISIBLE);
             measureType.setText(contractName);
-            // TODO: 12/12/2017 更新按合同量体统计
+            measureStatAl.setText(String.valueOf(measured));
+            measureStatNo.setText(String.valueOf(unMeasuredPersons));
         }
     }
 
     private void initToolbar() {
         toolbar.setTitle("量体");
-        navOfToolbar(toolbar);
         toolbar.inflateMenu(R.menu.base_toolbar_menu);
         toolbar.getMenu().getItem(0).setIcon(R.mipmap.battery_unknown);
+        toolbar.setNavigationIcon(R.mipmap.left);
+        toolbar.setNavigationOnClickListener(view -> showHandleBackPress());
     }
 
     private void resetTextViewClickState() {
@@ -361,15 +368,22 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 TextView valueTv = (TextView) layout.getChildAt(2);
                 float value = Float.parseFloat(valueTv.getText().toString());
                 String s = ((EditText) ((LinearLayout) layout.getChildAt(4)).getChildAt(1)).getText().toString();
-                float offset = Float.parseFloat(s);
+                Float offset;
+                if (!TextUtils.isEmpty(s)) {
+                    offset = Float.parseFloat(s);
+                } else {
+                    offset = 0.0f;
+                }
                 Part part = new Part(cn, value, offset);
                 data.add(part);
             }
 
-            String cid = preferences.getString("id", "");
+            String uid = preferences.getString("id", "");
             String oid = preferences.getString("orgId", "");
+            //自由量体，合同id固定为10000
+            String cid = preferences.getString("cid", "10000");
 
-            Measurement measurement = new Measurement(user, data, cid, oid);
+            Measurement measurement = new Measurement(user, data, uid, oid, cid);
             MultipartBody.Part[] imgs = new MultipartBody.Part[3];
             if (img1.getDrawable() != null) {
                 imgs[0] = drawable2file(img1, "img1");
@@ -516,9 +530,20 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void onSaveSuccess() {
+    public void onSaveSuccess(Result result) {
         showToast("保存成功");
         unmeasuredItemHint.setText("保存成功");
+        if (!"10000".equals(result.getId())) {
+            //非自由量体，更新量体信息
+            measureStatAl.setText(String.valueOf(result.getMal()));
+            measureStatNo.setText(String.valueOf(result.getMno()));
+            SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+                    Context.MODE_APPEND).edit();
+            //设置量体合同号信息
+            edit.putInt("num", result.getMno());
+            edit.putInt("measured", result.getMal());
+            edit.apply();
+        }
         //清除所有已测量项目
         clearAndMeasureNext();
         btnSave.setVisibility(View.GONE);
@@ -526,7 +551,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void clearAndMeasureNext() {
-        // FIXME: 12/12/2017 清除上一人量体信息
         int count = gridView.getChildCount();
         for (int i = 0; i < count; i++) {
             LinearLayout linearLayout = (LinearLayout) gridView.getChildAt(i);
@@ -793,5 +817,26 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     protected void toast2Speech(String s) {
         speechSynthesizer.playText(s);
+    }
+
+    /**
+     * 不使用第三方库提供的按两下返回键退出机制
+     * 防止量体过程中不小心按到返回键
+     *
+     * @return
+     */
+    @Override
+    public boolean onBackPressedSupport() {
+        showHandleBackPress();
+        return true;
+    }
+
+    private void showHandleBackPress() {
+        new MaterialDialog.Builder(getActivity())
+                .title("确定要离开当前量体界面?")
+                .onPositive((d, i) -> startActivity(new Intent(getActivity(), MainActivity.class)))
+                .positiveText(getResources().getString(R.string.sure))
+                .negativeText("点错了")
+                .show();
     }
 }

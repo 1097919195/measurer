@@ -3,6 +3,7 @@ package com.npclo.imeasurer.main;
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
 import com.npclo.imeasurer.data.app.App;
+import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -38,6 +39,10 @@ public interface HomeContract {
          * 根据合同号获取第三方组织的量体部位
          */
         void getThirdOrgMeasurePartByContractNum();
+
+        void getContractInfoWithCode(String result);
+
+        void getContractInfoWithNum(String result);
     }
 
     interface View extends BaseView<Presenter> {
@@ -73,5 +78,7 @@ public interface HomeContract {
         void onDefaultMeasureParts(List<Item> partList);
 
         void startScanContractNum();
+
+        void onHandleContractInfo(Contract contract);
     }
 }

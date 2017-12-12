@@ -31,10 +31,10 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
-            android:layout_gravity="center"
             android:text="量体部位"
             android:textAlignment="center" />
 
@@ -46,11 +46,11 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
-            android:text="测量结果(单位: cm)"
+            android:text="测量结果(cm/°)"
             android:textAlignment="center" />
 
         <View
@@ -60,12 +60,12 @@
 
         <TextView
             android:layout_width="0dp"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
-            android:text="成衣尺寸调整(单位: cm)"
+            android:text="成衣尺寸调整(cm/°)"
             android:textAlignment="center" />
     </LinearLayout>
 

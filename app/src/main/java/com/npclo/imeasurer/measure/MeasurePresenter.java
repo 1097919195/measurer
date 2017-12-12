@@ -109,7 +109,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
-                .subscribe(v -> fragment.onSaveSuccess(),
+                .subscribe(result -> fragment.onSaveSuccess(result),
                         e -> fragment.showSaveError(e),
                         () -> fragment.showSaveCompleted()
                 );

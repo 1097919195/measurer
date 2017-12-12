@@ -1,8 +1,9 @@
 package com.npclo.imeasurer.utils.http.measurement;
 
 
-import com.npclo.imeasurer.data.HttpResponse;
+import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
+import com.npclo.imeasurer.data.measure.Result;
 import com.npclo.imeasurer.utils.http.HttpHelper;
 
 import java.util.List;
@@ -20,14 +21,15 @@ public class MeasurementHelper extends HttpHelper {
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<List<Item>> getMeasureParts(String oid, String cid) {
+    public Observable<Contract> getContractInfoWithCode(String id) {
         return retrofit.create(MeasurementService.class)
-                .getMeasureParts(oid, cid)
+                .getMeasureParts(id)
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<HttpResponse> saveMeasurement(String measurement, MultipartBody.Part[] imgs) {
+    public Observable<Result> saveMeasurement(String measurement, MultipartBody.Part[] imgs) {
         return retrofit.create(MeasurementService.class)
-                .saveMeasurement(measurement, imgs);
+                .saveMeasurement(measurement, imgs)
+                .map(new HttpResponseFunc<>());
     }
 }

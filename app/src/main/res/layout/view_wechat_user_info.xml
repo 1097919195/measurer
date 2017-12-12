@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="量体形式: "
+                android:text="量体单位: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 

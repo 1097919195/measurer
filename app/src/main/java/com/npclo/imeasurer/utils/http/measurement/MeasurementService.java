@@ -1,8 +1,10 @@
 package com.npclo.imeasurer.utils.http.measurement;
 
 import com.npclo.imeasurer.data.HttpResponse;
+import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.measure.Measurement;
+import com.npclo.imeasurer.data.measure.Result;
 
 import java.util.List;
 
@@ -26,13 +28,13 @@ public interface MeasurementService {
     Observable<HttpResponse<List<Item>>> getDefaultMeasureParts(@Query("oid") String orgId);
 
     @GET("measureparts/contract")
-    Observable<HttpResponse<List<Item>>> getMeasureParts(@Query("oid") String orgId, @Query("cid") String cid);
+    Observable<HttpResponse<Contract>> getMeasureParts(@Query("id") String id);
 
     @GET("measurement/single/{id}")
     Observable<HttpResponse<Measurement>> getMeasurement(@Path("id") String id);
 
     @Multipart
     @POST("measurement/save")
-    Observable<HttpResponse> saveMeasurement(
+    Observable<HttpResponse<Result>> saveMeasurement(
             @Part("measurement") String measurement, @Part MultipartBody.Part[] imgs);
 }
