@@ -186,6 +186,25 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         }).show();
                 drawerLayout.closeDrawers();
                 break;
+            case R.id.nav_contract:
+                new MaterialDialog.Builder(this)
+                        .backgroundColor(getResources().getColor(R.color.white))
+                        .title(R.string.contract_setting)
+                        .content(R.string.contract_instruction)
+//                        .contentColor(getResources().getColor(R.color.ff5001))
+                        .positiveText(R.string.new_contract)
+                        .negativeText(R.string.default_contract)
+                        .onPositive((dialog, action) ->
+                                homePresenter.getThirdOrgMeasurePartByContractNum()
+                        )
+                        .onNegative((dialog, action) -> {
+                                    String orgId = getSharedPreferences(getString(R.string.app_name), MODE_APPEND).getString("orgId", null);
+                                    homePresenter.getThirdOrgDefaultParts(orgId);
+                                }
+                        )
+                        .show();
+                drawerLayout.closeDrawers();
+                break;
             case R.id.nav_account:
                 drawerLayout.closeDrawers();
                 Intent pwdIntent = new Intent(this, UserActivity.class);

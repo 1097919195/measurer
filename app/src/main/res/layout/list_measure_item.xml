@@ -1,17 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="42dp"
-    android:layout_gravity="center"
+    android:layout_height="36dp"
     android:background="@color/white"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal">
 
     <com.npclo.imeasurer.utils.views.MyTextView
-        android:id="@+id/tv"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:id="@+id/item_title"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
         android:gravity="center"
         android:textColor="@color/unmeasured"
         android:textSize="16sp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/c999" />
+
+    <TextView
+        android:id="@+id/item_value"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="@color/primary"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/c999" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <ImageButton
+            android:id="@+id/btnDecrease"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/btn_minus" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:id="@+id/et_offset"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/edit_amount"
+            android:gravity="center"
+            android:hint="0"
+            android:inputType="number" />
+
+        <ImageButton
+            android:id="@+id/btnIncrease"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/btn_plus" />
+    </LinearLayout>
+
 </LinearLayout>

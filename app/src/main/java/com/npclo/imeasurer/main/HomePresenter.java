@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.data.user.UserRepository;
+import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -207,6 +208,25 @@ public class HomePresenter implements HomeContract.Presenter {
                 .subscribe(app -> fragment.onGetVersionInfo(app),
                         e -> fragment.onGetVersionError(e), () -> fragment.showLoading(false));
         mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void getThirdOrgDefaultParts(String oid) {
+        Subscription subscribe = new MeasurementHelper()
+                .getDefaultMeasureParts(oid)
+                .subscribeOn(mSchedulerProvider.io())
+                .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(
+                        partList -> fragment.onDefaultMeasureParts(partList),
+                        e -> fragment.showGetInfoError(e),
+                        () -> fragment.showLoading(false));
+        mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void getThirdOrgMeasurePartByContractNum() {
+        fragment.startScanContractNum();
     }
 
     private void onHandleConnectError(Throwable e) {

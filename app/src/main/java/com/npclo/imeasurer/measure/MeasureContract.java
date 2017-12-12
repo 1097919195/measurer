@@ -18,7 +18,7 @@ public interface MeasureContract {
 
         void handleMeasureData(float v, float a2, int a3);
 
-        void showSuccessSave();
+        void onSaveSuccess();
 
         void showSaveError(Throwable e);
 
@@ -37,8 +37,6 @@ public interface MeasureContract {
         void onHandleMeasureError();
 
         void onHandleMeasureError(Throwable e);
-
-        void showPopWindow();
     }
 
     interface Presenter extends BasePresenter {

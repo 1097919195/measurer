@@ -55,12 +55,4 @@ public class MeasureActivity extends BaseActivity {
             }
         }
     }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            measureFragment.showPopWindow();
-        }
-    }
 }

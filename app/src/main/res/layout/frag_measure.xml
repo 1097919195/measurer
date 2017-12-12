@@ -2,7 +2,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/eee"
     android:orientation="vertical">
+
+    <include layout="@layout/base_toolbar" />
+
+    <include layout="@layout/view_wechat_user_info" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/unmeasured_item_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="待测部位"
+        android:textAlignment="center"
+        android:textColor="@color/unmeasured"
+        android:textSize="42sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/measure_layout_header_bg">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:layout_gravity="center"
+            android:text="量体部位"
+            android:textAlignment="center" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/c999" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="测量结果(单位: cm)"
+            android:textAlignment="center" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/c999" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="成衣尺寸调整(单位: cm)"
+            android:textAlignment="center" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,10 +79,6 @@
             android:layout_height="wrap_content"
             android:background="@color/eee"
             android:orientation="vertical">
-
-            <include layout="@layout/base_toolbar" />
-
-            <include layout="@layout/view_wechat_user_info" />
 
             <include layout="@layout/view_mygridview" />
 
@@ -38,7 +99,7 @@
             android:text="@string/save_measure_result"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/next_person"
@@ -49,7 +110,7 @@
             android:text="@string/next_person"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:visibility="invisible" />
     </FrameLayout>
 </LinearLayout>

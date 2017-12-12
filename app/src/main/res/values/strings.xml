@@ -148,4 +148,9 @@
     <string name="input_offset_hint">请输入正确的量尺偏移数据</string>
     <string name="btn_save">保存</string>
     <string name="default_value">14</string>
+    <string name="contract">合同号(默认)</string>
+    <string name="contract_setting">设置合同号</string>
+    <string name="contract_instruction">测量部位与合同号一一对应。点击恢复为默认：测量部位为默认部位；点击扫码设置新合同号，可更新量体部位信息</string>
+    <string name="new_contract">扫码设置新合同号</string>
+    <string name="default_contract">恢复为默认</string>
 </resources>

@@ -20,6 +20,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
+import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.LogUtils;
@@ -43,7 +44,8 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * @author Endless
  */
 public class HomeFragment extends BaseFragment implements HomeContract.View {
-    public static final int REQUEST_CODE = 1001;
+    public static final int REQUEST_CODE_WECHATUSER = 1201;
+    private static final int REQUEST_CODE_CONTRACT = 1202;
     @BindView(R.id.scan_img)
     ImageView scanImg;
     @BindView(R.id.scan_hint)
@@ -98,9 +100,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
     }
 
+    /**
+     * 扫码微信用户二维码
+     */
     private void startScan() {
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
+        startActivityForResult(intent, REQUEST_CODE_WECHATUSER);
     }
 
     @Override
@@ -316,6 +321,31 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDefaultMeasureParts(List<Item> partList) {
+        // FIXME: 11/12/2017 更好的解决方法，存储到数据库中
+        String arr = "";
+        for (int i = 0, l = partList.size(); i < l; i++) {
+            arr += partList.get(i).getCn() + ",";
+        }
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+                Context.MODE_APPEND).edit();
+        edit.putString("items", arr.trim());
+        //置空量体合同号
+        edit.putString("contractName", null);
+        edit.apply();
+        showToast("设置默认量体项目成功");
+    }
+
+    /**
+     * 扫描合同二维码
+     */
+    @Override
+    public void startScanContractNum() {
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_CONTRACT);
     }
 
     @Override

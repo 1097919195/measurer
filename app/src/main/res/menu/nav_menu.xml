@@ -5,6 +5,12 @@
         android:id="@+id/device"
         android:menuCategory="container">
         <item
+            android:id="@+id/nav_device"
+            android:icon="@drawable/ic_blueteeth_connected"
+            android:orderInCategory="0"
+            android:title="@string/zhanwei" />
+        <!--已绑定点击弹框是否需要解绑(确定：扫描新设备)，未绑定点击弹出扫描蓝牙-->
+        <item
             android:id="@+id/nav_offset_setting"
             android:icon="@drawable/ic_offset_setting"
             android:title="@string/offset_setting" />
@@ -13,11 +19,9 @@
             android:icon="@mipmap/instruction_book"
             android:title="@string/instruction" />
         <item
-            android:id="@+id/nav_device"
-            android:icon="@drawable/ic_blueteeth_connected"
-            android:orderInCategory="0"
-            android:title="@string/zhanwei" />
-        <!--已绑定点击弹框是否需要解绑(确定：扫描新设备)，未绑定点击弹出扫描蓝牙-->
+            android:id="@+id/nav_contract"
+            android:icon="@drawable/ic_contract"
+            android:title="@string/contract" />
     </group>
     <group
         android:id="@+id/other"

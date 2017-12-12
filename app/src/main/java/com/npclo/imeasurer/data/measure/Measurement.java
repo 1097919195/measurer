@@ -3,7 +3,6 @@ package com.npclo.imeasurer.data.measure;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.npclo.imeasurer.data.measure.item.parts.Part;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 
 import java.util.List;

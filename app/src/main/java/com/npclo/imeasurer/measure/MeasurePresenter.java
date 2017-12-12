@@ -109,7 +109,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
-                .subscribe(v -> fragment.showSuccessSave(),
+                .subscribe(v -> fragment.onSaveSuccess(),
                         e -> fragment.showSaveError(e),
                         () -> fragment.showSaveCompleted()
                 );
@@ -164,9 +164,8 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 //                            () -> fragment.showLoading(false)
 //                    );
 //            mSubscriptions.add(subscribe);
-        } else {
-            startMeasure();
         }
+        startMeasure();
     }
 
     private Observable<RxBleConnection> prepareConnectionObservable() {
@@ -195,10 +194,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     private void triggerDisconnect() {
-//        disconnectTriggerSubject.onNext(null);
-//        connectionObservable = null;
-        device.establishConnection(false);
-        startMeasure();
+        disconnectTriggerSubject.onNext(null);
     }
 
     private boolean isConnected() {
