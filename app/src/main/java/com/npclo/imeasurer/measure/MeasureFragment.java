@@ -248,7 +248,12 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 s = ((MyTextView) unMeasuredList.get(0).getChildAt(0)).getText().toString();
             } else {
                 s2 = "请确定待测人员性别，首先测量部位";
-                s = measureSequence[0];
+                // FIXME: 13/12/2017 语音播报生命周期
+                if (measureSequence == null) {
+                    s = partList.get(0).getCn();
+                } else {
+                    s = measureSequence[0];
+                }
                 firstHint = false;
             }
             speechSynthesizer.playText(s2 + s);
@@ -273,7 +278,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onPause() {
         super.onPause();
-        measurePresenter.unsubscribe();
+        if (measurePresenter != null) {
+            measurePresenter.unsubscribe();
+        }
         firstHint = true;
         speechSynthesizer = null;
     }
@@ -800,7 +807,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void startPhotoCrop(Uri imageUri) {
-        Intent intent = new Intent("com.android.camera.action.CROP"); //剪裁
+        Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(imageUri, "image/*");
         intent.putExtra("scale", true);
         //设置宽高比例

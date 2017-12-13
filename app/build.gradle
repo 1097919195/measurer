@@ -1,12 +1,10 @@
 apply plugin: 'com.android.application'
-//rxjava debug
-apply plugin: 'com.fernandocejas.frodo'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "com.npclo.IMeasurer"
+        applicationId "com.npclo.IMeasurer_third"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 12
