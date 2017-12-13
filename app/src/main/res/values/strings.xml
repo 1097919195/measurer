@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">格心科技</string>
+    <string name="app_name">格心科技第三方App</string>
     <string name="scan_qrcode_prompt">请对准二维码进行扫描</string>
     <string name="scan_input_prompt">手动输入二维码编号</string>
     <!-- Strings related to signIn -->
