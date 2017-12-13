@@ -341,6 +341,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         edit.putInt("measured", 0);
         edit.apply();
         showToast("设置默认量体项目成功");
+        updateContractName("默认");
     }
 
     @Override
@@ -361,6 +362,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         edit.putInt("measured", 0);
         edit.apply();
         showToast("合同: " + contract.getName() + "量体项目加载成功");
+        updateContractName(contract.getName());
+    }
+
+    private void updateContractName(String name) {
+        ((MainActivity) getActivity()).updateContractName(name);
     }
 
     /**

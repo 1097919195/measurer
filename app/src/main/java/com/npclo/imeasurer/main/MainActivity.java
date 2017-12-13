@@ -126,7 +126,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void updateBlueToothState(String name) {
         //先清除蓝牙设备信息菜单项
         navView.getMenu().removeItem(R.id.nav_device);
-        navView.getMenu().add(R.id.device, R.id.nav_device, 0, "扫描设备(已绑定: " + name + ")")
+        navView.getMenu()
+                .add(R.id.device, R.id.nav_device, 0, "扫描设备(已绑定: " + name + ")")
                 .setIcon(R.drawable.ic_blueteeth_connected);
     }
 
@@ -230,5 +231,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
         }
         return false;
+    }
+
+    public void updateContractName(String name) {
+        navView.getMenu().removeItem(R.id.nav_contract);
+        navView.getMenu()
+                .add(R.id.device, R.id.nav_contract, 1, "合同号(" + name + ")")
+                .setIcon(R.drawable.ic_contract);
     }
 }
