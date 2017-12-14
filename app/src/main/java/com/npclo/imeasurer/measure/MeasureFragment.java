@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
@@ -38,7 +38,6 @@ import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;
-import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
@@ -46,9 +45,7 @@ import com.polidea.rxandroidble.exceptions.BleGattException;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -77,6 +74,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public static final int BATTERY_HIGH = 80;
     public static final String FEMALE = "女";
     public static final String MALE = "男";
+    public static final String JPG_SUFFIX = ".jpg";
     @BindView(R.id.support_frag_toolbar)
     Toolbar toolbar;
     @BindView(R.id.wechat_icon)
@@ -143,11 +141,13 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private LinearLayout modifyingView;
     private boolean initUmMeasureListFlag;
     private Uri imageUri;
-    private boolean firstHint = true;
     private static final int SCAN_HINT = 1001;
     private static final int CODE_HINT = 1002;
     private String[] measureSequence;
     private SharedPreferences preferences;
+    public static final File PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+    private String picName;
+    private String firstMeasurePartName;
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -205,6 +205,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             measureStatAl.setText(String.valueOf(measured));
             measureStatNo.setText(String.valueOf(unMeasuredPersons));
         }
+        initSpeech();
     }
 
     private void initToolbar() {
@@ -229,10 +230,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void onResume() {
         super.onResume();
         //初始化语音播报
-        initSpeech();
         if (measurePresenter != null) {
             measurePresenter.subscribe();
         }
+        unmeasuredItemHint.setText(firstMeasurePartName);
 
         user = getActivity().getIntent().getBundleExtra("userBundle").getParcelable("user");
         //仅接收homefragment传值过来的用户信息时才赋值，从当前fragment发起的意图返回结果不在此处进行赋值调用
@@ -241,24 +242,24 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         }
 
         initUmMeasureListFlag = true;
-        if (firstHint) {
-            String s, s2;
-            if (unMeasuredList.size() > 0) {
-                s2 = "当前测量部位";
-                s = ((MyTextView) unMeasuredList.get(0).getChildAt(0)).getText().toString();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        String s2;
+        if (unMeasuredList.size() > 0) {
+            s2 = "当前测量部位";
+            firstMeasurePartName = ((MyTextView) unMeasuredList.get(0).getChildAt(0)).getText().toString();
+        } else {
+            s2 = "请确定待测人员性别，首先测量部位";
+            if (measureSequence == null) {
+                firstMeasurePartName = partList.get(0).getCn();
             } else {
-                s2 = "请确定待测人员性别，首先测量部位";
-                // FIXME: 13/12/2017 语音播报生命周期
-                if (measureSequence == null) {
-                    s = partList.get(0).getCn();
-                } else {
-                    s = measureSequence[0];
-                }
-                firstHint = false;
+                firstMeasurePartName = measureSequence[0];
             }
-            speechSynthesizer.playText(s2 + s);
-            unmeasuredItemHint.setText(s);
         }
+        speechSynthesizer.playText(s2 + firstMeasurePartName);
     }
 
     private void setWechatUserInfo(WechatUser u) {
@@ -281,7 +282,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         if (measurePresenter != null) {
             measurePresenter.unsubscribe();
         }
-        firstHint = true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
         speechSynthesizer = null;
     }
 
@@ -300,7 +305,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 measureNextPerson();
                 break;
             case R.id.camera_add:
-                capturePic();
+                if (unVisibleView.size() > 0) {
+                    capturePic();
+                } else {
+                    showToast("已拍照三张特体图片");
+                }
                 break;
             case R.id.del_1:
             case R.id.del_2:
@@ -323,7 +332,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         FrameLayout parent = (FrameLayout) view.getParent();
         ImageView img = (ImageView) parent.getChildAt(0);
         img.setImageDrawable(null);
-        parent.setVisibility(View.INVISIBLE);
+        view.setVisibility(View.INVISIBLE);
         unVisibleView.add(0, parent);
     }
 
@@ -393,13 +402,13 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             Measurement measurement = new Measurement(user, data, uid, oid, cid);
             MultipartBody.Part[] imgs = new MultipartBody.Part[3];
             if (img1.getDrawable() != null) {
-                imgs[0] = drawable2file(img1, "img1");
+                imgs[0] = getSpecialBodyTypePic((String) img1.getTag());
             }
             if (img2.getDrawable() != null) {
-                imgs[1] = drawable2file(img2, "img2");
+                imgs[1] = getSpecialBodyTypePic((String) img2.getTag());
             }
             if (img3.getDrawable() != null) {
-                imgs[2] = drawable2file(img3, "img3");
+                imgs[2] = getSpecialBodyTypePic((String) img3.getTag());
             }
 
             measurePresenter.saveMeasurement(measurement, imgs);
@@ -409,27 +418,13 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     /**
-     * 上传特殊体型图片
-     * fixme 根据文件名获取大图，目前的图片只存比较小
+     * 读取特体大图
      *
-     * @param img      图片
-     * @param filename 文件名
-     * @return 上传文件数组
-     * @throws IOException
+     * @param filename
+     * @return
      */
-    private MultipartBody.Part drawable2file(ImageView img, String filename) throws IOException {
-
-        Bitmap bitmap = ((BitmapDrawable) img.getDrawable()).getBitmap();
-        File f = new File(getContext().getCacheDir(), filename);
-        f.createNewFile();
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
-        byte[] bitmapdata = bos.toByteArray();
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write(bitmapdata);
-        fos.flush();
-        fos.close();
+    private MultipartBody.Part getSpecialBodyTypePic(String filename) {
+        File f = new File(PATH + File.separator + filename + JPG_SUFFIX);
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
         return MultipartBody.Part.createFormData("img[]", filename, requestFile);
     }
@@ -470,25 +465,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public void onHandleMeasureError(Throwable e) {
         Gog.e("出错了======" + e.toString());
         if (e instanceof BleGattException) {
-            toast2Speech("蓝牙连接断开");
             measurePresenter.reConnect();
-            LogUtils.fixBug("蓝牙断开=>" + e.toString());
         } else {
             super.onHandleError(e);
         }
-    }
-
-    private void showReConnectDialog() {
-        new MaterialDialog.Builder(getActivity())
-                .contentColor(getResources().getColor(R.color.primary))
-                .backgroundColor(getResources().getColor(R.color.white))
-                .content("蓝牙连接断开，重新连接蓝牙？")
-                .positiveText("确定")
-                .negativeText("取消")
-                .positiveColor(getResources().getColor(R.color.ff5001))
-                .negativeColor(getResources().getColor(R.color.c252527))
-                .onPositive((dialog, which) -> measurePresenter.reConnect())
-                .show();
     }
 
     private void initUnMeasureList() {
@@ -567,9 +547,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             textTv.setState(MeasureStateEnum.UNMEASUED.ordinal());
             textTv.setTextColor(getResources().getColor(R.color.unmeasured));
         }
-        frame1.setVisibility(View.INVISIBLE);
-        frame2.setVisibility(View.INVISIBLE);
-        frame3.setVisibility(View.INVISIBLE);
+        frame1.getChildAt(1).setVisibility(View.INVISIBLE);
+        frame2.getChildAt(1).setVisibility(View.INVISIBLE);
+        frame3.getChildAt(1).setVisibility(View.INVISIBLE);
         img1.setImageDrawable(null);
         img2.setImageDrawable(null);
         img3.setImageDrawable(null);
@@ -714,7 +694,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             case CROP_PHOTO:
                 try {
                     if (data != null) {
-                        // FIXME: 11/12/2017 获取大图（根据图片文件名获取大图）
                         Bundle bundle = data.getExtras();
                         Bitmap bitmap = bundle.getParcelable("data");
                         FrameLayout frameLayout = unVisibleView.get(0);
@@ -738,13 +717,18 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 Intent intentBc1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 intentBc1.setData(imageUri);
                 getActivity().sendBroadcast(intentBc1);
-                Bitmap bitmap = BitmapUtils.decodeUri(getActivity(), imageUri, 800, 800);//att 获得小预览图
+                Bitmap bitmap = BitmapUtils.decodeUri(getActivity(), imageUri, 800, 800);
                 FrameLayout frameLayout = unVisibleView.get(0);
                 ImageView imageView = (ImageView) frameLayout.getChildAt(0);
                 if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
-                    frameLayout.setVisibility(View.VISIBLE);
+                    frameLayout.getChildAt(1).setVisibility(View.VISIBLE);
                     unVisibleView.remove(0);
+                    if (!TextUtils.isEmpty(picName)) {
+                        imageView.setTag(picName);
+                    }
+                } else {
+                    showToast("拍照失败");
                 }
                 break;
             case SCAN_HINT:
@@ -782,7 +766,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     private void capturePic() {
         Date date = new Date(System.nanoTime());
-        String picName;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             // 计算md5函数
@@ -792,8 +775,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             picName = date.toString();
             e.printStackTrace();
         }
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File outputImage = new File(path, picName + ".jpg");
+        File outputImage = new File(PATH, picName + JPG_SUFFIX);
         try {
             outputImage.createNewFile();
         } catch (IOException e) {
@@ -801,9 +783,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         }
         //将File对象转换为Uri并启动照相程序
         imageUri = Uri.fromFile(outputImage);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
-        startActivityForResult(intent, DISPLAY_PHOTO); //启动照相
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, DISPLAY_PHOTO);
     }
 
     private void startPhotoCrop(Uri imageUri) {
