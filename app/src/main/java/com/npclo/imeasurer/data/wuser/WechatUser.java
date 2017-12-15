@@ -22,6 +22,8 @@ public class WechatUser implements Parcelable {
     private String avatar;
     @NonNull
     private String name;
+    @Nullable
+    private int times;
 
     protected WechatUser(Parcel in) {
         gender = in.readInt();
@@ -31,6 +33,7 @@ public class WechatUser implements Parcelable {
         openID = in.readString();
         avatar = in.readString();
         name = in.readString();
+        times = in.readInt();
     }
 
     public static final Creator<WechatUser> CREATOR = new Creator<WechatUser>() {
@@ -116,6 +119,15 @@ public class WechatUser implements Parcelable {
         return 0;
     }
 
+    @Nullable
+    public int getTimes() {
+        return times;
+    }
+
+    public void setTimes(@Nullable int times) {
+        this.times = times;
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(gender);
@@ -125,5 +137,6 @@ public class WechatUser implements Parcelable {
         parcel.writeString(openID);
         parcel.writeString(avatar);
         parcel.writeString(name);
+        parcel.writeInt(times);
     }
 }

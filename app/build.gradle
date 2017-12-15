@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "com.npclo.IMeasurer_third"
+        applicationId "com.npclo.IMeasurer_company"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 12

@@ -274,6 +274,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         } else {
             wechatIcon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         }
+        if (u.getTimes() > 0) {
+            showToast("该用户已量体" + u.getTimes() + "次");
+        }
     }
 
     @Override
@@ -598,7 +601,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void onShowDevicePrepareConnectionError() {
-        showToast("蓝牙状态异常，请重新连接");
+        showToast("蓝牙连接失败，请重新连接");
     }
 
     @Override

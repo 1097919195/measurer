@@ -5,7 +5,9 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 /**
- * Created by Endless on 2017/7/19.
+ * @author Endless
+ *         量体师类
+ * @date 2017/7/19
  */
 
 public class User implements Parcelable {
@@ -39,10 +41,10 @@ public class User implements Parcelable {
         return this;
     }
 
-    @Nullable
-    public String getPwd() {
-        return pwd;
-    }
+//    @Nullable
+//    public String getPwd() {
+//        return pwd;
+//    }
 
 //    public void setPwd(@Nullable String pwd) {
 //        this.pwd = pwd;

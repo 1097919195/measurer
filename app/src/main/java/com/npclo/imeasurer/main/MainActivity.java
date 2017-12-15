@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name), MODE_APPEND);
         macAddress = preferences.getString("mac_address", null);
         if (TextUtils.isEmpty(macAddress)) {
-            navView.getMenu().add(R.id.device, R.id.nav_device, 0, "连接设备").setIcon(R.drawable.ic_blueteeth_unconnected);
+            navView.getMenu().add(R.id.device, R.id.nav_device, 0, "连接智能尺").setIcon(R.drawable.ic_blueteeth_unconnected);
         } else {
             deviceName = preferences.getString("device_name", null);
             updateBlueToothState(deviceName);
@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         //先清除蓝牙设备信息菜单项
         navView.getMenu().removeItem(R.id.nav_device);
         navView.getMenu()
-                .add(R.id.device, R.id.nav_device, 0, "连接设备(已绑定: " + name + ")")
+                .add(R.id.device, R.id.nav_device, 0, "连接智能尺(已绑定: " + name + ")")
                 .setIcon(R.drawable.ic_blueteeth_connected);
     }
 
@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     drawerLayout.closeDrawers();
                 } else {
                     new MaterialDialog.Builder(this)
-                            .title("已绑定设备" + deviceName + "，需要更换设备？")
+                            .title("已绑定智能尺: " + deviceName + "，需要连接新智能尺？")
                             .titleColor(getResources().getColor(R.color.ff5001))
                             .positiveText(R.string.sure)
                             .negativeText(R.string.cancel)

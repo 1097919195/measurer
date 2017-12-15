@@ -99,8 +99,8 @@ public abstract class BaseFragment extends SupportFragment {
         } else if (e instanceof ApiException) {
             showToast(e.getMessage());
         } else if (e instanceof BleException) {
-            showToast("蓝牙设备异常，请重试");
-            toast2Speech("蓝牙设备异常，请重试");
+            showToast(getResources().getString(R.string.ble_error_hint));
+            toast2Speech(getResources().getString(R.string.ble_error_hint));
         } else {
             String message = getStackMsg(e);
             Gog.d(message);
