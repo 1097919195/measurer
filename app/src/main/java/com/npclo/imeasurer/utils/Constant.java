@@ -14,10 +14,12 @@ public class Constant {
             R.mipmap.ic_launcher
     };
 
+    public static final String HTTP_PREFIX = "http";
     public static final int USER_PWD = 1;
     public static final int USER_FEEDBACK = 2;
     public static final int USER_CONTACT = 3;
     public static final int USER_INSTRUCTION = 4;
     public static final String APP_KEY = "hhzjkm3l5akcz5oiflyzmmmitzrhmsfd73lyl3y2";
     public static final String APP_SECRET = "29aa998c451d64d9334269546a4021b8";
+    public static final String IMG_URL = HTTP_PREFIX + "://img.npclo.com/org_logo/";
 }

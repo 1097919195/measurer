@@ -18,12 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
+import com.npclo.imeasurer.utils.views.CircleImageView;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
 
@@ -115,12 +117,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         TextView currTimes = (TextView) headerView.findViewById(R.id.curr_times);
         TextView totalTimes = (TextView) headerView.findViewById(R.id.total_times);
         TextView userName = (TextView) headerView.findViewById(R.id.user_name);
+        CircleImageView logo = (CircleImageView) headerView.findViewById(R.id.logo);
         // FIXME: 2017/12/5 非永久性数据应使用缓存
         currTimes.setText(preferences.getString("currTimes", "N/A"));
         totalTimes.setText(preferences.getString("totalTimes", "N/A"));
         String name = preferences.getString("name", "N/A");
-        String nickname = preferences.getString("nickname", "");
+        String nickname = preferences.getString("nickname", null);
         userName.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
+        String logoSrc = preferences.getString("logo", null);
+        if (!TextUtils.isEmpty(logoSrc)) {
+            Glide.with(this).load(Constant.IMG_URL + logoSrc).into(logo);
+        } else {
+            logo.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
+        }
     }
 
     public void updateBlueToothState(String name) {

@@ -185,6 +185,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onGetVersionError(Throwable e) {
+        showLoading(false);
         onHandleError(e);
     }
 

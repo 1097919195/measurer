@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.forgetPwd.ForgetPwdFragment;
@@ -24,6 +26,7 @@ import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.main.MainActivity;
+import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import butterknife.BindView;
@@ -33,6 +36,9 @@ import butterknife.Unbinder;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
+/**
+ * @author Endless
+ */
 public class SignInFragment extends BaseFragment implements SignInContract.View {
     Unbinder unbinder;
     @BindView(R.id.logo)
@@ -57,7 +63,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     ScrollView signInFrag;
 
     private SignInContract.Presenter signinPresenter;
-    private boolean pwd_label = true;
+    private boolean pwdLabel = true;
     @NonNull
     private Boolean isUserRememberPwd = true;
     private String name;
@@ -93,6 +99,13 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        String logoSrc = preferences.getString("logo", null);
+        if (!TextUtils.isEmpty(logoSrc)) {
+            Glide.with(this).load(Constant.IMG_URL + logoSrc).into(logo);
+        } else {
+            logo.setImageDrawable(getResources().getDrawable(R.mipmap.logo));
+        }
     }
 
     private boolean validate() {
@@ -125,15 +138,14 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.logo:
-                // TODO: 2017/8/30 link to the website
                 break;
             case R.id.input_eye:
-                if (pwd_label) {
+                if (pwdLabel) {
                     inputPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    pwd_label = false;
+                    pwdLabel = false;
                 } else {
                     inputPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    pwd_label = true;
+                    pwdLabel = true;
                 }
                 break;
             case R.id.action_remember_pwd:
@@ -180,7 +192,8 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         if (isUserRememberPwd) {
-            edit.putBoolean("loginState", true);//att 是否记住密码
+            edit.putBoolean("loginState", true);
+            //att 是否记住密码
         }
         // FIXME: 10/12/2017 时效性 数据永久性？
         edit.putString("id", user.get_id());
@@ -189,6 +202,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         edit.putString("orgId", user.getOrgId());
         edit.putString("currTimes", user.getCurrTimes() + "");
         edit.putString("totalTimes", user.getTotalTimes() + "");
+        edit.putString("logo", user.getLogo());
         edit.apply();
     }
 

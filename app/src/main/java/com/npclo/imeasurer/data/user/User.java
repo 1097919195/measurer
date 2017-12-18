@@ -71,6 +71,17 @@ public class User implements Parcelable {
     private int code;
     private String orgId;
     private String nickname;
+    @Nullable
+    private String logo;
+
+    @Nullable
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(@Nullable String logo) {
+        this.logo = logo;
+    }
 
     public String getNickname() {
         return nickname;

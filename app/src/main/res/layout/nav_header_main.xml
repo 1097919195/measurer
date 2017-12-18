@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    android:id="@+id/nav_header"
     android:background="@mipmap/background"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -16,6 +16,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <com.npclo.imeasurer.utils.views.CircleImageView
+        android:id="@+id/logo"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:scaleType="centerCrop"

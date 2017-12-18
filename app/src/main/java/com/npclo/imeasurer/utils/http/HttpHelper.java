@@ -2,6 +2,7 @@ package com.npclo.imeasurer.utils.http;
 
 import com.npclo.imeasurer.data.HttpResponse;
 import com.npclo.imeasurer.utils.ApiException;
+import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.aes.AesException;
 import com.npclo.imeasurer.utils.aes.AesUtils;
 
@@ -27,7 +28,7 @@ import rx.functions.Func1;
  */
 
 public class HttpHelper {
-    private static final String BASE_URL = "http://www.npclo.com/api/";
+    private static final String BASE_URL = Constant.HTTP_PREFIX + "://www.npclo.com/api/";
     private static final int DEFAULT_TIMEOUT = 600;
     protected Retrofit retrofit;
 

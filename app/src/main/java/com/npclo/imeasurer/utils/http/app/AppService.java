@@ -17,7 +17,7 @@ import rx.Observable;
  * @author Endless
  */
 public interface AppService {
-    @GET("client/info?type=third")
+    @GET("client/info?type=company")
     Observable<HttpResponse<App>> getLatestVersion();
 
     @Multipart
