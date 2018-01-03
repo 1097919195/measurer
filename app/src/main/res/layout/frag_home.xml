@@ -9,6 +9,7 @@
         android:id="@+id/scan_img"
         android:layout_width="181dp"
         android:layout_height="181dp"
+        android:scaleType="center"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="120dp"
         android:src="@mipmap/qrcode" />

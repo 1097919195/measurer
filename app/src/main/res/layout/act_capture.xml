@@ -69,6 +69,7 @@
         <ImageView
             android:layout_width="123dp"
             android:layout_height="91dp"
+            android:id="@+id/act_capture_logo"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80dp"
             android:src="@mipmap/logo_blue" />

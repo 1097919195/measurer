@@ -19,8 +19,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.resetpwd.ResetPwdFragment;
-import com.npclo.imeasurer.account.resetpwd.ResetPwdPresenter;
+import com.npclo.imeasurer.account.forgetpwd.ForgetPwdFragment;
+import com.npclo.imeasurer.account.forgetpwd.ForgetPwdPresenter;
 import com.npclo.imeasurer.account.signup.SignUpFragment;
 import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
@@ -162,9 +162,9 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
                 signinPresenter.signIn(name, password);
                 break;
             case R.id.forget_pwd_tv:
-                ResetPwdFragment fragment = ResetPwdFragment.newInstance();
+                ForgetPwdFragment fragment = ForgetPwdFragment.newInstance();
                 start(fragment, SINGLETASK);
-                fragment.setPresenter(new ResetPwdPresenter(fragment,
+                fragment.setPresenter(new ForgetPwdPresenter(fragment,
                         SchedulerProvider.getInstance()));
                 break;
             case R.id.signup_tv:
@@ -207,6 +207,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         edit.putString("currTimes", user.getCurrTimes() + "");
         edit.putString("totalTimes", user.getTotalTimes() + "");
         edit.putString("logo", user.getLogo());
+        edit.putString("title", user.getTitle());
         edit.apply();
     }
 

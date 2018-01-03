@@ -7,12 +7,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
@@ -24,6 +26,7 @@ import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.measure.MeasureActivity;
+import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
@@ -61,6 +64,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private MaterialDialog.Builder scanResultDialog;
     private MaterialDialog cirProgressBar;
     private MaterialDialog resultDialog;
+    private SharedPreferences preferences;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -76,6 +80,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         configureResultList();
+        preferences = getActivity().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_APPEND);
+        String logo = preferences.getString("logo", null);
+        if (!TextUtils.isEmpty(logo)) {
+            Glide.with(this).load(Constant.IMG_URL + logo).into(scanImg);
+        }
     }
 
     @Override
@@ -131,8 +140,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     protected void initComToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
-        toolbar.setTitle(getString(R.string.app_name));
+        Toolbar toolbar = getActivity().findViewById(R.id.basetoolbar);
+        String title = preferences.getString("title", null);
+        if (!TextUtils.isEmpty(title)) {
+            toolbar.setTitle(title);
+        } else {
+            toolbar.setTitle(getString(R.string.app_name));
+        }
     }
 
     @Override

@@ -41,15 +41,6 @@ public class User implements Parcelable {
         return this;
     }
 
-//    @Nullable
-//    public String getPwd() {
-//        return pwd;
-//    }
-
-//    public void setPwd(@Nullable String pwd) {
-//        this.pwd = pwd;
-//    }
-
     @Nullable
     public String get_id() {
         return _id;
@@ -73,6 +64,26 @@ public class User implements Parcelable {
     private String nickname;
     @Nullable
     private String logo;
+    @Nullable
+    private String title;
+
+    @Nullable
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(@Nullable String pwd) {
+        this.pwd = pwd;
+    }
+
+    @Nullable
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(@Nullable String title) {
+        this.title = title;
+    }
 
     @Nullable
     public String getLogo() {

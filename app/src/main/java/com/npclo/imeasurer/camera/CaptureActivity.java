@@ -1,7 +1,9 @@
 package com.npclo.imeasurer.camera;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,11 +17,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.npclo.imeasurer.R;
@@ -30,6 +34,7 @@ import com.npclo.imeasurer.camera.decode.CaptureActivityHandler;
 import com.npclo.imeasurer.camera.decode.InactivityTimer;
 import com.npclo.imeasurer.camera.view.ViewfinderView;
 import com.npclo.imeasurer.main.MainActivity;
+import com.npclo.imeasurer.utils.Constant;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -83,15 +88,15 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     }
 
     private void initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.left));
         toolbar.inflateMenu(R.menu.base_toolbar_menu);
         MenuItem item = toolbar.getMenu().getItem(0);
-        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText("扫描二维码");
         item.setTitle("帮助");
         item.setOnMenuItemClickListener(v -> {
-            Toast.makeText(CaptureActivity.this, "前往帮助界面", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CaptureActivity.this, "帮助界面开发中", Toast.LENGTH_SHORT).show();
             return false;
         });
         toolbar.setNavigationOnClickListener(v -> {
@@ -111,7 +116,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         // off screen.
         cameraManager = new CameraManager(getApplication());
 
-        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinderView);
+        viewfinderView = findViewById(R.id.viewfinderView);
         viewfinderView.setCameraManager(cameraManager);
         handler = null;
 
@@ -123,7 +128,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         decodeFormats = null;
         characterSet = null;
 
-        surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+        surfaceView = findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         handleEnterCode();
 
@@ -140,12 +145,12 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
 
     private void handleEnterCode() {
         //手动输入二维码编号
-        viewEnterQrcode = (LinearLayout) findViewById(R.id.view_enter_qrcode);
-        toManualEnterQrcode = (RelativeLayout) findViewById(R.id.to_manual_enter_qrcode);
+        viewEnterQrcode = findViewById(R.id.view_enter_qrcode);
+        toManualEnterQrcode = findViewById(R.id.to_manual_enter_qrcode);
         findViewById(R.id.enter_qrcode_img).setOnClickListener(v -> showEnterCodeView());
         findViewById(R.id.enter_qrcode_tv).setOnClickListener(v -> showEnterCodeView());
-        AppCompatButton btnEnterCode = (AppCompatButton) findViewById(R.id.action_enter_qrcode);
-        final EditText inputQrcode = (EditText) findViewById(R.id.input_qrcode);
+        AppCompatButton btnEnterCode = findViewById(R.id.action_enter_qrcode);
+        final EditText inputQrcode = findViewById(R.id.input_qrcode);
         btnEnterCode.setOnClickListener(v -> {
             String code = inputQrcode.getText().toString();
             if (!TextUtils.isEmpty(code)) {
@@ -167,6 +172,12 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         viewEnterQrcode.setVisibility(View.VISIBLE);
         toolbarTitle.setText("输入二维码编号");
         toManualEnterQrcode.setVisibility(View.GONE);
+        ImageView viewLogo = viewEnterQrcode.findViewById(R.id.act_capture_logo);
+        SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_APPEND);
+        String logo = preferences.getString("logo", null);
+        if (!TextUtils.isEmpty(logo)) {
+            Glide.with(this).load(Constant.IMG_URL + logo).into(viewLogo);
+        }
     }
 
     @Override
