@@ -10,8 +10,11 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
+/**
+ * @author Endless
+ */
 public class SignInPresenter implements SignInContract.Presenter {
-    private SignInContract.View mView;
+    private final SignInContract.View mView;
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
@@ -19,16 +22,14 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     public SignInPresenter(@NonNull SignInContract.View signinView,
                            @NonNull BaseSchedulerProvider schedulerProvider) {
-        signinView = checkNotNull(signinView);
         mSchedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
-        mView = signinView;
+        mView = checkNotNull(signinView);
         mView.setPresenter(this);
     }
 
     @Override
     public void subscribe() {
-        // TODO: 2017/8/30 maybe have bug
     }
 
     @Override
@@ -42,9 +43,9 @@ public class SignInPresenter implements SignInContract.Presenter {
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> mView.showLoading(true))
-                .subscribe(user -> mView.showSignInSuccess(user),
-                        e -> mView.showSignInError(e),
-                        () -> mView.completeSignIn());
+                .subscribe(mView::showSignInSuccess,
+                        mView::showSignInError,
+                        mView::completeSignIn);
         mSubscriptions.add(subscribe);
     }
 }

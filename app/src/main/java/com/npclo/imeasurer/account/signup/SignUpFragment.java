@@ -29,6 +29,9 @@ import butterknife.Unbinder;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
+/**
+ * @author Endless
+ */
 public class SignUpFragment extends BaseFragment implements SignUpContract.View {
 
     @BindView(R.id.input_mobile)
@@ -49,7 +52,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     private Unbinder bind;
     private String name;
     private String pwd;
-    private boolean pwd_label = true;
+    private boolean pwdLabel = true;
     private MaterialDialog dialog;
     private String code;
 
@@ -97,6 +100,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
         SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
+        // FIXME: 02/01/2018 修改此处的逻辑
         edit.putBoolean("loginState", true);
         edit.putString("id", user.get_id());
         edit.putString("name", user.getName());
@@ -170,12 +174,12 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
                 signUpPresenter.getValidCode(mobile, "signup");
                 break;
             case R.id.input_eye:
-                if (pwd_label) {
+                if (pwdLabel) {
                     inputPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    pwd_label = false;
+                    pwdLabel = false;
                 } else {
                     inputPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    pwd_label = true;
+                    pwdLabel = true;
                 }
                 break;
             case R.id.action_sign_up:

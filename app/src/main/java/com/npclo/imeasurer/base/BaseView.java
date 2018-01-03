@@ -16,6 +16,14 @@
 
 package com.npclo.imeasurer.base;
 
+/**
+ * @author Endless
+ */
 public interface BaseView<T> {
+    /**
+     * 为view设置presenter
+     *
+     * @param presenter T
+     */
     void setPresenter(T presenter);
 }

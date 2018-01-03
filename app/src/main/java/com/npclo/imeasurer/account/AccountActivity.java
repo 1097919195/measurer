@@ -13,11 +13,12 @@ import me.yokeyword.fragmentation.SupportActivity;
 
 /**
  * 管理用户登录和注册的界面，使用两个不同的fragment来分别承载
+ *
+ * @author Endless
  */
 public class AccountActivity extends SupportActivity {
-    // 再点一次退出程序时间设置
     private static final long WAIT_TIME = 2000L;
-    private long TOUCH_TIME = 0;
+    private long touchTime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,10 +43,10 @@ public class AccountActivity extends SupportActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             pop();
         } else {
-            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+            if (System.currentTimeMillis() - touchTime < WAIT_TIME) {
                 finish();
             } else {
-                TOUCH_TIME = System.currentTimeMillis();
+                touchTime = System.currentTimeMillis();
                 Toast.makeText(this, R.string.press_again_exit, Toast.LENGTH_SHORT).show();
             }
         }

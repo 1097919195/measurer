@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.account.forgetPwd;
+package com.npclo.imeasurer.account.forgetpwd;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +32,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * @author Endless
  */
 public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract.View {
-    private static String TAG = ForgetPwdFragment.class.getSimpleName();
     @BindView(R.id.support_frag_toolbar)
     TextView baseToolbarTitle;
     @BindView(R.id.base_toolbar)
@@ -63,13 +62,17 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe();
+        if (mPresenter != null) {
+            mPresenter.subscribe();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.unsubscribe();
+        if (mPresenter != null) {
+            mPresenter.unsubscribe();
+        }
     }
 
     @Override

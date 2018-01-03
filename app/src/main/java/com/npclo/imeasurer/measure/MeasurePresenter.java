@@ -33,7 +33,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private static final int MEASURE_DURATION = 500;
     public static final int STANDARD_BYTE = 16;
     @NonNull
-    private MeasureContract.View fragment;
+    private final MeasureContract.View fragment;
     @NonNull
     private BaseSchedulerProvider schedulerProvider;
     @NonNull

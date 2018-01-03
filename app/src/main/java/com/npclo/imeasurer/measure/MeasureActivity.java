@@ -22,8 +22,6 @@ import java.util.UUID;
 
 public class MeasureActivity extends BaseActivity {
 
-    private MeasureFragment measureFragment;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +35,7 @@ public class MeasureActivity extends BaseActivity {
     }
 
     private void init() {
-        measureFragment = findFragment(MeasureFragment.class);
+        MeasureFragment measureFragment = findFragment(MeasureFragment.class);
         if (measureFragment == null) {
             measureFragment = MeasureFragment.newInstance();
             loadRootFragment(R.id.content_frame, measureFragment);

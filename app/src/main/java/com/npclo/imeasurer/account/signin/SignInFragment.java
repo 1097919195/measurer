@@ -19,8 +19,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.forgetPwd.ForgetPwdFragment;
-import com.npclo.imeasurer.account.forgetPwd.ForgetPwdPresenter;
+import com.npclo.imeasurer.account.resetpwd.ResetPwdFragment;
+import com.npclo.imeasurer.account.resetpwd.ResetPwdPresenter;
 import com.npclo.imeasurer.account.signup.SignUpFragment;
 import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
@@ -77,13 +77,17 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     public void onResume() {
         super.onResume();
-        signinPresenter.subscribe();
+        if (signinPresenter != null) {
+            signinPresenter.subscribe();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        signinPresenter.unsubscribe();
+        if (signinPresenter != null) {
+            signinPresenter.unsubscribe();
+        }
     }
 
     @Override
@@ -158,9 +162,9 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
                 signinPresenter.signIn(name, password);
                 break;
             case R.id.forget_pwd_tv:
-                ForgetPwdFragment fragment = ForgetPwdFragment.newInstance();
+                ResetPwdFragment fragment = ResetPwdFragment.newInstance();
                 start(fragment, SINGLETASK);
-                fragment.setPresenter(new ForgetPwdPresenter(fragment,
+                fragment.setPresenter(new ResetPwdPresenter(fragment,
                         SchedulerProvider.getInstance()));
                 break;
             case R.id.signup_tv:
