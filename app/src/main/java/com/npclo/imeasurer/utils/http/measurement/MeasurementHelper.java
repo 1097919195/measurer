@@ -32,4 +32,10 @@ public class MeasurementHelper extends HttpHelper {
                 .saveMeasurement(measurement, imgs)
                 .map(new HttpResponseFunc<>());
     }
+
+    public Observable<List<Item>> getAngleOfParts() {
+        return retrofit.create(MeasurementService.class)
+                .getAngleOfParts()
+                .map(new HttpResponseFunc<>());
+    }
 }

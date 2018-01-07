@@ -14,7 +14,9 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 /**
- * Created by Endless on 2017/7/19.
+ *
+ * @author Endless
+ * @date 2017/7/19
  */
 
 public interface UserService {

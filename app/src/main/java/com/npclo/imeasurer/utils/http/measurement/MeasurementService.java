@@ -37,4 +37,12 @@ public interface MeasurementService {
     @POST("measurement/save")
     Observable<HttpResponse<Result>> saveMeasurement(
             @Part("measurement") String measurement, @Part MultipartBody.Part[] imgs);
+
+    /**
+     * 获取需要测量角度的部位信息
+     *
+     * @return
+     */
+    @GET("parts/anglelist")
+    Observable<HttpResponse<List<Item>>> getAngleOfParts();
 }

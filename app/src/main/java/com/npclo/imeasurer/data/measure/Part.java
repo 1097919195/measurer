@@ -10,6 +10,7 @@ public class Part {
     private String cn;
     private float value;
     private float offset;
+    private boolean isAngle = false;
 
     public Part() {
     }
@@ -33,8 +34,17 @@ public class Part {
         this.offset = offset;
     }
 
-    public Part(String cn) {
+    public Part(String cn, boolean isAngle) {
         this.cn = cn;
+        this.isAngle = isAngle;
+    }
+
+    public boolean isAngle() {
+        return isAngle;
+    }
+
+    public void setAngle(boolean angle) {
+        isAngle = angle;
     }
 
     public float getValue() {

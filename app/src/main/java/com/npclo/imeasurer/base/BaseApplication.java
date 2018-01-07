@@ -3,22 +3,23 @@ package com.npclo.imeasurer.base;
 import android.app.Application;
 import android.content.Context;
 
+import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.utils.CrashHandler;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.internal.RxBleLog;
 import com.squareup.leakcanary.LeakCanary;
 
+import java.util.List;
+
 /**
- *
  * @author Endless
  * @date 2017/7/19
  */
 
 public class BaseApplication extends Application {
     private RxBleClient rxBleClient;
-    private boolean haveUpdate = false;
-    private boolean isFirstCheckUpdate = true;
     public static Context AppContext;
+    private List<Item> angleList;
 
     public static RxBleClient getRxBleClient(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
@@ -44,29 +45,13 @@ public class BaseApplication extends Application {
         crashHandler.init(this);
     }
 
-    /*=================TODO  elegant handle this=====================**/
-
-    /**
-     * @param context
-     * @param b
-     */
-    public static void haveUpdate(Context context, boolean b) {
+    public static List<Item> getAngleList(Context context) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        application.haveUpdate = b;
+        return application.angleList;
     }
 
-    public static boolean canUpdate(Context context) {
+    public static void setAngleList(Context context, List<Item> list) {
         BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        return application.haveUpdate;
-    }
-
-    public static void setIsFirstCheck(Context context) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        application.isFirstCheckUpdate = false;
-    }
-
-    public static boolean getFirstCheckHint(Context context) {
-        BaseApplication application = ((BaseApplication) context.getApplicationContext());
-        return application.isFirstCheckUpdate;
+        application.angleList = list;
     }
 }

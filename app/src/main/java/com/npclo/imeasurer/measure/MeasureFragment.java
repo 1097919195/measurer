@@ -167,8 +167,13 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        //初始化需要测量角度的部位
+        String[] angleItems = getResources().getStringArray(R.array.angle_items);
+        angleList = Arrays.asList(angleItems);
+        // TODO: 06/01/2018  预设值与动态获取值之间去重
+        // TODO: 06/01/2018 量角度部位标记出来
         //渲染测量部位列表
-        initMeasureItemList();
+        initMeasureItemList(angleList);
         // TODO: 2017/9/4 使用RecyclerView替代
         // FIXME: 2017/9/8 notifyItemChanged 部分绑定
         ItemAdapter adapter = new ItemAdapter(getActivity(), R.layout.list_measure_item, (ArrayList<Part>) partList);
@@ -190,9 +195,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unVisibleView.add(frame1);
         unVisibleView.add(frame2);
         unVisibleView.add(frame3);
-        //初始化需要测量角度的部位
-        String[] angleItems = getResources().getStringArray(R.array.angle_items);
-        angleList = Arrays.asList(angleItems);
 
         initToolbar();
 
@@ -443,8 +445,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     /**
      * 初始化测量部位列表
+     *
+     * @param angleList 角度部位集合
      */
-    private void initMeasureItemList() {
+    private void initMeasureItemList(List<String> angleList) {
         //初始化所有测量部位
         String items = preferences.getString("items", null);
         if (!TextUtils.isEmpty(items)) {
@@ -453,13 +457,21 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         partList.clear();
         if (measureSequence != null && measureSequence.length != 0) {
             for (String name : measureSequence) {
-                partList.add(new Part(name));
+                if (angleList.contains(name)) {
+                    partList.add(new Part(name, true));
+                } else {
+                    partList.add(new Part(name, false));
+                }
             }
         } else {
             //未设置默认量体项目，则量体项目为预设的24项量体项目
             List<String> list = Arrays.asList(getResources().getStringArray(R.array.items_sequence));
             for (String name : list) {
-                partList.add(new Part(name));
+                if (angleList.contains(name)) {
+                    partList.add(new Part(name, true));
+                } else {
+                    partList.add(new Part(name, false));
+                }
             }
         }
     }

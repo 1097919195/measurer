@@ -80,5 +80,9 @@ public interface HomeContract {
         void startScanContractNum();
 
         void onHandleContractInfo(Contract contract);
+
+        void onGetAngleOfParts(List<Item> list);
+
+        void onGetAngleOfPartsError(Throwable e);
     }
 }

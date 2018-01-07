@@ -59,6 +59,16 @@
         <item>凹腰角度</item>
         <item>上凸肚角度</item>
         <item>下凸肚角度</item>
+        <item>上凸肚角</item>
+        <item>下凸肚角</item>
+        <item>上凸臀角</item>
+        <item>下凸臀角</item>
+        <item>上胸凸角</item>
+        <item>下胸凸角</item>
+        <item>左臀凸角</item>
+        <item>右臀凸角</item>
+        <item>左胸凸角</item>
+        <item>右胸凸角</item>
     </string-array>
     <string-array name="items_sequence">
         <item>头围</item>

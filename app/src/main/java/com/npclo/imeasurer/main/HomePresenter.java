@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.data.user.UserRepository;
+import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
@@ -57,17 +58,18 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void subscribe() {
         // TODO: 2017/12/5 获取用户最新量体统计数据   使用token
+        Gog.e("subscribe");
         autoGetLatestVersion();
+        getAnglePartsList();
     }
 
-    @Override
-    public void autoGetLatestVersion() {
-        Subscription subscribe = new AppRepository()
-                .getLatestVersion()
+    private void getAnglePartsList() {
+        Subscription subscribe = new MeasurementHelper()
+                .getAngleOfParts()
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(app -> fragment.onGetVersionInfo(app),
-                        e -> fragment.onGetVersionError(e));
+                .subscribe(list -> fragment.onGetAngleOfParts(list),
+                        e -> fragment.onGetAngleOfPartsError(e));
         mSubscriptions.add(subscribe);
     }
 
@@ -207,6 +209,17 @@ public class HomePresenter implements HomeContract.Presenter {
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(app -> fragment.onGetVersionInfo(app),
                         e -> fragment.onGetVersionError(e), () -> fragment.showLoading(false));
+        mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void autoGetLatestVersion() {
+        Subscription subscribe = new AppRepository()
+                .getLatestVersion()
+                .subscribeOn(mSchedulerProvider.io())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(app -> fragment.onGetVersionInfo(app),
+                        e -> fragment.onGetVersionError(e));
         mSubscriptions.add(subscribe);
     }
 

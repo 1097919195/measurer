@@ -27,6 +27,7 @@ import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.wuser.WechatUser;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
@@ -121,11 +122,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        if (BaseApplication.getFirstCheckHint(getActivity())) {
-            if (mPresenter != null) {
-                mPresenter.subscribe(); // FIXME: 2017/12/8 app闲置后  mPresenter对象为空
-            }
-            BaseApplication.setIsFirstCheck(getActivity());
+        if (mPresenter != null) {
+//            mPresenter.subscribe();
         }
         LogUtils.upload(getActivity());
     }
@@ -133,6 +131,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
+        Gog.e("hf onPause");
+        // FIXME: 06/01/2018 哪里触发了导致系统调用这个方法
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         if (mPresenter != null) {
             mPresenter.unsubscribe();
         }
@@ -189,6 +194,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onGetVersionInfo(App app) {
+        Gog.e("get version success");
         int code = getVersionCode();
         if (app.getCode() > code && code != 0) {
             updateApp(app);
@@ -431,5 +437,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private SpeechSynthesizer getSynthesizer() {
         return ((MainActivity) getActivity()).speechSynthesizer;
+    }
+
+    /**
+     * 动态更新需要测量角度的部位
+     *
+     * @param list
+     */
+    @Override
+    public void onGetAngleOfParts(List<Item> list) {
+        BaseApplication.setAngleList(getActivity(), list);
+    }
+
+    @Override
+    public void onGetAngleOfPartsError(Throwable e) {
+        onHandleError(e);
     }
 }

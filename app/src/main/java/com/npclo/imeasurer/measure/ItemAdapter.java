@@ -43,21 +43,24 @@ public class ItemAdapter extends ArrayAdapter<Part> {
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder;
-
+        Part item = mGridData.get(position);
         if (convertView == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             convertView = inflater.inflate(layoutResourceId, null, false);
             holder = new ViewHolder();
             holder.textView = (MyTextView) convertView.findViewById(R.id.item_title);
-            holder.img1 = ((ImageButton) convertView.findViewById(R.id.btnDecrease));
-            holder.img2 = ((ImageButton) convertView.findViewById(R.id.btnIncrease));
-            holder.offsetView = ((EditText) convertView.findViewById(R.id.et_offset));
+            if (item.isAngle()) {
+                holder.textView.setBackgroundColor(parent.getResources().getColor(R.color.primary_lighter));
+            }
+            holder.img1 = (ImageButton) convertView.findViewById(R.id.btnDecrease);
+            holder.img2 = (ImageButton) convertView.findViewById(R.id.btnIncrease);
+            holder.offsetView = (EditText) convertView.findViewById(R.id.et_offset);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Part item = mGridData.get(position);
+
 
         MyTextView textView = holder.textView;
         textView.setText(item.getCn());

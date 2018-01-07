@@ -8,6 +8,9 @@ import com.npclo.imeasurer.utils.http.HttpHelper;
 
 import rx.Observable;
 
+/**
+ * @author Endless
+ */
 public class UserHttpHelper extends HttpHelper {
     public Observable<User> signIn(String name, String pwd) {
         return retrofit.create(UserService.class)
