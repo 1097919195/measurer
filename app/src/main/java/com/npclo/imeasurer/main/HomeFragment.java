@@ -3,9 +3,7 @@ package com.npclo.imeasurer.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -76,7 +74,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         return R.layout.frag_home;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
@@ -195,12 +192,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void onGetVersionInfo(App app) {
+    public void onGetVersionInfo(App app, String type) {
         int code = getVersionCode();
         if (app.getCode() > code && code != 0) {
             updateApp(app);
         } else {
-            showToast("已经是最新版");
+            if (Constant.MANUAL.equals(type)) {
+                showToast("已经是最新版");
+            }
         }
     }
 
@@ -366,6 +365,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         updateContractName("默认");
     }
 
+    /**
+     * 处理获取到的量体部位集合
+     *
+     * @param contract
+     */
     @Override
     public void onHandleContractInfo(Contract contract) {
         // FIXME: 11/12/2017 更好的解决方法，存储到数据库中

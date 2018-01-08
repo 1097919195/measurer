@@ -108,11 +108,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         //判断是否已绑定设备
         SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name), MODE_APPEND);
         macAddress = preferences.getString("mac_address", null);
+        //判断是否连接过蓝牙
         if (TextUtils.isEmpty(macAddress)) {
             navView.getMenu().add(R.id.device, R.id.nav_device, 0, "连接智能尺").setIcon(R.drawable.ic_blueteeth_unconnected);
         } else {
             deviceName = preferences.getString("device_name", null);
             updateBlueToothState(deviceName);
+        }
+        //判断是否加载特定量体合同
+        String contractName = preferences.getString("contractName", null);
+        if (TextUtils.isEmpty(contractName)) {
+            updateContractName("默认");
+        } else {
+            updateContractName(contractName);
         }
         View headerView = navView.getHeaderView(0);
         TextView currTimes = (TextView) headerView.findViewById(R.id.curr_times);

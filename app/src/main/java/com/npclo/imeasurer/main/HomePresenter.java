@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.data.user.UserRepository;
+import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
@@ -207,7 +208,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
-                .subscribe(app -> fragment.onGetVersionInfo(app),
+                .subscribe(app -> fragment.onGetVersionInfo(app, Constant.MANUAL),
                         e -> fragment.onGetVersionError(e), () -> fragment.showLoading(false));
         mSubscriptions.add(subscribe);
     }
@@ -218,7 +219,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .getLatestVersion()
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(app -> fragment.onGetVersionInfo(app),
+                .subscribe(app -> fragment.onGetVersionInfo(app, Constant.AUTO),
                         e -> fragment.onGetVersionError(e));
         mSubscriptions.add(subscribe);
     }
