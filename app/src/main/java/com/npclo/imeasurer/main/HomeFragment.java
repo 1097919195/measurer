@@ -120,7 +120,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onResume() {
         super.onResume();
         Gog.e("onResume");
-        // FIXME: 07/01/2018 调用两次
         if (mPresenter != null) {
             mPresenter.subscribe();
         }
@@ -132,11 +131,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         super.onPause();
         Gog.e("onPause");
         // FIXME: 06/01/2018 哪里触发了导致系统调用这个方法
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         if (mPresenter != null) {
             mPresenter.unsubscribe();
         }

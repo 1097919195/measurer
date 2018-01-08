@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import com.npclo.imeasurer.data.app.AppRepository;
 import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.Constant;
-import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleClient;
@@ -59,7 +58,6 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void subscribe() {
         // TODO: 2017/12/5 获取用户最新量体统计数据   使用token
-        Gog.e("HomePresenter subscribe");
         autoGetLatestVersion();
         getAnglePartsList();
     }
@@ -81,12 +79,12 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void startScan() {
-        // TODO: 2017/12/5 筛选特定名字的蓝牙设备
         scanSubscribe = rxBleClient.scanBleDevices(new ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                 .build(), new ScanFilter.Builder().build())
                 //蓝牙名不为空
+                // TODO: 2017/12/5 筛选特定名字的蓝牙设备
                 .filter(s -> !TextUtils.isEmpty(s.getBleDevice().getName()))
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(this::onScanning)

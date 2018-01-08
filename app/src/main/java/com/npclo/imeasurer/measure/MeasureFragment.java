@@ -172,8 +172,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         //初始化需要测量角度的部位
         angleList = initMeasureAnglePartsList();
-        // TODO: 06/01/2018  预设值与动态获取值之间去重
-        // TODO: 06/01/2018 量角度部位标记出来
         //渲染测量部位列表
         initMeasureItemList(angleList);
         // TODO: 2017/9/4 使用RecyclerView替代
@@ -250,6 +248,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onResume() {
         super.onResume();
+        Gog.e("Measurement onResume");
         //初始化语音播报
         if (measurePresenter != null) {
             measurePresenter.subscribe();
@@ -303,6 +302,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onPause() {
         super.onPause();
+        Gog.e("Measurement onPause");
         if (measurePresenter != null) {
             measurePresenter.unsubscribe();
         }
