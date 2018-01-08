@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
@@ -28,8 +29,10 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
+import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.Part;
 import com.npclo.imeasurer.data.measure.Result;
@@ -168,8 +171,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         unbinder = ButterKnife.bind(this, mRootView);
         preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
         //初始化需要测量角度的部位
-        String[] angleItems = getResources().getStringArray(R.array.angle_items);
-        angleList = Arrays.asList(angleItems);
+        angleList = initMeasureAnglePartsList();
         // TODO: 06/01/2018  预设值与动态获取值之间去重
         // TODO: 06/01/2018 量角度部位标记出来
         //渲染测量部位列表
@@ -208,6 +210,23 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             measureStatNo.setText(String.valueOf(unMeasuredPersons));
         }
         initSpeech();
+    }
+
+    @NonNull
+    private List<String> initMeasureAnglePartsList() {
+        String[] preArray = getResources().getStringArray(R.array.angle_items);
+        List<Item> setArray = BaseApplication.getAngleList(getActivity());
+        List<String> angleList = new ArrayList<>(Arrays.asList(preArray));
+        int l = setArray.size();
+        if (l > 0) {
+            for (int i = 0; i < l; i++) {
+                String cn = setArray.get(i).getName();
+                if (!angleList.contains(cn)) {
+                    angleList.add(cn);
+                }
+            }
+        }
+        return angleList;
     }
 
     private void initToolbar() {

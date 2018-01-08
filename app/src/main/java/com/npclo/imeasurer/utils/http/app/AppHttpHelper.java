@@ -2,7 +2,6 @@ package com.npclo.imeasurer.utils.http.app;
 
 import com.npclo.imeasurer.data.HttpMsg;
 import com.npclo.imeasurer.data.app.App;
-import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.http.HttpHelper;
 
 import java.io.File;
@@ -16,7 +15,6 @@ import rx.Observable;
  */
 public class AppHttpHelper extends HttpHelper {
     public Observable<App> getLatestVersion() {
-        Gog.e("AppHttpHelper class");
         return retrofit.create(AppService.class)
                 .getLatestVersion()
                 .map(new HttpResponseFunc<>());

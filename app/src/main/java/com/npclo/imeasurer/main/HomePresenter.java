@@ -58,7 +58,7 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void subscribe() {
         // TODO: 2017/12/5 获取用户最新量体统计数据   使用token
-        Gog.e("subscribe");
+        Gog.e("HomePresenter subscribe");
         autoGetLatestVersion();
         getAnglePartsList();
     }

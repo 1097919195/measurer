@@ -122,8 +122,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        Gog.e("onResume");
+        // FIXME: 07/01/2018 调用两次
         if (mPresenter != null) {
-//            mPresenter.subscribe();
+            mPresenter.subscribe();
         }
         LogUtils.upload(getActivity());
     }
@@ -131,7 +133,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        Gog.e("hf onPause");
+        Gog.e("onPause");
         // FIXME: 06/01/2018 哪里触发了导致系统调用这个方法
     }
 
@@ -145,7 +147,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     protected void initComToolbar() {
-        Toolbar toolbar = getActivity().findViewById(R.id.basetoolbar);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
         String title = preferences.getString("title", null);
         if (!TextUtils.isEmpty(title)) {
             toolbar.setTitle(title);
@@ -194,7 +196,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onGetVersionInfo(App app) {
-        Gog.e("get version success");
         int code = getVersionCode();
         if (app.getCode() > code && code != 0) {
             updateApp(app);

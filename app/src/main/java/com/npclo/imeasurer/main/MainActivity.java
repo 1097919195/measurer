@@ -24,12 +24,10 @@ import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
-import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.CircleImageView;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
-import com.unisound.client.SpeechSynthesizerListener;
 
 import kr.co.namee.permissiongen.PermissionGen;
 
@@ -60,19 +58,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
         speechSynthesizer.setOption(SpeechConstants.TTS_KEY_VOICE_SPEED, 70);
-        speechSynthesizer.setTTSListener(new SpeechSynthesizerListener() {
-            @Override
-            public void onEvent(int i) {
-
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Gog.e(s);
-            }
-        });
         speechSynthesizer.init(null);
-        speechSynthesizer.playText("浙江格心科技");
     }
 
     @Override

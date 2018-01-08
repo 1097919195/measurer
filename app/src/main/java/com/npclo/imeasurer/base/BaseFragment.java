@@ -103,7 +103,7 @@ public abstract class BaseFragment extends SupportFragment {
             toast2Speech(getResources().getString(R.string.ble_error_hint));
         } else {
             String message = getStackMsg(e);
-            Gog.d(message);
+            Gog.e(message);
         }
     }
 
