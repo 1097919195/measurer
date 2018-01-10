@@ -69,10 +69,13 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     private String name;
     private String password;
     private MaterialDialog signInLoadingDialog;
+    private SharedPreferences.Editor edit;
+    private SharedPreferences sharedPreferences;
 
     public static SignInFragment newInstance() {
         return new SignInFragment();
     }
+
 
     @Override
     public void onResume() {
@@ -106,10 +109,16 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
         String logoSrc = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.IMG_URL + logoSrc).into(logo);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logo);
         } else {
             logo.setImageDrawable(getResources().getDrawable(R.mipmap.logo));
         }
+        sharedPreferences = getActivity()
+                .getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("loginname", null);
+        String pwd = sharedPreferences.getString("loginpwd", null);
+        inputName.setText(username);
+        inputPassword.setText(pwd);
     }
 
     private boolean validate() {
@@ -192,12 +201,9 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         showToast(getResources().getString(R.string.login_success_hint));
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
-        SharedPreferences sharedPreferences = getActivity()
-                .getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit = sharedPreferences.edit();
         if (isUserRememberPwd) {
             edit.putBoolean("loginState", true);
-            //att 是否记住密码
         }
         // FIXME: 10/12/2017 时效性 数据永久性？
         edit.putString("id", user.get_id());
@@ -208,6 +214,9 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         edit.putString("totalTimes", user.getTotalTimes() + "");
         edit.putString("logo", user.getLogo());
         edit.putString("title", user.getTitle());
+
+        edit.putString("loginname", name);
+        edit.putString("loginpwd", password);
         edit.apply();
     }
 
@@ -232,5 +241,12 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         } else {
             signInLoadingDialog.dismiss();
         }
+    }
+
+    @Override
+    public void saveToken(String token) {
+        edit = sharedPreferences.edit();
+        edit.putString("token", token);
+        edit.apply();
     }
 }

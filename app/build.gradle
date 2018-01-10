@@ -11,21 +11,20 @@ android {
         versionName "1.2.3"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        jackOptions {
-//            enabled true
-//        }
     }
     buildTypes {
         release {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField('String', 'ENV', '"production"')
         }
         debug {
             minifyEnabled false
             useProguard false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField('String', 'ENV', '"development"')
         }
     }
     compileOptions {

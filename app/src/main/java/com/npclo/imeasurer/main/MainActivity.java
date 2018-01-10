@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
+import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
@@ -37,12 +38,16 @@ import kr.co.namee.permissiongen.PermissionGen;
  */
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private NavigationView navView;
+    public NavigationView navView;
     private DrawerLayout drawerLayout;
     private HomePresenter homePresenter;
     private String macAddress;
     private String deviceName;
     public SpeechSynthesizer speechSynthesizer;
+    private TextView currTimesView;
+    private TextView totalTimesView;
+    private TextView userNameView;
+    private CircleImageView logoView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,21 +133,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             updateContractName(contractName);
         }
         View headerView = navView.getHeaderView(0);
-        TextView currTimes = (TextView) headerView.findViewById(R.id.curr_times);
-        TextView totalTimes = (TextView) headerView.findViewById(R.id.total_times);
-        TextView userName = (TextView) headerView.findViewById(R.id.user_name);
-        CircleImageView logo = (CircleImageView) headerView.findViewById(R.id.logo);
+        currTimesView = headerView.findViewById(R.id.curr_times);
+        totalTimesView = headerView.findViewById(R.id.total_times);
+        userNameView = headerView.findViewById(R.id.user_name);
+        logoView = headerView.findViewById(R.id.logo);
         // FIXME: 2017/12/5 非永久性数据应使用缓存
-        currTimes.setText(preferences.getString("currTimes", "N/A"));
-        totalTimes.setText(preferences.getString("totalTimes", "N/A"));
+        currTimesView.setText(preferences.getString("currTimes", "N/A"));
+        totalTimesView.setText(preferences.getString("totalTimes", "N/A"));
         String name = preferences.getString("name", "N/A");
         String nickname = preferences.getString("nickname", null);
-        userName.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
+        userNameView.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
         String logoSrc = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.IMG_URL + logoSrc).into(logo);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logoView);
         } else {
-            logo.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
+            logoView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         }
     }
 
@@ -261,5 +266,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navView.getMenu()
                 .add(R.id.device, R.id.nav_contract, 1, "合同号(" + name + ")")
                 .setIcon(R.drawable.ic_contract);
+    }
+
+    public void updateUserinfoView(User user) {
+        currTimesView.setText(user.getCurrTimes());
+        totalTimesView.setText(user.getTotalTimes());
+        userNameView.setText(!TextUtils.isEmpty(user.getNickname()) ? user.getNickname() : user.getName());
+        String logoSrc = user.getLogo();
+        if (!TextUtils.isEmpty(logoSrc)) {
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logoView);
+        } else {
+            logoView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
+        }
     }
 }

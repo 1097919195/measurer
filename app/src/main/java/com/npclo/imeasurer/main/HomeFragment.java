@@ -65,6 +65,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private MaterialDialog resultDialog;
     private SharedPreferences preferences;
 
+
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
@@ -81,7 +82,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         preferences = getActivity().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         String logo = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logo)) {
-            Glide.with(this).load(Constant.IMG_URL + logo).into(scanImg);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logo).into(scanImg);
         }
     }
 
@@ -208,7 +209,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         // FIXME: 2017/12/5 修改保存登录状态
         SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE).edit();
         edit.putBoolean("loginState", false);
-        edit.putString("id", "");
+        edit.putString("id", null);
+        edit.putString("token", null);
         edit.apply();
         Toast.makeText(getActivity(), getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), AccountActivity.class);
@@ -239,6 +241,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onShowError(String s) {
         showToast(s);
     }
+
 
     private void configureResultList() {
         scanResultsAdapter = new ScanResultsAdapter(this, bleDeviceList);
@@ -393,9 +396,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         ((MainActivity) getActivity()).updateContractName(name);
     }
 
-    /**
-     * 扫描合同二维码
-     */
     @Override
     public void startScanContractNum() {
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
@@ -454,6 +454,21 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onGetAngleOfPartsError(Throwable e) {
+        onHandleError(e);
+    }
+
+    @Override
+    public void onUpdateUserInfoError(Throwable e) {
+        onHandleError(e);
+    }
+
+    @Override
+    public void onHandleUnknownError(Throwable e) {
+        onHandleError(e);
+    }
+
+    @Override
+    public void onHandleConnectError(Throwable e) {
         onHandleError(e);
     }
 }

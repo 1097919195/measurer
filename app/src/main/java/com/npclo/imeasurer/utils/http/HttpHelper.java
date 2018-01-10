@@ -1,18 +1,17 @@
 package com.npclo.imeasurer.utils.http;
 
-import com.npclo.imeasurer.data.HttpResponse;
-import com.npclo.imeasurer.utils.ApiException;
-import com.npclo.imeasurer.utils.Constant;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-import java.util.Date;
+import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.base.BaseApplication;
+import com.npclo.imeasurer.data.HttpResponse;
+import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.exception.ApiException;
+import com.npclo.imeasurer.utils.exception.TimeoutException;
+
 import java.util.concurrent.TimeUnit;
 
-import javax.crypto.SecretKey;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
-import io.jsonwebtoken.impl.crypto.MacProvider;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -26,8 +25,9 @@ import rx.functions.Func1;
  */
 
 public class HttpHelper {
-    private static final String BASE_URL = Constant.HTTP_PREFIX + "://www.npclo.com/api/";
-    private static final int DEFAULT_TIMEOUT = 600;
+    private static final int DEFAULT_TIMEOUT = 6000;
+    private static final int TIMEOUT_STATUS = 1430;
+    private static final int EXCEPTION_THRESHOLD = 1000;
     protected Retrofit retrofit;
 
     protected HttpHelper() {
@@ -35,41 +35,24 @@ public class HttpHelper {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         initHeader(httpClientBuilder);
+        String httpScheme = Constant.getHttpScheme();
         retrofit = new Retrofit.Builder()
                 .client(httpClientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(BASE_URL)
+                .baseUrl(httpScheme + Constant.API_BASE_URL)
                 .build();
     }
 
     private void initHeader(OkHttpClient.Builder httpClientBuilder) {
-        Date date = new Date();
-        long time = date.getTime();
-        SecretKey key = MacProvider.generateKey();
-        byte[] keyBytes = key.getEncoded();
-
-        String base64Encoded = TextCodec.BASE64.encode(keyBytes);
-        String jwt = Jwts.builder()
-                .setExpiration(new Date(time + 600 * 1000))
-                .signWith(SignatureAlgorithm.HS256, base64Encoded)
-                .compact();
-
+        Context context = BaseApplication.AppContext;
+        SharedPreferences preferences = context.getSharedPreferences(
+                context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        String jwt = preferences.getString("token", "thisisadefaultjwt");
         httpClientBuilder.addInterceptor(chain -> {
             Request original = chain.request();
-            // Request customization: add request headers
-//            String s = null;
-//            AesUtils aesUtils = new AesUtils();
-//            try {
-//                String key2 = aesUtils.encryptMsg(base64Encoded, null, aesUtils.getRandomStr());
-//                s = key2.replaceAll("\\n", "");
-//            } catch (AesException e) {
-//                e.printStackTrace();
-//            }
-
             Request.Builder requestBuilder = original.newBuilder()
-                    .header("X-Authorization", jwt) // <-- this is the important line
-                    .header("X-Key", base64Encoded);
+                    .header("X-Authorization", jwt);
             Request request = requestBuilder.build();
             return chain.proceed(request);
         });
@@ -79,8 +62,13 @@ public class HttpHelper {
         @Override
         public T call(HttpResponse<T> httpResponse) {
             //att 显示错误信息
-            if (httpResponse.getStatus() >= 1000) {
-                throw new ApiException(httpResponse.getMsg());
+            int status = httpResponse.getStatus();
+            if (status >= EXCEPTION_THRESHOLD) {
+                if (status == TIMEOUT_STATUS) {
+                    throw new TimeoutException(httpResponse.getMsg());
+                } else {
+                    throw new ApiException(httpResponse.getMsg());
+                }
             }
             if (httpResponse.getData() == null) {
                 throw new ApiException("暂无数据");

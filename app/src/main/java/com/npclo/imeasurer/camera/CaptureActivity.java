@@ -176,7 +176,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         String logo = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logo)) {
-            Glide.with(this).load(Constant.IMG_URL + logo).into(viewLogo);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logo).into(viewLogo);
         }
     }
 
