@@ -103,7 +103,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
         String logoSrc = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logoSrc)) {
             Glide.with(this).load(Constant.IMG_URL + logoSrc).into(logo);
@@ -193,7 +193,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
         SharedPreferences sharedPreferences = getActivity()
-                .getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+                .getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         if (isUserRememberPwd) {
             edit.putBoolean("loginState", true);

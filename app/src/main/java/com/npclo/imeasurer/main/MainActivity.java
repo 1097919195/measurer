@@ -49,6 +49,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onCreate(savedInstanceState);
         initView();
         init();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         initSpeech();
     }
 
@@ -106,7 +111,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initDrawerMenuContent() {
         //判断是否已绑定设备
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name), MODE_APPEND);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         macAddress = preferences.getString("mac_address", null);
         //判断是否连接过蓝牙
         if (TextUtils.isEmpty(macAddress)) {
@@ -199,7 +204,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .input(R.string.input_offset_hint, R.string.default_value, (dialog, offset) -> {
                             dialog.dismiss();
                             SharedPreferences.Editor edit = getSharedPreferences(getString(R.string.app_name),
-                                    MODE_APPEND).edit();
+                                    MODE_PRIVATE).edit();
                             edit.putInt("measure_offset", Integer.parseInt(offset.toString()));
                             edit.apply();
                         }).show();
@@ -216,7 +221,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                 homePresenter.getThirdOrgMeasurePartByContractNum()
                         )
                         .onNegative((dialog, action) -> {
-                                    String orgId = getSharedPreferences(getString(R.string.app_name), MODE_APPEND).getString("orgId", null);
+                            String orgId = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE).getString("orgId", null);
                                     homePresenter.getThirdOrgDefaultParts(orgId);
                                 }
                         )

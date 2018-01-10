@@ -3,8 +3,6 @@ package com.npclo.imeasurer.utils.http;
 import com.npclo.imeasurer.data.HttpResponse;
 import com.npclo.imeasurer.utils.ApiException;
 import com.npclo.imeasurer.utils.Constant;
-import com.npclo.imeasurer.utils.aes.AesException;
-import com.npclo.imeasurer.utils.aes.AesUtils;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -60,18 +58,18 @@ public class HttpHelper {
         httpClientBuilder.addInterceptor(chain -> {
             Request original = chain.request();
             // Request customization: add request headers
-            String s = null;
-            AesUtils aesUtils = new AesUtils();
-            try {
-                String key2 = aesUtils.encryptMsg(base64Encoded, null, aesUtils.getRandomStr());
-                s = key2.replaceAll("\\n", "");
-            } catch (AesException e) {
-                e.printStackTrace();
-            }
+//            String s = null;
+//            AesUtils aesUtils = new AesUtils();
+//            try {
+//                String key2 = aesUtils.encryptMsg(base64Encoded, null, aesUtils.getRandomStr());
+//                s = key2.replaceAll("\\n", "");
+//            } catch (AesException e) {
+//                e.printStackTrace();
+//            }
 
             Request.Builder requestBuilder = original.newBuilder()
                     .header("X-Authorization", jwt) // <-- this is the important line
-                    .header("X-Key", s);
+                    .header("X-Key", base64Encoded);
             Request request = requestBuilder.build();
             return chain.proceed(request);
         });

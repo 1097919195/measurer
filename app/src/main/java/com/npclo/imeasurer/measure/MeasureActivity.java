@@ -40,7 +40,7 @@ public class MeasureActivity extends BaseActivity {
             measureFragment = MeasureFragment.newInstance();
             loadRootFragment(R.id.content_frame, measureFragment);
             SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name),
-                    Context.MODE_APPEND);
+                    Context.MODE_PRIVATE);
             int offsetMeasure = preferences.getInt("measure_offset", 14);
             String address = preferences.getString("mac_address", null);
             String uuid = preferences.getString("uuid", null);

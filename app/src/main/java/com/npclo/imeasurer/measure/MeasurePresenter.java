@@ -7,8 +7,6 @@ import com.google.gson.Gson;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.user.UserRepository;
 import com.npclo.imeasurer.utils.HexString;
-import com.npclo.imeasurer.utils.aes.AesException;
-import com.npclo.imeasurer.utils.aes.AesUtils;
 import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;
 import com.npclo.imeasurer.utils.schedulers.BaseSchedulerProvider;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -38,7 +36,6 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private BaseSchedulerProvider schedulerProvider;
     @NonNull
     private CompositeSubscription mSubscriptions;
-    private AesUtils aesUtils;
     private RxBleDevice device;
     private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
     private UUID uuid;
@@ -93,25 +90,14 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     @Override
     public void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs) {
         String s = (new Gson()).toJson(measurement);
-        if (aesUtils == null) {
-            aesUtils = new AesUtils();
-        }
-        String s1 = null;
-        String nonce = aesUtils.getRandomStr();
-        String timeStamp = Long.toString(System.currentTimeMillis());
-        try {
-            s1 = aesUtils.encryptMsg(s, timeStamp, nonce);
-        } catch (AesException e) {
-            e.printStackTrace();
-        }
         Subscription subscribe = new MeasurementHelper()
-                .saveMeasurement(s1, imgs)
+                .saveMeasurement(s, imgs)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
-                .subscribe(result -> fragment.onSaveSuccess(result),
-                        e -> fragment.showSaveError(e),
-                        () -> fragment.showSaveCompleted()
+                .subscribe(fragment::onSaveSuccess,
+                        fragment::showSaveError,
+                        fragment::showSaveCompleted
                 );
         mSubscriptions.add(subscribe);
     }

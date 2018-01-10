@@ -9,8 +9,6 @@ import android.support.annotation.Nullable;
 
 public class Item {
     @Nullable
-    private String cn;
-    @Nullable
     private String name;
 
     @Nullable
@@ -20,14 +18,5 @@ public class Item {
 
     public void setName(@Nullable String name) {
         this.name = name;
-    }
-
-    @Nullable
-    public String getCn() {
-        return cn;
-    }
-
-    public void setCn(@Nullable String cn) {
-        this.cn = cn;
     }
 }

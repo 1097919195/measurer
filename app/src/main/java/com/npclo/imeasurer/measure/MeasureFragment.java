@@ -169,7 +169,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
         //初始化需要测量角度的部位
         angleList = initMeasureAnglePartsList();
         //渲染测量部位列表
@@ -248,7 +248,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        Gog.e("Measurement onResume");
+        Gog.d("Measurement onResume");
         //初始化语音播报
         if (measurePresenter != null) {
             measurePresenter.subscribe();
@@ -302,7 +302,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onPause() {
         super.onPause();
-        Gog.e("Measurement onPause");
+        Gog.d("Measurement onPause");
         if (measurePresenter != null) {
             measurePresenter.unsubscribe();
         }
@@ -559,7 +559,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             measureStatAl.setText(String.valueOf(result.getMal()));
             measureStatNo.setText(String.valueOf(result.getMno()));
             SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
-                    Context.MODE_APPEND).edit();
+                    Context.MODE_PRIVATE).edit();
             //设置量体合同号信息
             edit.putInt("num", result.getMno());
             edit.putInt("measured", result.getMal());

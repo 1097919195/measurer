@@ -78,7 +78,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         configureResultList();
-        preferences = getActivity().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_APPEND);
+        preferences = getActivity().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         String logo = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logo)) {
             Glide.with(this).load(Constant.IMG_URL + logo).into(scanImg);
@@ -119,7 +119,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        Gog.e("onResume");
+        Gog.d("onResume");
         if (mPresenter != null) {
             mPresenter.subscribe();
         }
@@ -129,7 +129,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        Gog.e("onPause");
+        Gog.d("onPause");
         // FIXME: 06/01/2018 哪里触发了导致系统调用这个方法
         if (mPresenter != null) {
             mPresenter.unsubscribe();
@@ -206,7 +206,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onLogout() {
         // FIXME: 2017/12/5 修改保存登录状态
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND).edit();
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE).edit();
         edit.putBoolean("loginState", false);
         edit.putString("id", "");
         edit.apply();
@@ -298,20 +298,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onSetNotificationUUID(UUID uuid) {
         SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
-                Context.MODE_APPEND).edit();
+                Context.MODE_PRIVATE).edit();
         edit.putString("uuid", uuid.toString());
         edit.apply();
     }
 
     private void setBleAddress(String s) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString("mac_address", s);
         edit.apply();
     }
 
     private void setBleDeviceName(String name) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_APPEND);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString("device_name", name);
         edit.apply();
@@ -342,13 +342,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onDefaultMeasureParts(List<Item> partList) {
         // FIXME: 11/12/2017 更好的解决方法，存储到数据库中
-        String arr = "";
+        StringBuilder builder = new StringBuilder();
         for (int i = 0, l = partList.size(); i < l; i++) {
-            arr += partList.get(i).getCn() + ",";
+            builder.append(partList.get(i).getName());
+            builder.append(",");
         }
+        String s = builder.toString();
         SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
-                Context.MODE_APPEND).edit();
-        edit.putString("items", arr.trim());
+                Context.MODE_PRIVATE).edit();
+        edit.putString("items", s.trim());
         //置空量体合同号
         edit.putString("contractName", null);
         edit.putString("cid", null);
@@ -367,14 +369,16 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onHandleContractInfo(Contract contract) {
         // FIXME: 11/12/2017 更好的解决方法，存储到数据库中
-        String arr = "";
         List<Item> list = contract.getData();
+        StringBuilder builder = new StringBuilder();
         for (int i = 0, l = list.size(); i < l; i++) {
-            arr += list.get(i).getCn() + ",";
+            builder.append(list.get(i).getName());
+            builder.append(",");
         }
+        String s = builder.toString();
         SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
-                Context.MODE_APPEND).edit();
-        edit.putString("items", arr.trim());
+                Context.MODE_PRIVATE).edit();
+        edit.putString("items", s.trim());
         //设置量体合同号信息
         edit.putString("contractName", contract.getName());
         edit.putString("cid", contract.getId());
@@ -404,7 +408,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         Bundle bundle = data.getExtras();
         String result = bundle.getString("result");
         String uid = getActivity().getSharedPreferences(getString(R.string.app_name),
-                Context.MODE_APPEND).getString("id", null);
+                Context.MODE_PRIVATE).getString("id", null);
         // FIXME: 10/12/2017 是否为永久性数据
         switch (resultCode) {
             case SCAN_HINT:
