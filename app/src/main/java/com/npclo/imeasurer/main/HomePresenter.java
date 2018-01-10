@@ -57,9 +57,19 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void subscribe() {
-        // TODO: 2017/12/5 获取用户最新量体统计数据   使用token
-        autoGetLatestVersion();
+        updateUserInfo();
+//        autoGetLatestVersion();
         getAnglePartsList();
+    }
+
+    private void updateUserInfo() {
+        Subscription subscribe = new UserRepository()
+                .userInfo()
+                .subscribeOn(mSchedulerProvider.io())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(user -> ((MainActivity) ((HomeFragment) fragment).getActivity()).updateUserinfoView(user),
+                        e -> fragment.onUpdateUserInfoError(e));
+        mSubscriptions.add(subscribe);
     }
 
     private void getAnglePartsList() {
@@ -103,7 +113,7 @@ public class HomePresenter implements HomeContract.Presenter {
         } else if (e instanceof BleAlreadyConnectedException) {
             fragment.onShowError("重复连接，请检查");
         } else {
-            fragment.onHandleError(e);
+            fragment.onHandleUnknownError(e);
         }
     }
 
@@ -271,7 +281,7 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     private void onHandleConnectError(Throwable e) {
-        fragment.onHandleError(e);
+        fragment.onHandleConnectError(e);
     }
 
     private void connectDevice(UUID uuid) {

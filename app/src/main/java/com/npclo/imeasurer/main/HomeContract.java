@@ -65,8 +65,6 @@ public interface HomeContract {
 
         void onShowError(String s);
 
-        void onHandleError(Throwable e);
-
         void onHandleBleScanException(BleScanException e);
 
         void onSetNotificationUUID(UUID characteristicUUID);
@@ -84,5 +82,11 @@ public interface HomeContract {
         void onGetAngleOfParts(List<Item> list);
 
         void onGetAngleOfPartsError(Throwable e);
+
+        void onUpdateUserInfoError(Throwable e);
+
+        void onHandleUnknownError(Throwable e);
+
+        void onHandleConnectError(Throwable e);
     }
 }

@@ -11,13 +11,15 @@ import com.npclo.imeasurer.data.user.User;
 
 public interface SignInContract {
     interface View extends BaseView<Presenter> {
-        void showSignInSuccess(User v);
+        void showSignInSuccess(User user);
 
         void showSignInError(Throwable e);
 
         void completeSignIn();
 
         void showLoading(boolean bool);
+
+        void saveToken(String token);
     }
 
     interface Presenter extends BasePresenter {

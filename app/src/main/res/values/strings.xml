@@ -154,4 +154,6 @@
     <string name="new_contract">扫码设置新合同号</string>
     <string name="default_contract">恢复为默认</string>
     <string name="ble_error_hint">智能尺连接失败，请重试</string>
+    <string name="app_config">gt_config</string>
+    <string name="login_time_out">登录状态超时，请重新登录</string>
 </resources>

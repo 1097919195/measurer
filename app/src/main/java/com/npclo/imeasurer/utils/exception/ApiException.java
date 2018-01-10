@@ -1,7 +1,9 @@
-package com.npclo.imeasurer.utils;
+package com.npclo.imeasurer.utils.exception;
 
 /**
- * Created by Endless on 2017/7/11.
+ *
+ * @author Endless
+ * @date 2017/7/11
  */
 
 public class ApiException extends RuntimeException {

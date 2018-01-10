@@ -12,9 +12,15 @@ import rx.Observable;
  * @author Endless
  */
 public class UserHttpHelper extends HttpHelper {
-    public Observable<User> signIn(String name, String pwd) {
+    public Observable<HttpMsg> signIn(String name, String pwd) {
         return retrofit.create(UserService.class)
                 .signIn(name, pwd)
+                .map(new HttpResponseFunc<>());
+    }
+
+    public Observable<User> userInfo() {
+        return retrofit.create(UserService.class)
+                .userInfo()
                 .map(new HttpResponseFunc<>());
     }
 

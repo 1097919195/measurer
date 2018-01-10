@@ -13,8 +13,13 @@ import rx.Observable;
 
 public class UserRepository implements UserDataSource {
     @Override
-    public Observable<User> signIn(String name, String pwd) {
+    public Observable<HttpMsg> signIn(String name, String pwd) {
         return new UserHttpHelper().signIn(name, pwd);
+    }
+
+    @Override
+    public Observable<User> userInfo() {
+        return new UserHttpHelper().userInfo();
     }
 
     @Override

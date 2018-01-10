@@ -14,7 +14,6 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 /**
- *
  * @author Endless
  * @date 2017/7/19
  */
@@ -22,7 +21,10 @@ import rx.Observable;
 public interface UserService {
     @FormUrlEncoded
     @POST("clientUser/signIn")
-    Observable<HttpResponse<User>> signIn(@Field("name") String name, @Field("pwd") String pwd);
+    Observable<HttpResponse<HttpMsg>> signIn(@Field("name") String name, @Field("pwd") String pwd);
+
+    @GET("clientUser/userinfo")
+    Observable<HttpResponse<User>> userInfo();
 
     @FormUrlEncoded
     @POST("clientUser/signUp")
