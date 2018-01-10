@@ -32,7 +32,7 @@ public abstract class BaseActivity extends SupportActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        checkLogin();
+//        checkLogin();
     }
 
     @Override
@@ -46,7 +46,7 @@ public abstract class BaseActivity extends SupportActivity {
     }
 
     private void checkLogin() {
-        SharedPreferences loginState = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+        SharedPreferences loginState = getSharedPreferences(getString(R.string.app_config), MODE_PRIVATE);
         boolean isLogin = loginState.getBoolean("loginState", false);
         String uid = loginState.getString("id", "");
         if (!isLogin && TextUtils.isEmpty(uid)) {

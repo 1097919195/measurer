@@ -98,7 +98,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
         startActivity(intent);
 
         SharedPreferences sharedPreferences = getActivity()
-                .getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+                .getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         // FIXME: 02/01/2018 修改此处的逻辑
         edit.putBoolean("loginState", true);

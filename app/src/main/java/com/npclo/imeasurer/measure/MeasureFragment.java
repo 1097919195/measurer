@@ -169,7 +169,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         //初始化需要测量角度的部位
         angleList = initMeasureAnglePartsList();
         //渲染测量部位列表
@@ -558,7 +558,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             //非自由量体，更新量体信息
             measureStatAl.setText(String.valueOf(result.getMal()));
             measureStatNo.setText(String.valueOf(result.getMno()));
-            SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+            SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
                     Context.MODE_PRIVATE).edit();
             //设置量体合同号信息
             edit.putInt("num", result.getMno());

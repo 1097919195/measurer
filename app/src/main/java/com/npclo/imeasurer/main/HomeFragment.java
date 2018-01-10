@@ -79,7 +79,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         configureResultList();
-        preferences = getActivity().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(getResources().getString(R.string.app_config), Context.MODE_PRIVATE);
         String logo = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logo)) {
             Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logo).into(scanImg);
@@ -207,7 +207,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onLogout() {
         // FIXME: 2017/12/5 修改保存登录状态
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE).edit();
         edit.putBoolean("loginState", false);
         edit.putString("id", null);
         edit.putString("token", null);
@@ -300,21 +300,21 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onSetNotificationUUID(UUID uuid) {
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
                 Context.MODE_PRIVATE).edit();
         edit.putString("uuid", uuid.toString());
         edit.apply();
     }
 
     private void setBleAddress(String s) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString("mac_address", s);
         edit.apply();
     }
 
     private void setBleDeviceName(String name) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString("device_name", name);
         edit.apply();
@@ -351,7 +351,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             builder.append(",");
         }
         String s = builder.toString();
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
                 Context.MODE_PRIVATE).edit();
         edit.putString("items", s.trim());
         //置空量体合同号
@@ -379,7 +379,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             builder.append(",");
         }
         String s = builder.toString();
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_name),
+        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
                 Context.MODE_PRIVATE).edit();
         edit.putString("items", s.trim());
         //设置量体合同号信息
@@ -407,7 +407,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle bundle = data.getExtras();
         String result = bundle.getString("result");
-        String uid = getActivity().getSharedPreferences(getString(R.string.app_name),
+        String uid = getActivity().getSharedPreferences(getString(R.string.app_config),
                 Context.MODE_PRIVATE).getString("id", null);
         // FIXME: 10/12/2017 是否为永久性数据
         switch (resultCode) {

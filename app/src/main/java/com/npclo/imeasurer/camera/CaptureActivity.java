@@ -173,7 +173,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         toolbarTitle.setText("输入二维码编号");
         toManualEnterQrcode.setVisibility(View.GONE);
         ImageView viewLogo = viewEnterQrcode.findViewById(R.id.act_capture_logo);
-        SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.app_config), Context.MODE_PRIVATE);
         String logo = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logo)) {
             Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logo).into(viewLogo);

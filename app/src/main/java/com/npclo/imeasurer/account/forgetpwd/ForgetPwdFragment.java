@@ -198,7 +198,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
         //att 重置密码成功，需要重新登录
         showToast(getString(R.string.reset_pwd_success));
         SharedPreferences sharedPreferences = getActivity()
-                .getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+                .getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putBoolean("loginState", false);
         edit.apply();

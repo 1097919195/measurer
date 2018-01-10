@@ -85,7 +85,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
             showSnackbar("新输入密码两次不一致，请检查");
             return;
         }
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.app_config), MODE_PRIVATE);
         String id = sharedPreferences.getString("id", null);
         if (TextUtils.isEmpty(id)) {
             showToast("账号异常，请重新登录");

@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initDrawerMenuContent() {
         //判断是否已绑定设备
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.app_config), MODE_PRIVATE);
         macAddress = preferences.getString("mac_address", null);
         //判断是否连接过蓝牙
         if (TextUtils.isEmpty(macAddress)) {
@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .inputType(InputType.TYPE_CLASS_NUMBER)
                         .input(R.string.input_offset_hint, R.string.default_value, (dialog, offset) -> {
                             dialog.dismiss();
-                            SharedPreferences.Editor edit = getSharedPreferences(getString(R.string.app_name),
+                            SharedPreferences.Editor edit = getSharedPreferences(getString(R.string.app_config),
                                     MODE_PRIVATE).edit();
                             edit.putInt("measure_offset", Integer.parseInt(offset.toString()));
                             edit.apply();
@@ -226,7 +226,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                 homePresenter.getThirdOrgMeasurePartByContractNum()
                         )
                         .onNegative((dialog, action) -> {
-                            String orgId = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE).getString("orgId", null);
+                            String orgId = getSharedPreferences(getString(R.string.app_config), MODE_PRIVATE).getString("orgId", null);
                                     homePresenter.getThirdOrgDefaultParts(orgId);
                                 }
                         )

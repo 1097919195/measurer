@@ -106,7 +106,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         String logoSrc = preferences.getString("logo", null);
         if (!TextUtils.isEmpty(logoSrc)) {
             Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logo);
@@ -114,7 +114,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
             logo.setImageDrawable(getResources().getDrawable(R.mipmap.logo));
         }
         sharedPreferences = getActivity()
-                .getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+                .getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("loginname", null);
         String pwd = sharedPreferences.getString("loginpwd", null);
         inputName.setText(username);

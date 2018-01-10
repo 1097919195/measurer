@@ -47,7 +47,7 @@ public class HttpHelper {
     private void initHeader(OkHttpClient.Builder httpClientBuilder) {
         Context context = BaseApplication.AppContext;
         SharedPreferences preferences = context.getSharedPreferences(
-                context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+                context.getResources().getString(R.string.app_config), Context.MODE_PRIVATE);
         String jwt = preferences.getString("token", "thisisadefaultjwt");
         httpClientBuilder.addInterceptor(chain -> {
             Request original = chain.request();
