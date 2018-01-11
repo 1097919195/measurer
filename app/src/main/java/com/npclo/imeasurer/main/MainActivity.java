@@ -137,9 +137,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         totalTimesView = headerView.findViewById(R.id.total_times);
         userNameView = headerView.findViewById(R.id.user_name);
         logoView = headerView.findViewById(R.id.logo);
-        // FIXME: 2017/12/5 非永久性数据应使用缓存
-        currTimesView.setText(instance.getCurrTimes());
-        totalTimesView.setText(instance.getTotalTimes());
+
+        currTimesView.setText(String.valueOf(instance.getCurrTimes()));
+        totalTimesView.setText(String.valueOf(instance.getTotalTimes()));
         String name = instance.getUserName();
         String nickname = instance.getUserNickname();
         userNameView.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
@@ -266,8 +266,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     public void updateUserinfoView(User user) {
-        currTimesView.setText(user.getCurrTimes());
-        totalTimesView.setText(user.getTotalTimes());
+        currTimesView.setText(String.valueOf(user.getCurrTimes()));
+        totalTimesView.setText(String.valueOf(user.getTotalTimes()));
         userNameView.setText(!TextUtils.isEmpty(user.getNickname()) ? user.getNickname() : user.getName());
         String logoSrc = user.getLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
