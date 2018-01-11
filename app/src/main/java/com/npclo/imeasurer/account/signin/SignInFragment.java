@@ -1,8 +1,6 @@
 package com.npclo.imeasurer.account.signin;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
@@ -27,6 +25,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import butterknife.BindView;
@@ -69,8 +68,6 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     private String name;
     private String password;
     private MaterialDialog signInLoadingDialog;
-    private SharedPreferences.Editor edit;
-    private SharedPreferences sharedPreferences;
 
     public static SignInFragment newInstance() {
         return new SignInFragment();
@@ -106,19 +103,17 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
-        String logoSrc = preferences.getString("logo", null);
-        if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logo);
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        String userLogo = instance.getUserLogo();
+        if (!TextUtils.isEmpty(userLogo)) {
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo).into(logo);
         } else {
             logo.setImageDrawable(getResources().getDrawable(R.mipmap.logo));
         }
-        sharedPreferences = getActivity()
-                .getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
-        String username = sharedPreferences.getString("loginname", null);
-        String pwd = sharedPreferences.getString("loginpwd", null);
-        inputName.setText(username);
-        inputPassword.setText(pwd);
+        String loginName = instance.getLoginName();
+        String loginPwd = instance.getLoginPwd();
+        inputName.setText(loginName);
+        inputPassword.setText(loginPwd);
     }
 
     private boolean validate() {
@@ -199,25 +194,26 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     public void showSignInSuccess(User user) {
         showToast(getResources().getString(R.string.login_success_hint));
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        if (isUserRememberPwd) {
+            instance.setLoginPwd(password);
+        } else {
+            //不保存密码
+            instance.setLoginPwd("");
+        }
+        instance.setLoginName(name);
+
+        instance.setUserId(user.getId());
+        instance.setUserName(user.getName());
+        instance.setUserNickname(user.getNickname());
+        instance.setUserOrgid(user.getOrgId());
+        instance.setCurrTimes(user.getCurrTimes());
+        instance.setTotalTimes(user.getTotalTimes());
+        instance.setUserLogo(user.getLogo());
+        instance.setUserTitle(user.getTitle());
+
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
-        edit = sharedPreferences.edit();
-        if (isUserRememberPwd) {
-            edit.putBoolean("loginState", true);
-        }
-        // FIXME: 10/12/2017 时效性 数据永久性？
-        edit.putString("id", user.get_id());
-        edit.putString("name", user.getName());
-        edit.putString("nickname", user.getNickname());
-        edit.putString("orgId", user.getOrgId());
-        edit.putString("currTimes", user.getCurrTimes() + "");
-        edit.putString("totalTimes", user.getTotalTimes() + "");
-        edit.putString("logo", user.getLogo());
-        edit.putString("title", user.getTitle());
-
-        edit.putString("loginname", name);
-        edit.putString("loginpwd", password);
-        edit.apply();
     }
 
     @Override
@@ -245,8 +241,6 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
 
     @Override
     public void saveToken(String token) {
-        edit = sharedPreferences.edit();
-        edit.putString("token", token);
-        edit.apply();
+        PreferencesUtils.getInstance(getActivity()).setToken(token);
     }
 }

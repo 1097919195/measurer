@@ -1,8 +1,6 @@
 package com.npclo.imeasurer.main;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -27,6 +25,7 @@ import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;
@@ -63,7 +62,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private MaterialDialog.Builder scanResultDialog;
     private MaterialDialog cirProgressBar;
     private MaterialDialog resultDialog;
-    private SharedPreferences preferences;
 
 
     public static HomeFragment newInstance() {
@@ -79,10 +77,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
         configureResultList();
-        preferences = getActivity().getSharedPreferences(getResources().getString(R.string.app_config), Context.MODE_PRIVATE);
-        String logo = preferences.getString("logo", null);
-        if (!TextUtils.isEmpty(logo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logo).into(scanImg);
+        String userLogo = PreferencesUtils.getInstance(getActivity()).getUserLogo();
+        if (!TextUtils.isEmpty(userLogo)) {
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo).into(scanImg);
         }
     }
 
@@ -140,9 +137,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     protected void initComToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.basetoolbar);
-        String title = preferences.getString("title", null);
-        if (!TextUtils.isEmpty(title)) {
-            toolbar.setTitle(title);
+        String userTitle = PreferencesUtils.getInstance(getActivity()).getUserTitle();
+        if (!TextUtils.isEmpty(userTitle)) {
+            toolbar.setTitle(userTitle);
         } else {
             toolbar.setTitle(getString(R.string.app_name));
         }
@@ -206,12 +203,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onLogout() {
-        // FIXME: 2017/12/5 修改保存登录状态
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE).edit();
-        edit.putBoolean("loginState", false);
-        edit.putString("id", null);
-        edit.putString("token", null);
-        edit.apply();
+        // 退出登录，清除id和token
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        instance.setToken("");
         Toast.makeText(getActivity(), getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), AccountActivity.class);
         startActivity(intent);
@@ -300,24 +294,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onSetNotificationUUID(UUID uuid) {
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
-                Context.MODE_PRIVATE).edit();
-        edit.putString("uuid", uuid.toString());
-        edit.apply();
+        PreferencesUtils.getInstance(getActivity()).setDeviceUuid(uuid.toString());
     }
 
     private void setBleAddress(String s) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = preferences.edit();
-        edit.putString("mac_address", s);
-        edit.apply();
+        PreferencesUtils.getInstance(getActivity()).setMacAddress(s);
     }
 
     private void setBleDeviceName(String name) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = preferences.edit();
-        edit.putString("device_name", name);
-        edit.apply();
+        PreferencesUtils.getInstance(getActivity()).setDeviceName(name);
     }
 
     @Override
@@ -351,15 +336,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             builder.append(",");
         }
         String s = builder.toString();
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
-                Context.MODE_PRIVATE).edit();
-        edit.putString("items", s.trim());
-        //置空量体合同号
-        edit.putString("contractName", null);
-        edit.putString("cid", null);
-        edit.putInt("num", 0);
-        edit.putInt("measured", 0);
-        edit.apply();
+
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        instance.setMeasureItems(s.trim());
+        instance.setContractName("");
+        instance.setMeasureCid("");
+        instance.setMeasureNum(0);
+        instance.setMeasureMeasured(0);
+
         showToast("设置默认量体项目成功");
         updateContractName("默认");
     }
@@ -379,15 +363,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             builder.append(",");
         }
         String s = builder.toString();
-        SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
-                Context.MODE_PRIVATE).edit();
-        edit.putString("items", s.trim());
-        //设置量体合同号信息
-        edit.putString("contractName", contract.getName());
-        edit.putString("cid", contract.getId());
-        edit.putInt("num", contract.getNum());
-        edit.putInt("measured", 0);
-        edit.apply();
+
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        instance.setMeasureItems(s.trim());
+        instance.setContractName(contract.getName());
+        instance.setMeasureCid(contract.getId());
+        instance.setMeasureNum(contract.getNum());
+        instance.setMeasureMeasured(contract.getMeasured());
+
         showToast("合同: " + contract.getName() + "量体项目加载成功");
         updateContractName(contract.getName());
     }
@@ -407,16 +390,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle bundle = data.getExtras();
         String result = bundle.getString("result");
-        String uid = getActivity().getSharedPreferences(getString(R.string.app_config),
-                Context.MODE_PRIVATE).getString("id", null);
-        // FIXME: 10/12/2017 是否为永久性数据
         switch (resultCode) {
             case SCAN_HINT:
                 if (result != null) {
                     if (requestCode == REQUEST_CODE_CONTRACT) {
                         mPresenter.getContractInfoWithCode(result);
                     } else if (requestCode == REQUEST_CODE_WECHATUSER) {
-                        mPresenter.getUserInfoWithOpenID(result, uid);
+                        mPresenter.getUserInfoWithOpenID(result);
                     }
                 } else {
                     showToast(getString(R.string.scan_qrcode_failed));
@@ -427,7 +407,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                     if (requestCode == REQUEST_CODE_CONTRACT) {
                         mPresenter.getContractInfoWithNum(result);
                     } else if (requestCode == REQUEST_CODE_WECHATUSER) {
-                        mPresenter.getUserInfoWithCode(result, uid);
+                        mPresenter.getUserInfoWithCode(result);
                     }
                 } else {
                     showToast(getString(R.string.enter_qrcode_error));

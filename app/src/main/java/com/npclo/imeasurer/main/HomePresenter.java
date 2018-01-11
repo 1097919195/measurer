@@ -130,9 +130,9 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void getUserInfoWithCode(String result, String uid) {
+    public void getUserInfoWithCode(String result) {
         Subscription subscribe = new UserRepository()
-                .getUserInfoWithCode(result, uid)
+                .getUserInfoWithCode(result)
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
@@ -144,9 +144,9 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void getUserInfoWithOpenID(String oid, String uid) {
+    public void getUserInfoWithOpenID(String oid) {
         Subscription subscribe = new UserRepository()
-                .getUserInfoWithOpenID(oid, uid)
+                .getUserInfoWithOpenID(oid)
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))

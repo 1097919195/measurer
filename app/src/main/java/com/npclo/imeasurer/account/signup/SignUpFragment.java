@@ -1,8 +1,6 @@
 package com.npclo.imeasurer.account.signup;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -20,6 +18,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.ValidCode;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.main.MainActivity;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import butterknife.BindView;
@@ -71,7 +70,7 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     }
 
     private boolean checkInputValid() {
-        Boolean flag = true;
+        boolean flag = true;
         name = inputMobile.getText().toString();
         pwd = inputPassword.getText().toString();
         code = inputValidCode.getText().toString();
@@ -94,21 +93,18 @@ public class SignUpFragment extends BaseFragment implements SignUpContract.View 
     @Override
     public void showSignUpSuccess(User user) {
         showToast(getResources().getString(R.string.register_success_hint));
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        instance.setUserId(user.getId());
+        instance.setUserName(user.getName());
+        instance.setUserNickname(user.getNickname());
+        instance.setUserOrgid(user.getOrgId());
+        instance.setCurrTimes(user.getCurrTimes());
+        instance.setTotalTimes(user.getTotalTimes());
+        instance.setUserLogo(user.getLogo());
+        instance.setUserTitle(user.getTitle());
+
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
-
-        SharedPreferences sharedPreferences = getActivity()
-                .getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        // FIXME: 02/01/2018 修改此处的逻辑
-        edit.putBoolean("loginState", true);
-        edit.putString("id", user.get_id());
-        edit.putString("name", user.getName());
-        edit.putString("nickname", user.getNickname());
-        edit.putString("orgId", user.getOrgId());
-        edit.putString("curr_times", user.getCurrTimes() + "");
-        edit.putString("total_times", user.getTotalTimes() + "");
-        edit.apply();
     }
 
     @Override

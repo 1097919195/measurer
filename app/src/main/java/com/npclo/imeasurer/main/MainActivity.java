@@ -2,7 +2,6 @@ package com.npclo.imeasurer.main;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +24,7 @@ import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.data.user.User;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.CircleImageView;
 import com.unisound.client.SpeechConstants;
@@ -115,18 +115,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initDrawerMenuContent() {
+        PreferencesUtils instance = PreferencesUtils.getInstance(this);
         //判断是否已绑定设备
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.app_config), MODE_PRIVATE);
-        macAddress = preferences.getString("mac_address", null);
+        macAddress = instance.getMacAddress();
         //判断是否连接过蓝牙
         if (TextUtils.isEmpty(macAddress)) {
             navView.getMenu().add(R.id.device, R.id.nav_device, 0, "连接智能尺").setIcon(R.drawable.ic_blueteeth_unconnected);
         } else {
-            deviceName = preferences.getString("device_name", null);
+            deviceName = instance.getDeviceName();
             updateBlueToothState(deviceName);
         }
         //判断是否加载特定量体合同
-        String contractName = preferences.getString("contractName", null);
+        String contractName = instance.getContractName();
         if (TextUtils.isEmpty(contractName)) {
             updateContractName("默认");
         } else {
@@ -138,12 +138,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userNameView = headerView.findViewById(R.id.user_name);
         logoView = headerView.findViewById(R.id.logo);
         // FIXME: 2017/12/5 非永久性数据应使用缓存
-        currTimesView.setText(preferences.getString("currTimes", "N/A"));
-        totalTimesView.setText(preferences.getString("totalTimes", "N/A"));
-        String name = preferences.getString("name", "N/A");
-        String nickname = preferences.getString("nickname", null);
+        currTimesView.setText(instance.getCurrTimes());
+        totalTimesView.setText(instance.getTotalTimes());
+        String name = instance.getUserName();
+        String nickname = instance.getUserNickname();
         userNameView.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
-        String logoSrc = preferences.getString("logo", null);
+        String logoSrc = instance.getUserLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
             Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logoView);
         } else {
@@ -162,6 +162,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        PreferencesUtils instance = PreferencesUtils.getInstance(this);
         switch (id) {
             case R.id.nav_logout:
                 new MaterialDialog.Builder(this)
@@ -179,7 +180,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_instruction:
                 drawerLayout.closeDrawers();
-                Toast.makeText(this, "暂无使用说明", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "使用说明开发中", Toast.LENGTH_SHORT).show();
 //              Intent instructionIntent = new Intent(this, UserActivity.class);
 //                instructionIntent.putExtra("support_type", Constant.USER_INSTRUCTION);
 //                startActivity(instructionIntent);
@@ -208,10 +209,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .inputType(InputType.TYPE_CLASS_NUMBER)
                         .input(R.string.input_offset_hint, R.string.default_value, (dialog, offset) -> {
                             dialog.dismiss();
-                            SharedPreferences.Editor edit = getSharedPreferences(getString(R.string.app_config),
-                                    MODE_PRIVATE).edit();
-                            edit.putInt("measure_offset", Integer.parseInt(offset.toString()));
-                            edit.apply();
+                            instance.setMeasureOffset(Float.parseFloat(offset.toString()));
                         }).show();
                 drawerLayout.closeDrawers();
                 break;
@@ -226,8 +224,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                 homePresenter.getThirdOrgMeasurePartByContractNum()
                         )
                         .onNegative((dialog, action) -> {
-                            String orgId = getSharedPreferences(getString(R.string.app_config), MODE_PRIVATE).getString("orgId", null);
-                                    homePresenter.getThirdOrgDefaultParts(orgId);
+                            homePresenter.getThirdOrgDefaultParts(instance.getUserOrgid());
                                 }
                         )
                         .show();

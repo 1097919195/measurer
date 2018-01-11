@@ -14,7 +14,7 @@ public class User implements Parcelable {
     protected User(Parcel in) {
         name = in.readString();
         pwd = in.readString();
-        _id = in.readString();
+        id = in.readString();
         currTimes = in.readInt();
         totalTimes = in.readInt();
         code = in.readInt();
@@ -42,19 +42,19 @@ public class User implements Parcelable {
     }
 
     @Nullable
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(@Nullable String _id) {
-        this._id = _id;
+    public void setId(@Nullable String id) {
+        this.id = id;
     }
 
     private String name;
     @Nullable
     private String pwd;
     @Nullable
-    private String _id;
+    private String id;
     @Nullable
     private int currTimes;
     @Nullable
@@ -145,7 +145,7 @@ public class User implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(pwd);
-        dest.writeString(_id);
+        dest.writeString(id);
         dest.writeInt(currTimes);
         dest.writeInt(totalTimes);
         dest.writeInt(code);

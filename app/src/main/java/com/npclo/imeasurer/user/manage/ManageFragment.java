@@ -1,7 +1,5 @@
 package com.npclo.imeasurer.user.manage;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -11,7 +9,6 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseFragment;
 
 import butterknife.BindView;
@@ -19,7 +16,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
@@ -85,14 +81,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
             showSnackbar("新输入密码两次不一致，请检查");
             return;
         }
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.app_config), MODE_PRIVATE);
-        String id = sharedPreferences.getString("id", null);
-        if (TextUtils.isEmpty(id)) {
-            showToast("账号异常，请重新登录");
-            startActivity(new Intent(getActivity(), AccountActivity.class));
-            return;
-        }
-        presenter.resetPwd(id, old, newpwd1);
+        presenter.resetPwd(old, newpwd1);
     }
 
     private boolean checkInput(String field) {

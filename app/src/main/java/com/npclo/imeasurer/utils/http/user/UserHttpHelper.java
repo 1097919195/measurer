@@ -42,21 +42,21 @@ public class UserHttpHelper extends HttpHelper {
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<WechatUser> getUserInfoWithCode(String code, String uid) {
+    public Observable<WechatUser> getUserInfoWithCode(String code) {
         return retrofit.create(UserService.class)
-                .getUserInfoWithCode(code, uid)
+                .getUserInfoWithCode(code)
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<HttpMsg> editPwd(String id, String old, String newpwd) {
+    public Observable<HttpMsg> editPwd(String old, String newpwd) {
         return retrofit.create(UserService.class)
-                .editPwd(id, old, newpwd)
+                .editPwd(old, newpwd)
                 .map(new HttpResponseFunc<>());
     }
 
-    public Observable<WechatUser> getUserInfoWithOpenID(String oid, String uid) {
+    public Observable<WechatUser> getUserInfoWithOpenID(String oid) {
         return retrofit.create(UserService.class)
-                .getUserInfoWithOpenID(oid, uid)
+                .getUserInfoWithOpenID(oid)
                 .map(new HttpResponseFunc<>());
     }
 }

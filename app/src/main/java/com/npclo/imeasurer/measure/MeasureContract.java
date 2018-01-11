@@ -29,7 +29,7 @@ public interface MeasureContract {
 
         void onGetWechatUserInfoSuccess(WechatUser user);
 
-        void showGetInfoError(Throwable e);
+        void onShowGetInfoError(Throwable e);
 
         void showCompleteGetInfo();
 
@@ -43,9 +43,9 @@ public interface MeasureContract {
     interface Presenter extends BasePresenter {
         void saveMeasurement(Measurement measurement, MultipartBody.Part[] imgs);
 
-        void getUserInfoWithOpenID(String id, String uid);
+        void getUserInfoWithOpenID(String id);
 
-        void getUserInfoWithCode(String code, String uid);
+        void getUserInfoWithCode(String code);
 
         void reConnect();
 

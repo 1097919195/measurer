@@ -40,13 +40,13 @@ public interface UserService {
                                                @Field("code") String code);
 
     @GET("clientUser/getInfoWithQrcode")
-    Observable<HttpResponse<WechatUser>> getUserInfoWithCode(@Query("code") String code, @Query("uid") String uid);
+    Observable<HttpResponse<WechatUser>> getUserInfoWithCode(@Query("code") String code);
 
     @FormUrlEncoded
     @POST("clientUser/editPwd")
-    Observable<HttpResponse<HttpMsg>> editPwd(@Field("id") String id, @Field("old") String old,
+    Observable<HttpResponse<HttpMsg>> editPwd(@Field("old") String old,
                                               @Field("new") String newpwd);
 
     @GET("clientUser/getInfoWithOpenID")
-    Observable<HttpResponse<WechatUser>> getUserInfoWithOpenID(@Query("openid") String id, @Query("uid") String uid);
+    Observable<HttpResponse<WechatUser>> getUserInfoWithOpenID(@Query("openid") String id);
 }

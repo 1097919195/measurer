@@ -1,9 +1,7 @@
 package com.npclo.imeasurer.camera;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +33,7 @@ import com.npclo.imeasurer.camera.decode.InactivityTimer;
 import com.npclo.imeasurer.camera.view.ViewfinderView;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -173,10 +172,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         toolbarTitle.setText("输入二维码编号");
         toManualEnterQrcode.setVisibility(View.GONE);
         ImageView viewLogo = viewEnterQrcode.findViewById(R.id.act_capture_logo);
-        SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.app_config), Context.MODE_PRIVATE);
-        String logo = preferences.getString("logo", null);
-        if (!TextUtils.isEmpty(logo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logo).into(viewLogo);
+        String userLogo = PreferencesUtils.getInstance(this).getUserLogo();
+        if (!TextUtils.isEmpty(userLogo)) {
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo).into(viewLogo);
         }
     }
 

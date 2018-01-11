@@ -40,11 +40,11 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     private PublishSubject<Void> disconnectTriggerSubject = PublishSubject.create();
     private UUID uuid;
     private String macAddress;
-    private int offset;
+    private float offset;
     private Observable<RxBleConnection> connectionObservable;
 
     public MeasurePresenter(@NonNull MeasureContract.View view, @NonNull BaseSchedulerProvider schedulerProvider,
-                            int offsetMeasure, String address, RxBleDevice bleDevice, @NonNull UUID u) {
+                            float offsetMeasure, String address, RxBleDevice bleDevice, @NonNull UUID u) {
         fragment = checkNotNull(view);
         this.schedulerProvider = checkNotNull(schedulerProvider);
         mSubscriptions = new CompositeSubscription();
@@ -103,30 +103,30 @@ public class MeasurePresenter implements MeasureContract.Presenter {
     }
 
     @Override
-    public void getUserInfoWithOpenID(String id, String uid) {
+    public void getUserInfoWithOpenID(String id) {
         Subscription subscribe = new UserRepository()
-                .getUserInfoWithOpenID(id, uid)
+                .getUserInfoWithOpenID(id)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        user -> fragment.onGetWechatUserInfoSuccess(user),
-                        e -> fragment.showGetInfoError(e),
-                        () -> fragment.showCompleteGetInfo());
+                        fragment::onGetWechatUserInfoSuccess,
+                        fragment::onShowGetInfoError,
+                        fragment::showCompleteGetInfo);
         mSubscriptions.add(subscribe);
     }
 
     @Override
-    public void getUserInfoWithCode(String code, String uid) {
+    public void getUserInfoWithCode(String code) {
         Subscription subscribe = new UserRepository()
-                .getUserInfoWithCode(code, uid)
+                .getUserInfoWithCode(code)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
-                        user -> fragment.onGetWechatUserInfoSuccess(user),
-                        e -> fragment.showGetInfoError(e),
-                        () -> fragment.showCompleteGetInfo());
+                        fragment::onGetWechatUserInfoSuccess,
+                        fragment::onShowGetInfoError,
+                        fragment::showCompleteGetInfo);
         mSubscriptions.add(subscribe);
     }
 

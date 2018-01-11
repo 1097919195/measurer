@@ -1,8 +1,6 @@
 package com.npclo.imeasurer.measure;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -42,6 +40,7 @@ import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.exceptions.BleGattException;
@@ -147,7 +146,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private static final int SCAN_HINT = 1001;
     private static final int CODE_HINT = 1002;
     private String[] measureSequence;
-    private SharedPreferences preferences;
     public static final File PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
     private String picName;
     private String firstMeasurePartName;
@@ -169,7 +167,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
-        preferences = getActivity().getSharedPreferences(getString(R.string.app_config), Context.MODE_PRIVATE);
         //初始化需要测量角度的部位
         angleList = initMeasureAnglePartsList();
         //渲染测量部位列表
@@ -198,9 +195,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
         initToolbar();
 
-        String contractName = preferences.getString("contractName", null);
-        int unMeasuredPersons = preferences.getInt("num", 0);
-        int measured = preferences.getInt("measured", 0);
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        String contractName = instance.getContractName();
+        int unMeasuredPersons = instance.getMeasureNum();
+        int measured = instance.getMeasureMeasured();
+
         if (!TextUtils.isEmpty(contractName)) {
             contractStat.setVisibility(View.VISIBLE);
             measureType.setText(contractName);
@@ -418,12 +417,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 data.add(part);
             }
 
-            String uid = preferences.getString("id", "");
-            String oid = preferences.getString("orgId", "");
             //自由量体，合同id固定为10000
-            String cid = preferences.getString("cid", "10000");
+            String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
 
-            Measurement measurement = new Measurement(user, data, uid, oid, cid);
+            Measurement measurement = new Measurement(user, data, cid);
             MultipartBody.Part[] imgs = new MultipartBody.Part[3];
             if (img1.getDrawable() != null) {
                 imgs[0] = getSpecialBodyTypePic((String) img1.getTag());
@@ -469,7 +466,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
      */
     private void initMeasureItemList(List<String> angleList) {
         //初始化所有测量部位
-        String items = preferences.getString("items", null);
+        String items = PreferencesUtils.getInstance(getActivity()).getMeasureItems();
         if (!TextUtils.isEmpty(items)) {
             measureSequence = items.split(",");
         }
@@ -555,15 +552,16 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         showToast("保存成功");
         unmeasuredItemHint.setText("保存成功");
         if (!"10000".equals(result.getId())) {
-            //非自由量体，更新量体信息
-            measureStatAl.setText(String.valueOf(result.getMal()));
-            measureStatNo.setText(String.valueOf(result.getMno()));
-            SharedPreferences.Editor edit = getActivity().getSharedPreferences(getString(R.string.app_config),
-                    Context.MODE_PRIVATE).edit();
-            //设置量体合同号信息
-            edit.putInt("num", result.getMno());
-            edit.putInt("measured", result.getMal());
-            edit.apply();
+
+            int mal = result.getMal();
+            int mno = result.getMno();
+
+            measureStatAl.setText(String.valueOf(mal));
+            measureStatNo.setText(String.valueOf(mno));
+
+            PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+            instance.setMeasureNum(mno);
+            instance.setMeasureMeasured(mal);
         }
         //清除所有已测量项目
         clearAndMeasureNext();
@@ -620,7 +618,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void showGetInfoError(Throwable e) {
+    public void onShowGetInfoError(Throwable e) {
         showLoading(false);
         onHandleMeasureError(e);
     }
@@ -713,7 +711,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String uid = preferences.getString("id", null);
         switch (requestCode) {
             case IMAGE_REQUEST_CODE:
                 startPhotoCrop(data.getData());
@@ -774,7 +771,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     e.printStackTrace();
                 }
                 if (id != null) {
-                    measurePresenter.getUserInfoWithOpenID(id, uid);
+                    measurePresenter.getUserInfoWithOpenID(id);
                 } else {
                     showToast(getString(R.string.scan_qrcode_failed));
                 }
@@ -788,7 +785,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     e.printStackTrace();
                 }
                 if (code != null) {
-                    measurePresenter.getUserInfoWithCode(code, uid);
+                    measurePresenter.getUserInfoWithCode(code);
                 } else {
                     showToast(getString(R.string.enter_qrcode_error));
                 }

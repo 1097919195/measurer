@@ -16,9 +16,9 @@ import java.util.UUID;
 public interface HomeContract {
     interface Presenter extends BasePresenter {
 
-        void getUserInfoWithCode(String result, String uid);
+        void getUserInfoWithCode(String result);
 
-        void getUserInfoWithOpenID(String result, String uid);
+        void getUserInfoWithOpenID(String result);
 
         void autoGetLatestVersion();
 

@@ -2,7 +2,6 @@ package com.npclo.imeasurer.slash;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +14,7 @@ import android.widget.ImageView;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.main.MainActivity;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,10 +38,9 @@ public class SlashActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         initView();
-        SharedPreferences sp = getSharedPreferences(getResources().getString(R.string.app_config), MODE_PRIVATE);
-        String token = sp.getString("token", "");
+        String token = PreferencesUtils.getInstance(this).getToken(true);
         if (!TextUtils.isEmpty(token)) {
-            handler.postDelayed(this::goToMain, 900);
+            handler.postDelayed(this::goToMain, 900);// FIXME: 11/01/2018 延迟时间
         } else {
             handler.postDelayed(this::goToSignIn, 900);
         }

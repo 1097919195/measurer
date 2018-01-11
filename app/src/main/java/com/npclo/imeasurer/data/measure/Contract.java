@@ -12,6 +12,15 @@ public class Contract {
     private List<Item> data;
     private String name;
     private String id;
+    private int measured = 0;
+
+    public int getMeasured() {
+        return measured;
+    }
+
+    public void setMeasured(int measured) {
+        this.measured = measured;
+    }
 
     public String getId() {
         return id;

@@ -1,12 +1,11 @@
 package com.npclo.imeasurer.utils.http;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
-import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.data.HttpResponse;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.npclo.imeasurer.utils.exception.ApiException;
 import com.npclo.imeasurer.utils.exception.TimeoutException;
 
@@ -46,9 +45,7 @@ public class HttpHelper {
 
     private void initHeader(OkHttpClient.Builder httpClientBuilder) {
         Context context = BaseApplication.AppContext;
-        SharedPreferences preferences = context.getSharedPreferences(
-                context.getResources().getString(R.string.app_config), Context.MODE_PRIVATE);
-        String jwt = preferences.getString("token", "thisisadefaultjwt");
+        String jwt = PreferencesUtils.getInstance(context).getToken(false);
         httpClientBuilder.addInterceptor(chain -> {
             Request original = chain.request();
             Request.Builder requestBuilder = original.newBuilder()
