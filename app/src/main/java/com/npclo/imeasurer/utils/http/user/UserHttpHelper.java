@@ -1,9 +1,9 @@
 package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
-import com.npclo.imeasurer.data.user.User;
+import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.data.ValidCode;
-import com.npclo.imeasurer.data.wuser.WechatUser;
+import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.utils.http.HttpHelper;
 
 import rx.Observable;

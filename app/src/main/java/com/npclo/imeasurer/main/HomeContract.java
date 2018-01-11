@@ -5,7 +5,7 @@ import com.npclo.imeasurer.base.BaseView;
 import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
-import com.npclo.imeasurer.data.wuser.WechatUser;
+import com.npclo.imeasurer.data.WechatUser;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
 import com.polidea.rxandroidble.scan.ScanResult;

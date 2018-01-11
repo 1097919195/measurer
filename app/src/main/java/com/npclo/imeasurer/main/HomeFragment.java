@@ -20,7 +20,7 @@ import com.npclo.imeasurer.data.app.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
-import com.npclo.imeasurer.data.wuser.WechatUser;
+import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;

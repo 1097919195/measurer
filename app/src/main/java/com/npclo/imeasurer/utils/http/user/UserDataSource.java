@@ -1,6 +1,7 @@
-package com.npclo.imeasurer.data.user;
+package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
+import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.data.ValidCode;
 
 import rx.Observable;

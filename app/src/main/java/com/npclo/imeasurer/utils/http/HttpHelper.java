@@ -34,19 +34,18 @@ public class HttpHelper {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         initHeader(httpClientBuilder);
-        String httpScheme = Constant.getHttpScheme();
         retrofit = new Retrofit.Builder()
                 .client(httpClientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(httpScheme + Constant.API_BASE_URL)
+                .baseUrl(Constant.getHttpScheme() + Constant.API_BASE_URL)
                 .build();
     }
 
     private void initHeader(OkHttpClient.Builder httpClientBuilder) {
-        Context context = BaseApplication.AppContext;
-        String jwt = PreferencesUtils.getInstance(context).getToken(false);
         httpClientBuilder.addInterceptor(chain -> {
+            Context context = BaseApplication.AppContext;
+            String jwt = PreferencesUtils.getInstance(context).getToken(false);
             Request original = chain.request();
             Request.Builder requestBuilder = original.newBuilder()
                     .header("X-Authorization", jwt);
@@ -58,7 +57,7 @@ public class HttpHelper {
     public class HttpResponseFunc<T> implements Func1<HttpResponse<T>, T> {
         @Override
         public T call(HttpResponse<T> httpResponse) {
-            //att 显示错误信息
+            //全局处理错误信息
             int status = httpResponse.getStatus();
             if (status >= EXCEPTION_THRESHOLD) {
                 if (status == TIMEOUT_STATUS) {

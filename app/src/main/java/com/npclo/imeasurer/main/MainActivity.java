@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
-import com.npclo.imeasurer.data.user.User;
+import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.PreferencesUtils;
@@ -220,12 +220,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .content(R.string.contract_instruction)
                         .positiveText(R.string.new_contract)
                         .negativeText(R.string.default_contract)
-                        .onPositive((dialog, action) ->
-                                homePresenter.getThirdOrgMeasurePartByContractNum()
+                        .onPositive((dialog, action) -> homePresenter.getThirdOrgMeasurePartByContractNum()
                         )
-                        .onNegative((dialog, action) -> {
-                            homePresenter.getThirdOrgDefaultParts(instance.getUserOrgid());
-                                }
+                        .onNegative((dialog, action) -> homePresenter.getThirdOrgDefaultParts(instance.getUserOrgid())
                         )
                         .show();
                 drawerLayout.closeDrawers();

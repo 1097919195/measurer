@@ -22,7 +22,7 @@ import com.npclo.imeasurer.account.forgetpwd.ForgetPwdPresenter;
 import com.npclo.imeasurer.account.signup.SignUpFragment;
 import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
-import com.npclo.imeasurer.data.user.User;
+import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.PreferencesUtils;
