@@ -1,5 +1,6 @@
 package com.npclo.imeasurer.user.manage;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -9,7 +10,9 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npclo.imeasurer.R;
+import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseFragment;
+import com.npclo.imeasurer.utils.PreferencesUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +39,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     @NonNull
     private ManageContract.Presenter presenter;
     private MaterialDialog dialog;
+    private String newpwd1;
 
     @Override
     public void setPresenter(@NonNull ManageContract.Presenter presenter) {
@@ -67,7 +71,7 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
             showSnackbar("旧密码格式不正确");
             return;
         }
-        String newpwd1 = inputNewPwd1.getText().toString();
+        newpwd1 = inputNewPwd1.getText().toString();
         if (checkInput(newpwd1)) {
             showSnackbar("新密码格式不正确");
             return;
@@ -111,6 +115,14 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     public void showEditSuccess() {
         showLoading(false);
         showSnackbar("修改成功");
+
+        PreferencesUtils.getInstance(getActivity()).setToken("");
+        PreferencesUtils.getInstance(getActivity()).setLoginPwd(newpwd1);
+        (new android.os.Handler()).postDelayed(() -> {
+            Intent intent = new Intent(getActivity(), AccountActivity.class);
+            getActivity().startActivity(intent);
+            getActivity().finish();
+        }, 1000);
     }
 
     @Override

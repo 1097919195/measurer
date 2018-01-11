@@ -86,7 +86,11 @@ public abstract class BaseFragment extends SupportFragment {
     }
 
     protected void showSnackbar(String text) {
-        Snackbar.make(checkNotNull(getView()), text, Snackbar.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(checkNotNull(getView()), text, Snackbar.LENGTH_SHORT);
+        snackbar.setActionTextColor(getResources().getColor(R.color.white));
+        View view = snackbar.getView();
+        view.setBackgroundColor(getResources().getColor(R.color.primary));
+        snackbar.show();
     }
 
     /**

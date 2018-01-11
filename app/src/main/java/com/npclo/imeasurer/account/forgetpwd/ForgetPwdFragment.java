@@ -200,7 +200,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
         (new android.os.Handler()).postDelayed(() -> {
             Intent intent = new Intent(getActivity(), AccountActivity.class);
             getActivity().startActivity(intent);
-            getActivity().finish();  // FIXME: 11/01/2018 test this
+            getActivity().finish();
         }, 1000);
     }
 
