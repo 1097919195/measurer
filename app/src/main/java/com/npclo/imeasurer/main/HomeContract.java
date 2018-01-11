@@ -2,7 +2,7 @@ package com.npclo.imeasurer.main;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
-import com.npclo.imeasurer.data.app.App;
+import com.npclo.imeasurer.data.App;
 import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.WechatUser;

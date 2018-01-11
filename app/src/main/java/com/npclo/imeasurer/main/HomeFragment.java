@@ -16,7 +16,7 @@ import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
-import com.npclo.imeasurer.data.app.App;
+import com.npclo.imeasurer.data.App;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;

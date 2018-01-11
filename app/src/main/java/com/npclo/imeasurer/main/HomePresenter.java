@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothGattService;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.npclo.imeasurer.data.app.AppRepository;
+import com.npclo.imeasurer.utils.http.app.AppRepository;
 import com.npclo.imeasurer.utils.http.user.UserRepository;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.http.measurement.MeasurementHelper;

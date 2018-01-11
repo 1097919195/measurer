@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
-import com.npclo.imeasurer.data.app.App;
+import com.npclo.imeasurer.data.App;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.exception.ApiException;
