@@ -5,9 +5,8 @@ import android.content.Context;
 
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.utils.CrashHandler;
+import com.npclo.imeasurer.utils.Gog;
 import com.polidea.rxandroidble.RxBleClient;
-import com.polidea.rxandroidble.internal.RxBleLog;
-import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
 
@@ -29,20 +28,20 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Gog.d("application start");
         AppContext = getApplicationContext();
         // TODO: 2017/8/2 判断当前手机API版本
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            // TODO: 2017/8/28 heap analysis
-            return;
-        }
-        LeakCanary.install(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        LeakCanary.install(this);
         rxBleClient = RxBleClient.create(this);
-        RxBleClient.setLogLevel(RxBleLog.DEBUG);
-        //att 处理app crash
+
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
+        Gog.d("application end");
     }
 
     public static List<Item> getAngleList(Context context) {
