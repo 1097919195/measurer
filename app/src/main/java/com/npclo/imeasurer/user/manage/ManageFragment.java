@@ -2,6 +2,7 @@ package com.npclo.imeasurer.user.manage;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
@@ -114,14 +115,14 @@ public class ManageFragment extends BaseFragment implements ManageContract.View 
     @Override
     public void showEditSuccess() {
         showLoading(false);
-        showSnackbar("修改成功");
-
-        PreferencesUtils.getInstance(getActivity()).setToken("");
-        PreferencesUtils.getInstance(getActivity()).setLoginPwd(newpwd1);
+        showSnackbar("修改成功，请重新登录");
+        FragmentActivity activity = getActivity();
+        PreferencesUtils.getInstance(activity).setToken("");
+        PreferencesUtils.getInstance(activity).setLoginPwd(newpwd1);
         (new android.os.Handler()).postDelayed(() -> {
-            Intent intent = new Intent(getActivity(), AccountActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().finish();
+            Intent intent = new Intent(activity, AccountActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
         }, 1000);
     }
 
