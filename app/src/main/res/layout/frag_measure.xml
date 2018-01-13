@@ -65,7 +65,7 @@
             android:layout_weight="1"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
-            android:text="成衣尺寸调整(cm/°)"
+            android:text="尺寸调整(cm/°)"
             android:textAlignment="center" />
     </LinearLayout>
 

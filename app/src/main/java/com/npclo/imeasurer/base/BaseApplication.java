@@ -7,6 +7,7 @@ import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.utils.CrashHandler;
 import com.npclo.imeasurer.utils.Gog;
 import com.polidea.rxandroidble.RxBleClient;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
 
@@ -31,12 +32,12 @@ public class BaseApplication extends Application {
         Gog.d("application start");
         AppContext = getApplicationContext();
         // TODO: 2017/8/2 判断当前手机API版本
-//        if (LeakCanary.isInAnalyzerProcess(this)) {
-//            // This process is dedicated to LeakCanary for heap analysis.
-//            // You should not init your app in this process.
-//            return;
-//        }
-//        LeakCanary.install(this);
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
         rxBleClient = RxBleClient.create(this);
 
         CrashHandler crashHandler = CrashHandler.getInstance();

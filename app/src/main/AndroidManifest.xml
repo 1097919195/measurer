@@ -44,7 +44,10 @@
         <activity
             android:name=".measure.MeasureActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".slash.SlashActivity">
+        <activity
+            android:name=".splash.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppWelcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
