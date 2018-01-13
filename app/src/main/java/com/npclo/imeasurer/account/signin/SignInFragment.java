@@ -17,16 +17,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
-import com.npclo.imeasurer.account.forgetpwd.ForgetPwdFragment;
-import com.npclo.imeasurer.account.forgetpwd.ForgetPwdPresenter;
-import com.npclo.imeasurer.account.signup.SignUpFragment;
-import com.npclo.imeasurer.account.signup.SignUpPresenter;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.PreferencesUtils;
-import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -166,16 +161,10 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
                 signinPresenter.signIn(name, password);
                 break;
             case R.id.forget_pwd_tv:
-                ForgetPwdFragment fragment = ForgetPwdFragment.newInstance();
-                start(fragment, SINGLETASK);
-                fragment.setPresenter(new ForgetPwdPresenter(fragment,
-                        SchedulerProvider.getInstance()));
+                showToast("请联系格心科技管理员重置密码");
                 break;
             case R.id.signup_tv:
-                SignUpFragment signUpFragment = SignUpFragment.newInstance();
-                start(signUpFragment, SINGLETASK);
-                signUpFragment.setPresenter(new SignUpPresenter(signUpFragment,
-                        SchedulerProvider.getInstance()));
+                showToast("暂不支持App内注册");
                 break;
             case R.id.action_wechat_login:
                 showToast("待开放微信登录");
