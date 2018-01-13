@@ -24,6 +24,7 @@ import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -173,6 +174,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         Intent intent = new Intent(getActivity(), MeasureActivity.class);
         intent.putExtra("userBundle", bundle);
         startActivity(intent);
+        getActivity().finish();
     }
 
     @Override

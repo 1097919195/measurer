@@ -22,10 +22,11 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         String token = PreferencesUtils.getInstance(this).getToken(true);
+        Handler handler = new Handler();
         if (!TextUtils.isEmpty(token)) {
-            goToMain();
+            handler.postDelayed(this::goToMain, 500);
         } else {
-            goToSignIn();
+            handler.postDelayed(this::goToSignIn, 500);
         }
     }
 

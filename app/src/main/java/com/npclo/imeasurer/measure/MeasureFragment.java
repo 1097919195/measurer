@@ -30,11 +30,11 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
+import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.Part;
 import com.npclo.imeasurer.data.measure.Result;
-import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Constant;
@@ -854,7 +854,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private void showHandleBackPress() {
         new MaterialDialog.Builder(getActivity())
                 .title("确定要离开当前量体界面?")
-                .onPositive((d, i) -> startActivity(new Intent(getActivity(), MainActivity.class)))
+                .onPositive((d, i) -> {
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                    getActivity().finish();
+                })
                 .positiveText(getResources().getString(R.string.sure))
                 .negativeText("点错了")
                 .show();
