@@ -124,7 +124,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             mPresenter.subscribe();
         }
         boolean currentDayFirst = PreferencesUtils.getInstance(getActivity()).isCurrentDayFirst(getTodayStr());
-        if (!currentDayFirst) {
+        if (currentDayFirst) {
             mPresenter.autoGetLatestVersion();
         }
         LogUtils.upload(getActivity());
