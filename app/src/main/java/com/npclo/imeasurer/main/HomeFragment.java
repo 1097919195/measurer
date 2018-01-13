@@ -18,13 +18,12 @@ import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.App;
+import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
-import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
-import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -119,7 +118,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        Gog.d("onResume");
         if (mPresenter != null) {
             mPresenter.subscribe();
         }
@@ -133,7 +131,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        Gog.d("onPause");
         // FIXME: 06/01/2018 哪里触发了导致系统调用这个方法
         if (mPresenter != null) {
             mPresenter.unsubscribe();
