@@ -2,6 +2,7 @@ package com.npclo.imeasurer.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.polidea.rxandroidble.scan.ScanResult;
 import com.unisound.client.SpeechSynthesizer;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -121,6 +123,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         if (mPresenter != null) {
             mPresenter.subscribe();
         }
+        boolean currentDayFirst = PreferencesUtils.getInstance(getActivity()).isCurrentDayFirst(getTodayStr());
+        if (!currentDayFirst) {
+            mPresenter.autoGetLatestVersion();
+        }
         LogUtils.upload(getActivity());
     }
 
@@ -186,6 +192,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onGetVersionInfo(App app, String type) {
         int code = getVersionCode();
+        if (Constant.AUTO.equals(type)) {
+            PreferencesUtils.getInstance(getActivity()).setCurrentDate(getTodayStr());
+        }
         if (app.getCode() > code && code != 0) {
             updateApp(app);
         } else {
@@ -193,6 +202,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 showToast("已经是最新版");
             }
         }
+    }
+
+    @NonNull
+    private String getTodayStr() {
+        Calendar instance = Calendar.getInstance();
+        String year = String.valueOf(instance.get(Calendar.YEAR));
+        String month = String.valueOf(instance.get(Calendar.MONTH) + 1);
+        String day = String.valueOf(instance.get(Calendar.DAY_OF_MONTH));
+        return year + month + day;
     }
 
     @Override

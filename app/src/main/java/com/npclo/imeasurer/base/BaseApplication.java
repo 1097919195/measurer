@@ -29,7 +29,6 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Gog.d("application start");
         AppContext = getApplicationContext();
         // TODO: 2017/8/2 判断当前手机API版本
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -42,7 +41,6 @@ public class BaseApplication extends Application {
 
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
-        Gog.d("application end");
     }
 
     public static List<Item> getAngleList(Context context) {
