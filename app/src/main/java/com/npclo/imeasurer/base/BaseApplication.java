@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.utils.CrashHandler;
-import com.npclo.imeasurer.utils.Gog;
 import com.polidea.rxandroidble.RxBleClient;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -30,7 +29,6 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         AppContext = getApplicationContext();
-        // TODO: 2017/8/2 判断当前手机API版本
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
