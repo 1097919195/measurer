@@ -24,7 +24,6 @@ import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
-import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -405,33 +404,37 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bundle bundle = data.getExtras();
-        String result = bundle.getString("result");
-        switch (resultCode) {
-            case SCAN_HINT:
-                if (result != null) {
-                    if (requestCode == REQUEST_CODE_CONTRACT) {
-                        mPresenter.getContractInfoWithCode(result);
-                    } else if (requestCode == REQUEST_CODE_WECHATUSER) {
-                        mPresenter.getUserInfoWithOpenID(result);
+        if (data != null) {
+            Bundle bundle = data.getExtras();
+            String result = bundle.getString("result");
+            switch (resultCode) {
+                case SCAN_HINT:
+                    if (result != null) {
+                        if (requestCode == REQUEST_CODE_CONTRACT) {
+                            mPresenter.getContractInfoWithCode(result);
+                        } else if (requestCode == REQUEST_CODE_WECHATUSER) {
+                            mPresenter.getUserInfoWithOpenID(result);
+                        }
+                    } else {
+                        showToast(getString(R.string.scan_qrcode_failed));
                     }
-                } else {
-                    showToast(getString(R.string.scan_qrcode_failed));
-                }
-                break;
-            case CODE_HINT:
-                if (result != null) {
-                    if (requestCode == REQUEST_CODE_CONTRACT) {
-                        mPresenter.getContractInfoWithNum(result);
-                    } else if (requestCode == REQUEST_CODE_WECHATUSER) {
-                        mPresenter.getUserInfoWithCode(result);
+                    break;
+                case CODE_HINT:
+                    if (result != null) {
+                        if (requestCode == REQUEST_CODE_CONTRACT) {
+                            mPresenter.getContractInfoWithNum(result);
+                        } else if (requestCode == REQUEST_CODE_WECHATUSER) {
+                            mPresenter.getUserInfoWithCode(result);
+                        }
+                    } else {
+                        showToast(getString(R.string.enter_qrcode_error));
                     }
-                } else {
-                    showToast(getString(R.string.enter_qrcode_error));
-                }
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            showToast(getString(R.string.enter_qrcode_error));
         }
     }
 
