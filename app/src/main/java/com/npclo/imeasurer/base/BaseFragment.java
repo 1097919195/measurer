@@ -17,7 +17,6 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.data.App;
 import com.npclo.imeasurer.main.MainActivity;
-import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.exception.ApiException;
 import com.npclo.imeasurer.utils.exception.TimeoutException;
 import com.polidea.rxandroidble.exceptions.BleException;
@@ -114,8 +113,10 @@ public abstract class BaseFragment extends SupportFragment {
             showToast(getResources().getString(R.string.ble_error_hint));
             toast2Speech(getResources().getString(R.string.ble_error_hint));
         } else {
-            String message = getStackMsg(e);
-            Gog.e(message);
+//            String message = getStackMsg(e);
+//            Gog.e(message);
+            showToast("登录超时，请重新登录");
+            handler.postDelayed(this::goToSignIn, 1000);
         }
     }
 
