@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
@@ -145,7 +146,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userNameView.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
         String logoSrc = instance.getUserLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logoView);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc)
+                    .apply(new RequestOptions().error(R.drawable.load_fail_pic))
+                    .into(logoView);
         } else {
             logoView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         }
@@ -268,7 +271,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userNameView.setText(!TextUtils.isEmpty(user.getNickname()) ? user.getNickname() : user.getName());
         String logoSrc = user.getLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc).into(logoView);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc)
+                    .apply(new RequestOptions().error(R.drawable.load_fail_pic))
+                    .into(logoView);
         } else {
             logoView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         }

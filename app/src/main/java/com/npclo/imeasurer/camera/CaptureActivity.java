@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.npclo.imeasurer.R;
@@ -174,7 +175,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         ImageView viewLogo = viewEnterQrcode.findViewById(R.id.act_capture_logo);
         String userLogo = PreferencesUtils.getInstance(this).getUserLogo();
         if (!TextUtils.isEmpty(userLogo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo).into(viewLogo);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo)
+                    .apply(new RequestOptions().error(R.drawable.load_fail_pic))
+                    .into(viewLogo);
         }
     }
 

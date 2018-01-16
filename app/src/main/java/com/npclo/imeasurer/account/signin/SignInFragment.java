@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseFragment;
@@ -101,7 +102,9 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
         String userLogo = instance.getUserLogo();
         if (!TextUtils.isEmpty(userLogo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo).into(logo);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo)
+                    .apply(new RequestOptions().error(R.drawable.load_fail_pic))
+                    .into(logo);
         } else {
             logo.setImageDrawable(getResources().getDrawable(R.mipmap.logo));
         }

@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
@@ -289,7 +290,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             switchGender();
         }
         if (u.getAvatar() != null) {
-            Glide.with(this).load(u.getAvatar()).into(wechatIcon);
+            Glide.with(getActivity()).load(u.getAvatar())
+                    .apply(new RequestOptions()
+                            .placeholder(R.mipmap.ic_launcher)
+                            .error(R.drawable.load_fail_pic))
+                    .into(wechatIcon);
         } else {
             wechatIcon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         }

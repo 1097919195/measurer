@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
@@ -80,7 +81,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         configureResultList();
         String userLogo = PreferencesUtils.getInstance(getActivity()).getUserLogo();
         if (!TextUtils.isEmpty(userLogo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo).into(scanImg);
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo)
+                    .apply(new RequestOptions().error(R.drawable.load_fail_pic))
+                    .into(scanImg);
         }
     }
 
