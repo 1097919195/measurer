@@ -1,5 +1,6 @@
 package com.npclo.imeasurer.base;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -16,37 +17,35 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.SettingUtil;
 
+import kr.co.namee.permissiongen.PermissionGen;
 import me.yokeyword.fragmentation.SupportActivity;
 
 public abstract class BaseActivity extends SupportActivity {
-    // 再点一次退出程序时间设置
-    private static final long WAIT_TIME = 2000L;
-    private long touchTime = 0;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        beforeInit();
+        initC();
     }
 
-    protected void beforeInit() {
+    protected void initC() {
+        requestPermission();
     }
 
-//    @Override
-//    public void onBackPressedSupport() {
-//        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-//            pop();
-//        } else {
-//            if (System.currentTimeMillis() - touchTime < WAIT_TIME) {
-//                finish();
-//            } else {
-//                touchTime = System.currentTimeMillis();
-//                Toast.makeText(this, R.string.press_again_exit, Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
+    private void requestPermission() {
+        PermissionGen.with(this)
+                .addRequestCode(100)
+                .permissions(
+                        Manifest.permission.LOCATION_HARDWARE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.CAMERA)
+                .request();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     protected void initToolBar(Toolbar toolbar, boolean homeAsUpEnabled, String title) {
@@ -78,5 +77,11 @@ public abstract class BaseActivity extends SupportActivity {
                 getWindow().setNavigationBarColor(Color.BLACK);
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 }

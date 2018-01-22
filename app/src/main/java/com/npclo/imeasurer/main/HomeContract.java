@@ -57,7 +57,7 @@ public interface HomeContract {
 
         void onGetVersionInfo(App app, String type);
 
-        void onGetVersionError(Throwable e);
+        void onGetVersionError(Throwable e, String type);
 
         void onLogout();
 

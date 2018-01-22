@@ -216,7 +216,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .observeOn(mSchedulerProvider.ui())
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(app -> fragment.onGetVersionInfo(app, Constant.MANUAL),
-                        e -> fragment.onGetVersionError(e), () -> fragment.showLoading(false));
+                        e -> fragment.onGetVersionError(e, Constant.MANUAL), () -> fragment.showLoading(false));
         mSubscriptions.add(subscribe);
     }
 
@@ -227,7 +227,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(app -> fragment.onGetVersionInfo(app, Constant.AUTO),
-                        e -> fragment.onGetVersionError(e));
+                        e -> fragment.onGetVersionError(e, Constant.AUTO));
         mSubscriptions.add(subscribe);
     }
 

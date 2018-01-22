@@ -1,6 +1,5 @@
 package com.npclo.imeasurer.main;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,13 +24,12 @@ import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.CircleImageView;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
-
-import kr.co.namee.permissiongen.PermissionGen;
 
 /**
  * @author Endless
@@ -64,32 +62,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initSpeech() {
-        if (speechSynthesizer == null) {
-            speechSynthesizer = new SpeechSynthesizer(this, Constant.APP_KEY, Constant.APP_SECRET);
+        try {
+            if (speechSynthesizer == null) {
+                speechSynthesizer = new SpeechSynthesizer(this, Constant.APP_KEY, Constant.APP_SECRET);
+            }
+            speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
+            speechSynthesizer.setOption(SpeechConstants.TTS_KEY_VOICE_SPEED, 70);
+            speechSynthesizer.init(null);
+        } catch (Exception e) {
+            LogUtils.fixBug("语音播报出现异常，异常原因: " + LogUtils.getStackMsg(e));
         }
-        speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
-        speechSynthesizer.setOption(SpeechConstants.TTS_KEY_VOICE_SPEED, 70);
-        speechSynthesizer.init(null);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        speechSynthesizer = null;
+        if (speechSynthesizer != null) {
+            speechSynthesizer = null;
+        }
     }
 
     private void init() {
-        PermissionGen.with(MainActivity.this)
-                .addRequestCode(100)
-                .permissions(
-                        Manifest.permission.LOCATION_HARDWARE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.CAMERA)
-                .request();
         //加载登录后的欢迎界面
         HomeFragment homeFragment = findFragment(HomeFragment.class);
         if (homeFragment == null) {

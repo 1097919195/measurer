@@ -49,4 +49,23 @@ public class LogUtils {
                 .subscribe();
     }
 
+    public static String getStackMsg(Exception e) {
+
+        StringBuffer sb = new StringBuffer();
+        StackTraceElement[] stackArray = e.getStackTrace();
+        for (int i = 0; i < stackArray.length; i++) {
+            StackTraceElement element = stackArray[i];
+            sb.append(element.toString() + "\n");
+        }
+        return sb.toString();
+    }
+
+    public static String getStackMsg(Throwable e) {
+        StringBuilder sb = new StringBuilder();
+        StackTraceElement[] stackArray = e.getStackTrace();
+        for (StackTraceElement el : stackArray) {
+            sb.append(el.toString() + "\n");
+        }
+        return sb.toString();
+    }
 }

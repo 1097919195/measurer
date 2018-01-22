@@ -21,4 +21,16 @@ public class HttpResponse<T> {
     private int status;
     private String msg;
     private T data;
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
 }

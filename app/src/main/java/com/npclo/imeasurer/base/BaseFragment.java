@@ -13,10 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.JsonSyntaxException;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.data.App;
 import com.npclo.imeasurer.main.MainActivity;
+import com.npclo.imeasurer.utils.Gog;
+import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.exception.ApiException;
 import com.npclo.imeasurer.utils.exception.TimeoutException;
 import com.polidea.rxandroidble.exceptions.BleException;
@@ -112,11 +115,12 @@ public abstract class BaseFragment extends SupportFragment {
         } else if (e instanceof BleException) {
             showToast(getResources().getString(R.string.ble_error_hint));
             toast2Speech(getResources().getString(R.string.ble_error_hint));
+        } else if (e instanceof JsonSyntaxException) {
+            Gog.e(e.getMessage() + e.getCause().toString());
         } else {
-//            String message = getStackMsg(e);
-//            Gog.e(message);
-            showToast("登录超时，请重新登录");
-            handler.postDelayed(this::goToSignIn, 1000);
+            String message = LogUtils.getStackMsg(e);
+            LogUtils.fixBug("异常：" + e.getClass().getSimpleName() + "\n异常信息：" + e.getMessage() + "\n详细原因: " + message);
+
         }
     }
 
@@ -139,26 +143,6 @@ public abstract class BaseFragment extends SupportFragment {
                 .apkPath(app.getPath() + "?v=" + app.getVersion())
                 .updateInfo(app.getInfo().trim())
                 .update();
-    }
-
-    private String getStackMsg(Exception e) {
-
-        StringBuffer sb = new StringBuffer();
-        StackTraceElement[] stackArray = e.getStackTrace();
-        for (int i = 0; i < stackArray.length; i++) {
-            StackTraceElement element = stackArray[i];
-            sb.append(element.toString() + "\n");
-        }
-        return sb.toString();
-    }
-
-    private String getStackMsg(Throwable e) {
-        StringBuilder sb = new StringBuilder();
-        StackTraceElement[] stackArray = e.getStackTrace();
-        for (StackTraceElement el : stackArray) {
-            sb.append(el.toString() + "\n");
-        }
-        return sb.toString();
     }
 
     private void goToSignIn() {

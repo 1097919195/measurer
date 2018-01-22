@@ -13,8 +13,8 @@
         android:id="@+id/unmeasured_item_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
@@ -89,6 +89,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="48dp">
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/save_measure_result"
             android:layout_width="match_parent"
@@ -110,6 +111,6 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="22sp"
-            android:visibility="invisible" />
+            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

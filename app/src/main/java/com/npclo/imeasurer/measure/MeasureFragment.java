@@ -40,6 +40,7 @@ import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.BitmapUtils;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.Gog;
+import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.npclo.imeasurer.utils.views.MyGridView;
@@ -315,7 +316,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        speechSynthesizer = null;
+        if (speechSynthesizer != null) {
+            speechSynthesizer = null;
+        }
     }
 
     @OnClick({R.id.save_measure_result, R.id.wechat_gender_edit, R.id.camera_add, R.id.next_person,
@@ -456,12 +459,16 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void initSpeech() {
-        if (speechSynthesizer == null) {
-            speechSynthesizer = new SpeechSynthesizer(getActivity(), Constant.APP_KEY, Constant.APP_SECRET);
+        try {
+            if (speechSynthesizer == null) {
+                speechSynthesizer = new SpeechSynthesizer(getActivity(), Constant.APP_KEY, Constant.APP_SECRET);
+            }
+            speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
+            speechSynthesizer.setOption(SpeechConstants.TTS_KEY_VOICE_SPEED, 70);
+            speechSynthesizer.init(null);
+        } catch (Exception e) {
+            LogUtils.fixBug("语音播报出现异常，异常原因: " + LogUtils.getStackMsg(e));
         }
-        speechSynthesizer.setOption(SpeechConstants.TTS_SERVICE_MODE, SpeechConstants.TTS_SERVICE_MODE_NET);
-        speechSynthesizer.setOption(SpeechConstants.TTS_KEY_VOICE_SPEED, 70);
-        speechSynthesizer.init(null);
     }
 
     /**
