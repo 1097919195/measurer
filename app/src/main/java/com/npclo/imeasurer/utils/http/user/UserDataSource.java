@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.data.ValidCode;
 
@@ -18,4 +19,6 @@ public interface UserDataSource {
     Observable<ValidCode> getValidCode(String name, String type);
 
     Observable<User> userInfo();
+
+    Observable<ThirdMember> getThirdMemberInfo(String tid, String cid);
 }

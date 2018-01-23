@@ -186,4 +186,18 @@ public class MeasurePresenter implements MeasureContract.Presenter {
         return !TextUtils.isEmpty(macAddress) && device.getConnectionState()
                 == RxBleConnection.RxBleConnectionState.CONNECTED;
     }
+
+    @Override
+    public void getThirdMemberInfo(String tid, String cid) {
+        Subscription subscribe = new UserRepository()
+                .getThirdMemberInfo(tid, cid)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(
+                        fragment::onGetThirdMemberInfo,
+                        fragment::showGetThirdMemberInfoError,
+                        fragment::showCompleteGetThirdMemberInfo);
+        mSubscriptions.add(subscribe);
+    }
 }

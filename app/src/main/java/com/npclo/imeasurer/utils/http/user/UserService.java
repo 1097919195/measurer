@@ -2,8 +2,9 @@ package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
 import com.npclo.imeasurer.data.HttpResponse;
-import com.npclo.imeasurer.data.ValidCode;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.User;
+import com.npclo.imeasurer.data.ValidCode;
 import com.npclo.imeasurer.data.WechatUser;
 
 import retrofit2.http.Field;
@@ -49,4 +50,7 @@ public interface UserService {
 
     @GET("clientUser/getInfoWithOpenID")
     Observable<HttpResponse<WechatUser>> getUserInfoWithOpenID(@Query("openid") String id);
+
+    @GET("thirdMember/memberInfo")
+    Observable<HttpResponse<ThirdMember>> getThirdMemberInfo(@Query("tid") String tid, @Query("cid") String cid);
 }

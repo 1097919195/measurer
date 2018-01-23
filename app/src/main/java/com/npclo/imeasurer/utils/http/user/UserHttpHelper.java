@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.data.ValidCode;
 import com.npclo.imeasurer.data.WechatUser;
@@ -57,6 +58,12 @@ public class UserHttpHelper extends HttpHelper {
     public Observable<WechatUser> getUserInfoWithOpenID(String oid) {
         return retrofit.create(UserService.class)
                 .getUserInfoWithOpenID(oid)
+                .map(new HttpResponseFunc<>());
+    }
+
+    public Observable<ThirdMember> getThirdMemberInfo(String tid, String cid) {
+        return retrofit.create(UserService.class)
+                .getThirdMemberInfo(tid, cid)
                 .map(new HttpResponseFunc<>());
     }
 }

@@ -31,6 +31,8 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
+import com.npclo.imeasurer.data.IUser;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.measure.Measurement;
@@ -131,7 +133,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @BindView(R.id.unmeasured_item_hint)
     AppCompatTextView unmeasuredItemHint;
     private MeasureContract.Presenter measurePresenter;
-    private WechatUser user;
+    private IUser measurer;
     private SpeechSynthesizer speechSynthesizer;
     private MaterialDialog saveProgressbar;
     public static final int TAKE_PHOTO = 13;
@@ -151,6 +153,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     public static final File PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
     private String picName;
     private String firstMeasurePartName;
+    public static final String REDIRECT_URI = "redirect_uri";
 
     public static MeasureFragment newInstance() {
         return new MeasureFragment();
@@ -249,17 +252,20 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        Gog.d("Measurement onResume");
         //初始化语音播报
         if (measurePresenter != null) {
             measurePresenter.subscribe();
         }
         unmeasuredItemHint.setText(firstMeasurePartName);
 
-        user = getActivity().getIntent().getBundleExtra("userBundle").getParcelable("user");
+        measurer = getActivity().getIntent().getBundleExtra("userBundle").getParcelable("user");
         //仅接收homefragment传值过来的用户信息时才赋值，从当前fragment发起的意图返回结果不在此处进行赋值调用
-        if (user != null) {
-            setWechatUserInfo(user);
+        if (measurer != null) {
+            if (measurer instanceof WechatUser) {
+                setWechatUserInfo((WechatUser) measurer);
+            } else if (measurer instanceof ThirdMember) {
+                setThirdMemberInfo((ThirdMember) measurer);
+            }
         }
 
         initUmMeasureListFlag = true;
@@ -301,6 +307,24 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         }
         if (u.getTimes() > 0) {
             showToast("该用户已量体" + u.getTimes() + "次");
+        }
+    }
+
+    private void setThirdMemberInfo(ThirdMember member) {
+        wechatNickname.setText(member.getName());
+        if (member.getGender() != 0) {
+            wechatGender.setText(member.getGender() == 1 ? "男" : "女");
+        } else {
+            switchGender();
+        }
+        PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
+        Glide.with(getActivity()).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + instance.getUserLogo())
+                .apply(new RequestOptions()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.drawable.load_fail_pic))
+                .into(wechatIcon);
+        if (member.getTimes() > 0) {
+            showToast("用户" + member.getName() + "已量体" + member.getTimes() + "次");
         }
     }
 
@@ -386,7 +410,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 .contentColor(getResources().getColor(R.color.c252527))
                 .itemsCallbackSingleChoice(index - 1, (dialog, itemView, which, text) -> {
                     wechatGender.setText(text);
-                    user.setGender(MALE.equals(text.toString()) ? 1 : 2);
+                    if (measurer instanceof WechatUser) {
+                        ((WechatUser) measurer).setGender(MALE.equals(text.toString()) ? 1 : 2);
+                    } else if (measurer instanceof ThirdMember) {
+                        ((ThirdMember) measurer).setGender(MALE.equals(text.toString()) ? 1 : 2);
+                    }
                     return true;
                 })
                 .backgroundColor(getResources().getColor(R.color.white))
@@ -428,7 +456,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             //自由量体，合同id固定为10000
             String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
 
-            Measurement measurement = new Measurement(user, data, cid);
+            Measurement measurement = new Measurement(measurer, data, cid);
             MultipartBody.Part[] imgs = new MultipartBody.Part[3];
             if (img1.getDrawable() != null) {
                 imgs[0] = getSpecialBodyTypePic((String) img1.getTag());
@@ -443,6 +471,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             measurePresenter.saveMeasurement(measurement, imgs);
         } catch (Exception e) {
             e.printStackTrace();
+            Gog.e(e.getMessage());
         }
     }
 
@@ -624,8 +653,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     @Override
     public void onGetWechatUserInfoSuccess(WechatUser u) {
         showLoading(false);
-        user = u;
-        setWechatUserInfo(user);
+        measurer = u;
+        setWechatUserInfo(u);
     }
 
     @Override
@@ -774,27 +803,38 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 }
                 break;
             case SCAN_HINT:
-                String id = null;
-                try {
-                    Bundle bundle = data.getExtras();
-                    id = bundle.getString("result");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (data == null) {
+                    showToast(getString(R.string.scan_qrcode_failed));
+                    return;
                 }
-                if (id != null) {
-                    measurePresenter.getUserInfoWithOpenID(id);
+                Bundle scan_bundle = data.getExtras();
+                String result = scan_bundle.getString("result");
+                if (result != null) {
+                    if (result.contains("https")) {
+                        //解析出tid(ThirdMember中id)
+                        int redirectUriIndex = result.indexOf(REDIRECT_URI) + REDIRECT_URI.length() + 1;
+                        String s = result.substring(redirectUriIndex);
+                        try {
+                            String tid = LogUtils.getParams(s, "tid");
+                            String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
+                            measurePresenter.getThirdMemberInfo(tid, cid);
+                        } catch (Exception e) {
+                            showToast("二维码解析失败，请重试");
+                            return;
+                        }
+                    } else {
+                        measurePresenter.getUserInfoWithOpenID(result);
+                    }
                 } else {
                     showToast(getString(R.string.scan_qrcode_failed));
                 }
                 break;
             case CODE_HINT:
-                String code = null;
-                try {
-                    Bundle bundle = data.getExtras();
-                    code = bundle.getString("result");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (data == null) {
+                    return;
                 }
+                Bundle code_bundle = data.getExtras();
+                String code = code_bundle.getString("result");
                 if (code != null) {
                     measurePresenter.getUserInfoWithCode(code);
                 } else {
@@ -872,5 +912,22 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 .positiveText(getResources().getString(R.string.sure))
                 .negativeText("点错了")
                 .show();
+    }
+
+    @Override
+    public void onGetThirdMemberInfo(ThirdMember user) {
+        showLoading(false);
+        measurer = user;
+        setThirdMemberInfo(user);
+    }
+
+    @Override
+    public void showGetThirdMemberInfoError(Throwable e) {
+        onHandleError(e);
+    }
+
+    @Override
+    public void showCompleteGetThirdMemberInfo() {
+        showLoading(false);
     }
 }

@@ -1,6 +1,7 @@
 package com.npclo.imeasurer.utils.http.user;
 
 import com.npclo.imeasurer.data.HttpMsg;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.data.ValidCode;
 import com.npclo.imeasurer.data.WechatUser;
@@ -48,4 +49,8 @@ public class UserRepository implements UserDataSource {
         return new UserHttpHelper().getUserInfoWithOpenID(oid);
     }
 
+    @Override
+    public Observable<ThirdMember> getThirdMemberInfo(String tid, String cid) {
+        return new UserHttpHelper().getThirdMemberInfo(tid, cid);
+    }
 }

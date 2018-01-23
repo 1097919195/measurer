@@ -2,6 +2,7 @@ package com.npclo.imeasurer.measure;
 
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.measure.Measurement;
 import com.npclo.imeasurer.data.measure.Result;
 import com.npclo.imeasurer.data.WechatUser;
@@ -38,6 +39,12 @@ public interface MeasureContract {
         void onHandleMeasureError();
 
         void onHandleMeasureError(Throwable e);
+
+        void onGetThirdMemberInfo(ThirdMember user);
+
+        void showGetThirdMemberInfoError(Throwable e);
+
+        void showCompleteGetThirdMemberInfo();
     }
 
     interface Presenter extends BasePresenter {
@@ -50,5 +57,7 @@ public interface MeasureContract {
         void reConnect();
 
         void setUUID(UUID characteristicUUID);
+
+        void getThirdMemberInfo(String tid, String cid);
     }
 }

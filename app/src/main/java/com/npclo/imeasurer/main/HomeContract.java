@@ -3,6 +3,7 @@ package com.npclo.imeasurer.main;
 import com.npclo.imeasurer.base.BasePresenter;
 import com.npclo.imeasurer.base.BaseView;
 import com.npclo.imeasurer.data.App;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.data.WechatUser;
@@ -43,6 +44,8 @@ public interface HomeContract {
         void getContractInfoWithCode(String result);
 
         void getContractInfoWithNum(String result);
+
+        void getThirdMemberInfo(String tid, String cid);
     }
 
     interface View extends BaseView<Presenter> {
@@ -88,5 +91,11 @@ public interface HomeContract {
         void onHandleUnknownError(Throwable e);
 
         void onHandleConnectError(Throwable e);
+
+        void onGetThirdMemberInfo(ThirdMember member);
+
+        void showGetThirdMemberInfoError(Throwable e);
+
+        void showCompleteGetThirdMemberInfo();
     }
 }

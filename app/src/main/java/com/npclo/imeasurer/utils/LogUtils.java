@@ -2,10 +2,12 @@ package com.npclo.imeasurer.utils;
 
 import android.content.Context;
 
+import com.google.common.base.Splitter;
 import com.npclo.imeasurer.utils.http.app.AppHttpHelper;
 import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 
 import java.io.File;
+import java.util.Map;
 
 
 /**
@@ -67,5 +69,11 @@ public class LogUtils {
             sb.append(el.toString() + "\n");
         }
         return sb.toString();
+    }
+
+    public static String getParams(String url, String name) {
+        String params = url.substring(url.indexOf("?") + 1, url.length());
+        Map<String, String> split = Splitter.on("&").withKeyValueSeparator("=").split(params);
+        return split.get(name);
     }
 }

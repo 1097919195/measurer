@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
  * Created by Endless on 2017/8/14.
  */
 
-public class WechatUser implements Parcelable {
+public class WechatUser implements Parcelable, IUser {
     private int gender;
     private String nickname;
     @Nullable

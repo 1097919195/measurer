@@ -301,4 +301,17 @@ public class HomePresenter implements HomeContract.Presenter {
         fragment.showLoading(true);
     }
 
+    @Override
+    public void getThirdMemberInfo(String tid, String cid) {
+        Subscription subscribe = new UserRepository()
+                .getThirdMemberInfo(tid, cid)
+                .subscribeOn(mSchedulerProvider.io())
+                .observeOn(mSchedulerProvider.ui())
+                .doOnSubscribe(() -> fragment.showLoading(true))
+                .subscribe(
+                        user -> fragment.onGetThirdMemberInfo(user),
+                        e -> fragment.showGetThirdMemberInfoError(e),
+                        () -> fragment.showCompleteGetThirdMemberInfo());
+        mSubscriptions.add(subscribe);
+    }
 }

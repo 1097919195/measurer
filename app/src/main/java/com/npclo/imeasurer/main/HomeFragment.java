@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
@@ -19,6 +18,7 @@ import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
 import com.npclo.imeasurer.data.App;
+import com.npclo.imeasurer.data.ThirdMember;
 import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.data.ble.BleDevice;
 import com.npclo.imeasurer.data.measure.Contract;
@@ -50,6 +50,7 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 public class HomeFragment extends BaseFragment implements HomeContract.View {
     public static final int REQUEST_CODE_WECHATUSER = 1201;
     private static final int REQUEST_CODE_CONTRACT = 1202;
+    public static final String REDIRECT_URI = "redirect_uri";
     @BindView(R.id.scan_img)
     ImageView scanImg;
     @BindView(R.id.scan_hint)
@@ -224,12 +225,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onLogout() {
-        // 退出登录，清除id和token
         PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
         instance.setToken("");
-        Toast.makeText(getActivity(), getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(), AccountActivity.class);
-        startActivity(intent);
+        showToast(getString(R.string.logout_success));
+        new android.os.Handler().postDelayed(() -> {
+            MainActivity activity = (MainActivity) getActivity();
+            Intent intent = new Intent(activity, AccountActivity.class);
+            startActivity(intent);
+            activity.finish();
+        }, 500);
     }
 
     @Override
@@ -256,7 +260,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     public void onShowError(String s) {
         showToast(s);
     }
-
 
     private void configureResultList() {
         scanResultsAdapter = new ScanResultsAdapter(this, bleDeviceList);
@@ -332,7 +335,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         getSynthesizer().playText("蓝牙连接成功");
         setBleDeviceName(bleDevice.getName());
         setBleAddress(bleDevice.getMacAddress());
-        //更新设备连接信息状态
+        //更新设备连接信息状态 //TODO: 23/01/2018  使用R'xBus
         ((MainActivity) getActivity()).updateBlueToothState(bleDevice.getName());
     }
 
@@ -397,6 +400,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     private void updateContractName(String name) {
+        //TODO: 23/01/2018  使用R'xBus
         ((MainActivity) getActivity()).updateContractName(name);
     }
 
@@ -418,7 +422,21 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                         if (requestCode == REQUEST_CODE_CONTRACT) {
                             mPresenter.getContractInfoWithCode(result);
                         } else if (requestCode == REQUEST_CODE_WECHATUSER) {
-                            mPresenter.getUserInfoWithOpenID(result);
+                            if (result.contains("https")) {
+                                //解析出tid(ThirdMember中id)
+                                int redirectUriIndex = result.indexOf(REDIRECT_URI) + REDIRECT_URI.length() + 1;
+                                String s = result.substring(redirectUriIndex);
+                                try {
+                                    String tid = LogUtils.getParams(s, "tid");
+                                    String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
+                                    mPresenter.getThirdMemberInfo(tid, cid);
+                                } catch (Exception e) {
+                                    showToast("二维码解析失败，请重试");
+                                    return;
+                                }
+                            } else {
+                                mPresenter.getUserInfoWithOpenID(result);
+                            }
                         }
                     } else {
                         showToast(getString(R.string.scan_qrcode_failed));
@@ -473,5 +491,26 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onHandleConnectError(Throwable e) {
         onHandleError(e);
+    }
+
+    @Override
+    public void onGetThirdMemberInfo(ThirdMember member) {
+        showLoading(false);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("user", member);
+        Intent intent = new Intent(getActivity(), MeasureActivity.class);
+        intent.putExtra("userBundle", bundle);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    @Override
+    public void showGetThirdMemberInfoError(Throwable e) {
+        onHandleError(e);
+    }
+
+    @Override
+    public void showCompleteGetThirdMemberInfo() {
+        showLoading(false);
     }
 }
