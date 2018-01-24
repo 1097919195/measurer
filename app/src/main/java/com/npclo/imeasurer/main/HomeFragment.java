@@ -181,7 +181,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showGetInfoError(Throwable e) {
+    public void showGetWechatUserInfoError(Throwable e) {
         showLoading(false);
         onHandleError(e);
     }
@@ -364,7 +364,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
         instance.setMeasureItems(s.trim());
         instance.setContractName("");
-        instance.setMeasureCid("");
+        instance.setMeasureCid("10000");//默认量体cid
         instance.setMeasureNum(0);
         instance.setMeasureMeasured(0);
 
@@ -395,7 +395,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         instance.setMeasureNum(contract.getNum());
         instance.setMeasureMeasured(contract.getMeasured());
 
-        showToast("合同: " + contract.getName() + "量体项目加载成功");
+        showToast(contract.getName() + "量体合同量体项目加载成功");
         updateContractName(contract.getName());
     }
 
@@ -506,11 +506,24 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showGetThirdMemberInfoError(Throwable e) {
+        showLoading(false);
         onHandleError(e);
     }
 
     @Override
     public void showCompleteGetThirdMemberInfo() {
         showLoading(false);
+    }
+
+    @Override
+    public void showGetThirdOrgDefaultInfoError(Throwable e) {
+        showLoading(false);
+        onHandleError(e);
+    }
+
+    @Override
+    public void showGetContractInfoError(Throwable e) {
+        showLoading(false);
+        onHandleError(e);
     }
 }

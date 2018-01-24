@@ -10,7 +10,7 @@ public class Part {
     private String cn;
     private float value;
     private float offset;
-    private boolean isAngle = false;
+    private boolean isAngle;
 
     public Part() {
     }

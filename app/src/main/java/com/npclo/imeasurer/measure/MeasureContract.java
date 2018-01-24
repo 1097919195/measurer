@@ -30,7 +30,7 @@ public interface MeasureContract {
 
         void onGetWechatUserInfoSuccess(WechatUser user);
 
-        void onShowGetInfoError(Throwable e);
+        void onShowGetWechatUserInfoError(Throwable e);
 
         void showCompleteGetInfo();
 

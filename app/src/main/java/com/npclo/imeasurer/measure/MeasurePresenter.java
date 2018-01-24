@@ -111,7 +111,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
                         fragment::onGetWechatUserInfoSuccess,
-                        fragment::onShowGetInfoError,
+                        fragment::onShowGetWechatUserInfoError,
                         fragment::showCompleteGetInfo);
         mSubscriptions.add(subscribe);
     }
@@ -125,7 +125,7 @@ public class MeasurePresenter implements MeasureContract.Presenter {
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
                         fragment::onGetWechatUserInfoSuccess,
-                        fragment::onShowGetInfoError,
+                        fragment::onShowGetWechatUserInfoError,
                         fragment::showCompleteGetInfo);
         mSubscriptions.add(subscribe);
     }

@@ -8,13 +8,13 @@ import android.os.Parcelable;
  */
 
 public class ThirdMember implements Parcelable, IUser {
-    private String name;
+    private String realname;
     private int gender = 1;
     private int times = 0;
     private String tid;
 
     private ThirdMember(Parcel in) {
-        name = in.readString();
+        realname = in.readString();
         gender = in.readInt();
         times = in.readInt();
         tid = in.readString();
@@ -22,7 +22,7 @@ public class ThirdMember implements Parcelable, IUser {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
+        dest.writeString(realname);
         dest.writeInt(gender);
         dest.writeInt(times);
         dest.writeString(tid);
@@ -46,11 +46,11 @@ public class ThirdMember implements Parcelable, IUser {
     };
 
     public String getName() {
-        return name;
+        return realname;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.realname = name;
     }
 
     public int getGender() {

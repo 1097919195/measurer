@@ -45,6 +45,7 @@ import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.MeasureStateEnum;
 import com.npclo.imeasurer.utils.PreferencesUtils;
+import com.npclo.imeasurer.utils.exception.ApiException;
 import com.npclo.imeasurer.utils.views.MyGridView;
 import com.npclo.imeasurer.utils.views.MyTextView;
 import com.polidea.rxandroidble.exceptions.BleGattException;
@@ -535,11 +536,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void onHandleMeasureError(Throwable e) {
-        Gog.e("出错了======" + e.toString());
         if (e instanceof BleGattException) {
             measurePresenter.reConnect();
         } else {
-            super.onHandleError(e);
+            onHandleError(e);
         }
     }
 
@@ -610,6 +610,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void clearAndMeasureNext() {
+        //清空量体人信息
+        clearPreMeasureUserInfo();
         int count = gridView.getChildCount();
         for (int i = 0; i < count; i++) {
             LinearLayout linearLayout = (LinearLayout) gridView.getChildAt(i);
@@ -625,6 +627,12 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         img1.setImageDrawable(null);
         img2.setImageDrawable(null);
         img3.setImageDrawable(null);
+    }
+
+    private void clearPreMeasureUserInfo() {
+        wechatGender.setText("N/A");
+        wechatIcon.setBackground(getResources().getDrawable(R.drawable.load_fail_pic));
+        wechatNickname.setText("N/A");
     }
 
     @Override
@@ -658,9 +666,16 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     @Override
-    public void onShowGetInfoError(Throwable e) {
+    public void onShowGetWechatUserInfoError(Throwable e) {
         showLoading(false);
-        onHandleMeasureError(e);
+        if (e instanceof ApiException) {
+            showToast(e.getMessage());
+            clearPreMeasureUserInfo();
+            btnSave.setVisibility(View.GONE);
+            btnNext.setVisibility(View.VISIBLE);
+        } else {
+            onHandleMeasureError(e);
+        }
     }
 
     @Override
@@ -923,7 +938,15 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void showGetThirdMemberInfoError(Throwable e) {
-        onHandleError(e);
+        showLoading(false);
+        if (e instanceof ApiException) {
+            showToast(e.getMessage());
+            clearPreMeasureUserInfo();
+            btnSave.setVisibility(View.GONE);
+            btnNext.setVisibility(View.VISIBLE);
+        } else {
+            onHandleMeasureError(e);
+        }
     }
 
     @Override

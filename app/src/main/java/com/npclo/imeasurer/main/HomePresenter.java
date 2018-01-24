@@ -137,7 +137,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
                         user -> fragment.onGetWechatUserInfo(user),
-                        e -> fragment.showGetInfoError(e),
+                        e -> fragment.showGetWechatUserInfoError(e),
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
     }
@@ -151,7 +151,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
                         user -> fragment.onGetWechatUserInfo(user),
-                        e -> fragment.showGetInfoError(e),
+                        e -> fragment.showGetWechatUserInfoError(e),
                         () -> fragment.showCompleteGetInfo());
         mSubscriptions.add(subscribe);
     }
@@ -240,7 +240,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
                         list -> fragment.onDefaultMeasureParts(list),
-                        e -> fragment.showGetInfoError(e),
+                        e -> fragment.showGetThirdOrgDefaultInfoError(e),
                         () -> fragment.showLoading(false));
         mSubscriptions.add(subscribe);
     }
@@ -264,7 +264,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 .doOnSubscribe(() -> fragment.showLoading(true))
                 .subscribe(
                         contract -> fragment.onHandleContractInfo(contract),
-                        e -> fragment.showGetInfoError(e),
+                        e -> fragment.showGetContractInfoError(e),
                         () -> fragment.showLoading(false));
         mSubscriptions.add(subscribe);
     }

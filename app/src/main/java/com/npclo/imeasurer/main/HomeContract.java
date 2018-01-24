@@ -54,7 +54,7 @@ public interface HomeContract {
 
         void onGetWechatUserInfo(WechatUser info);
 
-        void showGetInfoError(Throwable e);
+        void showGetWechatUserInfoError(Throwable e);
 
         void showCompleteGetInfo();
 
@@ -97,5 +97,9 @@ public interface HomeContract {
         void showGetThirdMemberInfoError(Throwable e);
 
         void showCompleteGetThirdMemberInfo();
+
+        void showGetThirdOrgDefaultInfoError(Throwable e);
+
+        void showGetContractInfoError(Throwable e);
     }
 }
