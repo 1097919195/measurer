@@ -819,7 +819,10 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 break;
             case SCAN_HINT:
                 if (data == null) {
+                    //未扫描获取到数据或者拍照中错误返回
                     showToast(getString(R.string.scan_qrcode_failed));
+                    btnSave.setVisibility(View.GONE);
+                    btnNext.setVisibility(View.VISIBLE);
                     return;
                 }
                 Bundle scan_bundle = data.getExtras();
