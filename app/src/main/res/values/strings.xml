@@ -57,7 +57,7 @@
     <string name="prompt_user_manage">账户管理</string>
     <string name="prompt_link_device">连接智能尺</string>
     <string name="prompt_update">检查更新</string>
-    <string name="prompt_latest_version">已经最新版</string>
+    <string name="prompt_latest_version">已经是最新版</string>
     <string name="prompt_use_help">使用说明</string>
     <string name="prompt_feedback">反馈</string>
     <string name="prompt_contact">联系我们</string>
