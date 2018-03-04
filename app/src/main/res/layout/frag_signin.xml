@@ -2,10 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sign_in_frag"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fillViewport="true"
     android:fitsSystemWindows="true">
 
+    <!--TODO 更改背景，添加底纹-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,11 +45,12 @@
 
                 <EditText
                     android:id="@+id/input_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="19dp"
                     android:layout_gravity="top"
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:background="@null"
                     android:hint="@string/prompt_name"
                     android:inputType="phone"
@@ -90,11 +92,12 @@
 
                 <EditText
                     android:id="@+id/input_password"
-                    android:layout_width="258dp"
+                    android:layout_width="0dp"
                     android:layout_height="19dp"
                     android:layout_gravity="top"
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:background="@null"
                     android:hint="@string/prompt_pwd"
                     android:inputType="textPassword"
@@ -104,7 +107,7 @@
                     android:id="@+id/input_eye"
                     android:layout_width="23dp"
                     android:layout_height="14dp"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="right|center_vertical"
                     android:src="@mipmap/eye" />
             </LinearLayout>
 
