@@ -5,11 +5,13 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.npclo.imeasurer.BuildConfig;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
@@ -483,7 +486,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
      * @return
      */
     private MultipartBody.Part getSpecialBodyTypePic(String filename) {
-        File f = new File(PATH + File.separator + filename + JPG_SUFFIX);
+        File f = new File(PATH + File.separator + "gtImage" + File.separator + filename + JPG_SUFFIX);
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
         return MultipartBody.Part.createFormData("img[]", filename, requestFile);
     }
@@ -800,21 +803,27 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                 break;
             case DISPLAY_PHOTO:
                 //广播刷新相册
-                Intent intentBc1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intentBc1.setData(imageUri);
-                getActivity().sendBroadcast(intentBc1);
-                Bitmap bitmap = BitmapUtils.decodeUri(getActivity(), imageUri, 800, 800);
-                FrameLayout frameLayout = unVisibleView.get(0);
-                ImageView imageView = (ImageView) frameLayout.getChildAt(0);
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                    frameLayout.getChildAt(1).setVisibility(View.VISIBLE);
-                    unVisibleView.remove(0);
-                    if (!TextUtils.isEmpty(picName)) {
-                        imageView.setTag(picName);
+                try {
+                    Intent intentBc1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intentBc1.setData(imageUri);
+                    getActivity().sendBroadcast(intentBc1);
+                    Uri data1 = data.getData();
+                    Gog.e(data1.toString());
+                    Bitmap bitmap = BitmapUtils.decodeUri(getActivity(), data1, 800, 800);
+                    FrameLayout frameLayout = unVisibleView.get(0);
+                    ImageView imageView = (ImageView) frameLayout.getChildAt(0);
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                        frameLayout.getChildAt(1).setVisibility(View.VISIBLE);
+                        unVisibleView.remove(0);
+                        if (!TextUtils.isEmpty(picName)) {
+                            imageView.setTag(picName);
+                        }
+                    } else {
+                        showToast("拍照失败");
                     }
-                } else {
-                    showToast("拍照失败");
+                } catch (Exception e) {
+                    Gog.e(e.toString());
                 }
                 break;
             case SCAN_HINT:
@@ -875,16 +884,35 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             picName = date.toString();
             e.printStackTrace();
         }
-        File outputImage = new File(PATH, picName + JPG_SUFFIX);
+        File storageFile = new File(PATH.getAbsoluteFile() + File.separator + "gtImage");
+        if (!storageFile.isDirectory()) {
+            storageFile.mkdirs();
+        }
+        File outputImage = new File(storageFile, picName + JPG_SUFFIX);
         try {
             outputImage.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            Gog.e(e.toString());
         }
+
         //将File对象转换为Uri并启动照相程序
-        imageUri = Uri.fromFile(outputImage);
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // 系统版本大于N的统一用FileProvider处理
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // 将文件转换成content://Uri的形式
+            imageUri = FileProvider.getUriForFile(getActivity(),
+                    BuildConfig.APPLICATION_ID + ".fileprovider", outputImage);
+            // 申请临时访问权限
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        } else {
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            imageUri = Uri.fromFile(outputImage);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        }
         startActivityForResult(intent, DISPLAY_PHOTO);
     }
 

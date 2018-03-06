@@ -92,7 +92,6 @@ public class HomePresenter implements HomeContract.Presenter {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                 .build(), new ScanFilter.Builder().build())
-                //蓝牙名不为空
                 // TODO: 2017/12/5 筛选特定名字的蓝牙设备
                 .filter(s -> !TextUtils.isEmpty(s.getBleDevice().getName()))
                 .observeOn(mSchedulerProvider.ui())
