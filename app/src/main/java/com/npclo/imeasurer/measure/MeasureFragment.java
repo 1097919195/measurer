@@ -3,7 +3,6 @@ package com.npclo.imeasurer.measure;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -769,47 +768,25 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case IMAGE_REQUEST_CODE:
-                startPhotoCrop(data.getData());
-                break;
-            case TAKE_PHOTO:
-                startPhotoCrop(imageUri);
-                //广播刷新相册
-                Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intentBc.setData(imageUri);
-                getActivity().sendBroadcast(intentBc);
-                break;
-            case CROP_PHOTO:
-                try {
-                    if (data != null) {
-                        Bundle bundle = data.getExtras();
-                        Bitmap bitmap = bundle.getParcelable("data");
-                        FrameLayout frameLayout = unVisibleView.get(0);
-                        ImageView imageView = (ImageView) frameLayout.getChildAt(0);
-                        Matrix matrix = new Matrix();
-                        matrix.setScale(0.5f, 0.5f);
-                        Bitmap bm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                                bitmap.getHeight(), matrix, true);
-                        bitmap.recycle();
-                        imageView.setImageBitmap(bm);
-                        frameLayout.getChildAt(1).setVisibility(View.VISIBLE);
-                        unVisibleView.remove(0);
-                    }
-                } catch (Exception e) {
-                    showToast("操作失败，请重试");
-                    e.printStackTrace();
-                }
-                break;
-            case DISPLAY_PHOTO:
-                //广播刷新相册
-                try {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case IMAGE_REQUEST_CODE:
+                    startPhotoCrop(data.getData());
+                    break;
+                case TAKE_PHOTO:
+                    startPhotoCrop(imageUri);
+                    //广播刷新相册
+                    Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intentBc.setData(imageUri);
+                    getActivity().sendBroadcast(intentBc);
+                    break;
+                case DISPLAY_PHOTO:
+                    //广播刷新相册
                     Intent intentBc1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     intentBc1.setData(imageUri);
                     getActivity().sendBroadcast(intentBc1);
-                    Uri data1 = data.getData();
-                    Gog.e(data1.toString());
-                    Bitmap bitmap = BitmapUtils.decodeUri(getActivity(), data1, 800, 800);
+                    Bitmap bitmap = BitmapUtils.decodeUri(getActivity(), imageUri, 800, 800);
                     FrameLayout frameLayout = unVisibleView.get(0);
                     ImageView imageView = (ImageView) frameLayout.getChildAt(0);
                     if (bitmap != null) {
@@ -822,54 +799,52 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     } else {
                         showToast("拍照失败");
                     }
-                } catch (Exception e) {
-                    Gog.e(e.toString());
-                }
-                break;
-            case SCAN_HINT:
-                if (data == null) {
-                    //未扫描获取到数据或者拍照中错误返回
-                    showToast(getString(R.string.scan_qrcode_failed));
-                    btnSave.setVisibility(View.GONE);
-                    btnNext.setVisibility(View.VISIBLE);
-                    return;
-                }
-                Bundle scan_bundle = data.getExtras();
-                String result = scan_bundle.getString("result");
-                if (result != null) {
-                    if (result.contains("https")) {
-                        //解析出tid(ThirdMember中id)
-                        int redirectUriIndex = result.indexOf(REDIRECT_URI) + REDIRECT_URI.length() + 1;
-                        String s = result.substring(redirectUriIndex);
-                        try {
-                            String tid = LogUtils.getParams(s, "tid");
-                            String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
-                            measurePresenter.getThirdMemberInfo(tid, cid);
-                        } catch (Exception e) {
-                            showToast("二维码解析失败，请重试");
-                            return;
+                    break;
+                case SCAN_HINT:
+                    if (data == null) {
+                        //未扫描获取到数据或者拍照中错误返回
+                        showToast(getString(R.string.scan_qrcode_failed));
+                        btnSave.setVisibility(View.GONE);
+                        btnNext.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    Bundle scan_bundle = data.getExtras();
+                    String result = scan_bundle.getString("result");
+                    if (result != null) {
+                        if (result.contains("https")) {
+                            //解析出tid(ThirdMember中id)
+                            int redirectUriIndex = result.indexOf(REDIRECT_URI) + REDIRECT_URI.length() + 1;
+                            String s = result.substring(redirectUriIndex);
+                            try {
+                                String tid = LogUtils.getParams(s, "tid");
+                                String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
+                                measurePresenter.getThirdMemberInfo(tid, cid);
+                            } catch (Exception e) {
+                                showToast("二维码解析失败，请重试");
+                                return;
+                            }
+                        } else {
+                            measurePresenter.getUserInfoWithOpenID(result);
                         }
                     } else {
-                        measurePresenter.getUserInfoWithOpenID(result);
+                        showToast(getString(R.string.scan_qrcode_failed));
                     }
-                } else {
-                    showToast(getString(R.string.scan_qrcode_failed));
-                }
-                break;
-            case CODE_HINT:
-                if (data == null) {
-                    return;
-                }
-                Bundle code_bundle = data.getExtras();
-                String code = code_bundle.getString("result");
-                if (code != null) {
-                    measurePresenter.getUserInfoWithCode(code);
-                } else {
-                    showToast(getString(R.string.enter_qrcode_error));
-                }
-                break;
-            default:
-                break;
+                    break;
+                case CODE_HINT:
+                    if (data == null) {
+                        return;
+                    }
+                    Bundle code_bundle = data.getExtras();
+                    String code = code_bundle.getString("result");
+                    if (code != null) {
+                        measurePresenter.getUserInfoWithCode(code);
+                    } else {
+                        showToast(getString(R.string.enter_qrcode_error));
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -905,7 +880,9 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             imageUri = FileProvider.getUriForFile(getActivity(),
                     BuildConfig.APPLICATION_ID + ".fileprovider", outputImage);
             // 申请临时访问权限
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
                     | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         } else {
