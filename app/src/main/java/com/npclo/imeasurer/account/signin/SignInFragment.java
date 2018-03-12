@@ -76,6 +76,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         if (signinPresenter != null) {
             signinPresenter.subscribe();
         }
+        super.onResume();
     }
 
     @Override
