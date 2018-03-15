@@ -1,4 +1,4 @@
-package com.npclo.imeasurer.account.forgetPwd;
+package com.npclo.imeasurer.account.forgetpwd;
 
 import android.content.Intent;
 import android.support.v7.widget.AppCompatButton;
@@ -75,6 +75,11 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
     }
 
     @Override
+    public void setPresenter(ForgetPwdContract.Presenter presenter) {
+        mPresenter = checkNotNull(presenter);
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.frag_forget_pwd;
     }
@@ -82,6 +87,7 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
+
         RxTextView
                 .textChanges(inputMobile)
                 .subscribe(sequence -> {
@@ -104,11 +110,6 @@ public class ForgetPwdFragment extends BaseFragment implements ForgetPwdContract
             signInFragment.setPresenter(new SignInPresenter(signInFragment,
                     SchedulerProvider.getInstance()));
         });
-    }
-
-    @Override
-    public void setPresenter(ForgetPwdContract.Presenter presenter) {
-        mPresenter = checkNotNull(presenter);
     }
 
     @Override

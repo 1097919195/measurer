@@ -25,6 +25,7 @@ import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.LoadingTip;
 import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.polidea.rxandroidble.RxBleDevice;
@@ -66,6 +67,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private MaterialDialog cirProgressBar;
     private MaterialDialog resultDialog;
 
+    @BindView(R.id.loadedTip)
+    LoadingTip loadingTip;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -82,7 +85,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         configureResultList();
         String userLogo = PreferencesUtils.getInstance(getActivity()).getUserLogo();
         if (!TextUtils.isEmpty(userLogo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo)
+            Glide.with(this).load(Constant.getImgUrl() + userLogo)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(scanImg);
         }
@@ -153,14 +156,19 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showLoading(boolean b) {
-        if (b) {
-            cirProgressBar = new MaterialDialog.Builder(getActivity())
-                    .progress(true, 100)
-                    .backgroundColor(getResources().getColor(R.color.white))
-                    .show();
-        } else {
-            cirProgressBar.dismiss();
+    public void showLoading(boolean bool) {
+//        if (bool) {
+//            cirProgressBar = new MaterialDialog.Builder(getActivity())
+//                    .progress(true, 100)
+//                    .backgroundColor(getResources().getColor(R.color.white))
+//                    .show();
+//        } else {
+//            cirProgressBar.dismiss();
+//        }
+        if (bool) {
+            loadingTip.setLoadingTip(LoadingTip.LoadStatus.loading);
+        }else{
+            loadingTip.setLoadingTip(LoadingTip.LoadStatus.finish);
         }
     }
 
@@ -238,10 +246,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onHandleScanResult(ScanResult result) {
-        if (cirProgressBar != null) {
-            cirProgressBar.dismiss();
-            cirProgressBar = null;
-        }
+//        if (cirProgressBar != null) {
+//            cirProgressBar.dismiss();
+//            cirProgressBar = null;
+//        }
+        loadingTip.setLoadingTip(LoadingTip.LoadStatus.finish);
         RxBleDevice device = result.getBleDevice();
         if (resultDialog == null) {
             resultDialog = scanResultDialog.show();

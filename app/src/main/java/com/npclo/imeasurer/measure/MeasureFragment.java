@@ -321,7 +321,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             switchGender();
         }
         PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
-        Glide.with(getActivity()).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + instance.getUserLogo())
+        Glide.with(getActivity()).load(Constant.getImgUrl() + instance.getUserLogo())
                 .apply(new RequestOptions()
                         .placeholder(R.mipmap.ic_launcher)
                         .error(R.drawable.load_fail_pic))

@@ -22,6 +22,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.LoadingTip;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 
 import butterknife.BindView;
@@ -63,7 +64,10 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     private Boolean isUserRememberPwd = true;
     private String name;
     private String password;
-    private MaterialDialog signInLoadingDialog;
+//    private MaterialDialog signInLoadingDialog;
+
+    @BindView(R.id.loadedTip)
+    LoadingTip loadingTip;
 
     public static SignInFragment newInstance() {
         return new SignInFragment();
@@ -76,7 +80,6 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         if (signinPresenter != null) {
             signinPresenter.subscribe();
         }
-        super.onResume();
     }
 
     @Override
@@ -100,10 +103,11 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
+
         PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
         String userLogo = instance.getUserLogo();
         if (!TextUtils.isEmpty(userLogo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo)
+            Glide.with(this).load(Constant.getImgUrl() + userLogo)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(logo);
         } else {
@@ -212,7 +216,8 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
 
     @Override
     public void showSignInError(Throwable e) {
-        signInLoadingDialog.dismiss();
+        loadingTip.setLoadingTip(LoadingTip.LoadStatus.finish);
+//        signInLoadingDialog.dismiss();
         onHandleError(e);
     }
 
@@ -223,13 +228,18 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
 
     @Override
     public void showLoading(boolean bool) {
+//        if (bool) {
+//            signInLoadingDialog = new MaterialDialog.Builder(getActivity())
+//                    .progress(true, 100)
+//                    .backgroundColor(getResources().getColor(R.color.white))
+//                    .show();
+//        } else {
+//            signInLoadingDialog.dismiss();
+//        }
         if (bool) {
-            signInLoadingDialog = new MaterialDialog.Builder(getActivity())
-                    .progress(true, 100)
-                    .backgroundColor(getResources().getColor(R.color.white))
-                    .show();
-        } else {
-            signInLoadingDialog.dismiss();
+            loadingTip.setLoadingTip(LoadingTip.LoadStatus.loading);
+        }else{
+            loadingTip.setLoadingTip(LoadingTip.LoadStatus.finish);
         }
     }
 

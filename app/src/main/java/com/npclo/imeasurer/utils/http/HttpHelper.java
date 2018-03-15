@@ -38,7 +38,7 @@ public class HttpHelper {
                 .client(httpClientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(Constant.getHttpScheme() + Constant.API_BASE_URL)
+                .baseUrl(Constant.getApiUrl())
                 .build();
     }
 
