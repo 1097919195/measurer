@@ -131,7 +131,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        // FIXME: 06/01/2018 哪里触发了导致系统调用这个方法
         if (mPresenter != null) {
             mPresenter.unsubscribe();
         }
@@ -153,6 +152,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         if (b) {
             cirProgressBar = new MaterialDialog.Builder(getActivity())
                     .progress(true, 100)
+                    .content("处理中...")
                     .backgroundColor(getResources().getColor(R.color.white))
                     .show();
         } else {

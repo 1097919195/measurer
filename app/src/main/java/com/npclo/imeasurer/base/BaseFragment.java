@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.JsonSyntaxException;
@@ -82,12 +81,7 @@ public abstract class BaseFragment extends SupportFragment {
     protected abstract void initView(View mRootView);
 
     protected void showToast(String text) {
-//        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-        ToastUtils.showShort(text);
-    }
-
-    protected void showToast(String text, int length) {
-        Toast.makeText(getActivity(), text, length).show();
+        ToastUtils.showShort(text); //全局Toast对象管理Toast
     }
 
     protected void showSnackbar(String text) {

@@ -3,6 +3,7 @@ package com.npclo.imeasurer.base;
 import android.app.Application;
 import android.content.Context;
 
+import com.blankj.utilcode.util.Utils;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.utils.CrashHandler;
 import com.polidea.rxandroidble.RxBleClient;
@@ -39,6 +40,7 @@ public class BaseApplication extends Application {
 
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
+        Utils.init(this);//全局初始化blank utils
     }
 
     public static List<Item> getAngleList(Context context) {

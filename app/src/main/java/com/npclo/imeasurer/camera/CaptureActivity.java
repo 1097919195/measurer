@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.zxing.BarcodeFormat;
@@ -161,7 +162,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
                 CaptureActivity.this.setResult(RESULT_OK, resultIntent);
                 CaptureActivity.this.finish();
             } else {
-                Toast.makeText(CaptureActivity.this, getString(R.string.plz_enter_qrcode), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(getString(R.string.plz_enter_qrcode));
             }
         });
     }

@@ -225,6 +225,7 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
         if (bool) {
             signInLoadingDialog = new MaterialDialog.Builder(getActivity())
                     .progress(true, 100)
+                    .content("登录中...")
                     .backgroundColor(getResources().getColor(R.color.white))
                     .show();
         } else {
