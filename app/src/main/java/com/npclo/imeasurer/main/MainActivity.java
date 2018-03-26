@@ -194,18 +194,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .negativeText(R.string.cancel)
                         .backgroundColor(getResources().getColor(R.color.white))
                         .onPositive((dialog, which) -> {
+                            drawerLayout.closeDrawers();
                             dialog.dismiss();
                             homePresenter.logout();
                         })
                         .show();
-                drawerLayout.closeDrawers();
                 break;
             case R.id.nav_instruction:
                 drawerLayout.closeDrawers();
                 Toast.makeText(this, "使用说明开发中", Toast.LENGTH_SHORT).show();
-//              Intent instructionIntent = new Intent(this, UserActivity.class);
-//                instructionIntent.putExtra("support_type", Constant.USER_INSTRUCTION);
-//                startActivity(instructionIntent);
                 break;
             case R.id.nav_device:
                 if (TextUtils.isEmpty(macAddress)) {
@@ -309,5 +306,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onBackPressedSupport() {
+        if (drawerLayout.isDrawerOpen(navView)) {
+            drawerLayout.closeDrawers();
+            return;
+        }
+        super.onBackPressedSupport();
     }
 }

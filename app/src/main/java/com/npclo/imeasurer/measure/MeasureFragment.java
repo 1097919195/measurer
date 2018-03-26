@@ -451,6 +451,11 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                     offset = 0.0f;
                 }
                 Part part = new Part(cn, value, offset);
+                if (textV.isAngleView()) {
+                    part.setAngle(true);
+                } else {
+                    part.setAngle(false);
+                }
                 data.add(part);
             }
 
@@ -630,8 +635,15 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     }
 
     private void clearPreMeasureUserInfo() {
+        measurer = null;
         wechatGender.setText("N/A");
-        wechatIcon.setBackground(getResources().getDrawable(R.drawable.load_fail_pic));
+        PreferencesUtils instance = PreferencesUtils.getInstance(getContext());
+        //清除上一个人的信息，图标默认使用当前量体的logo
+        Glide.with(getActivity()).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + instance.getUserLogo())
+                .apply(new RequestOptions()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.drawable.load_fail_pic))
+                .into(wechatIcon);
         wechatNickname.setText("N/A");
     }
 

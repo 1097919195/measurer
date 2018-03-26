@@ -12,6 +12,15 @@ import com.npclo.imeasurer.utils.MeasureStateEnum;
 public class MyTextView extends AppCompatTextView {
     private float value;
     private int state = MeasureStateEnum.UNMEASUED.ordinal();
+    private boolean isAngleView = false;
+
+    public boolean isAngleView() {
+        return isAngleView;
+    }
+
+    public void setAngleView(boolean angleView) {
+        isAngleView = angleView;
+    }
 
     public MyTextView(Context context) {
         super(context);

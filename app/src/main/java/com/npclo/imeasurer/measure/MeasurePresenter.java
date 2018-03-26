@@ -132,23 +132,8 @@ public class MeasurePresenter implements MeasureContract.Presenter {
 
     @Override
     public void reConnect() {
-//        if (!isConnected()) {
-//            startMeasure();
-//        }
         if (isConnected()) {
             triggerDisconnect();
-//            Subscription subscribe = prepareConnectionObservable()
-//                    .flatMap(RxBleConnection::discoverServices)
-//                    .flatMap(rxBleDeviceServices -> rxBleDeviceServices.getCharacteristic(uuid))
-//                    .observeOn(schedulerProvider.ui())
-//                    .subscribe(characteristic -> {
-//                                Log.d("tag", "reConnect startMeasure");
-//                                startMeasure();
-//                            },
-//                            e -> fragment.onHandleMeasureError(e),
-//                            () -> fragment.showLoading(false)
-//                    );
-//            mSubscriptions.add(subscribe);
         }
         startMeasure();
     }

@@ -3,6 +3,7 @@ package com.npclo.imeasurer.camera;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -32,7 +33,6 @@ import com.npclo.imeasurer.camera.decode.BeepManager;
 import com.npclo.imeasurer.camera.decode.CaptureActivityHandler;
 import com.npclo.imeasurer.camera.decode.InactivityTimer;
 import com.npclo.imeasurer.camera.view.ViewfinderView;
-import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 
@@ -45,8 +45,6 @@ import java.util.Collection;
 public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
-    private static final int SCAN_HINT = 1001;
-    private static final int CODE_HINT = 1002;
 
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
@@ -100,9 +98,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             return false;
         });
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(CaptureActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                finishAfterTransition();
+            } else {
+                finish();
+            }
         });
     }
 

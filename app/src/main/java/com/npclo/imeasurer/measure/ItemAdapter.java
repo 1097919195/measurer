@@ -51,6 +51,7 @@ public class ItemAdapter extends ArrayAdapter<Part> {
             holder.textView = (MyTextView) convertView.findViewById(R.id.item_title);
             if (item.isAngle()) {
                 holder.textView.setBackgroundColor(parent.getResources().getColor(R.color.primary_lighter));
+                holder.textView.setAngleView(true);
             }
             holder.img1 = (ImageButton) convertView.findViewById(R.id.btnDecrease);
             holder.img2 = (ImageButton) convertView.findViewById(R.id.btnIncrease);
