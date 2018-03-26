@@ -150,8 +150,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
     private LinearLayout modifyingView;
     private boolean initUmMeasureListFlag;
     private Uri imageUri;
-    private static final int SCAN_HINT = 1001;
-    private static final int CODE_HINT = 1002;
     private String[] measureSequence;
     public static final File PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
     private String picName;
@@ -381,7 +379,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
 
     private void measureNextPerson() {
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, 1001);
+        startActivityForResult(intent, Constant.REQUEST_CODE_WECHATUSER_CODE);
         btnNext.setVisibility(View.GONE);
         btnSave.setVisibility(View.VISIBLE);
     }
@@ -485,7 +483,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
      * @return
      */
     private MultipartBody.Part getSpecialBodyTypePic(String filename) {
-        File f = new File(PATH + File.separator + "gtImage" + File.separator + filename + JPG_SUFFIX);
+        File f = new File(PATH + File.separator + Constant.FILE_PROVIDER_NAME + File.separator + filename + JPG_SUFFIX);
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
         return MultipartBody.Part.createFormData("img[]", filename, requestFile);
     }
@@ -800,7 +798,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                         showToast("拍照失败");
                     }
                     break;
-                case SCAN_HINT:
+                case Constant.REQUEST_CODE_WECHATUSER_CODE:
                     if (data == null) {
                         //未扫描获取到数据或者拍照中错误返回
                         showToast(getString(R.string.scan_qrcode_failed));
@@ -830,7 +828,7 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
                         showToast(getString(R.string.scan_qrcode_failed));
                     }
                     break;
-                case CODE_HINT:
+                case Constant.REQUEST_CODE_WECHATUSER_NUM:
                     if (data == null) {
                         return;
                     }
@@ -857,9 +855,8 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             picName = new BigInteger(1, md.digest()).toString(16);
         } catch (NoSuchAlgorithmException e) {
             picName = date.toString();
-            e.printStackTrace();
         }
-        File storageFile = new File(PATH.getAbsoluteFile() + File.separator + "gtImage");
+        File storageFile = new File(PATH.getAbsoluteFile() + File.separator + Constant.FILE_PROVIDER_NAME);
         if (!storageFile.isDirectory()) {
             storageFile.mkdirs();
         }
@@ -869,7 +866,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
         } catch (IOException e) {
             Gog.e(e.toString());
         }
-
         //将File对象转换为Uri并启动照相程序
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -880,8 +876,6 @@ public class MeasureFragment extends BaseFragment implements MeasureContract.Vie
             imageUri = FileProvider.getUriForFile(getActivity(),
                     BuildConfig.APPLICATION_ID + ".fileprovider", outputImage);
             // 申请临时访问权限
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
                     | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);

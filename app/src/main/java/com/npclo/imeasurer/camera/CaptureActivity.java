@@ -158,7 +158,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
                 Bundle bundle = new Bundle();
                 bundle.putString("result", code);
                 resultIntent.putExtras(bundle);
-                CaptureActivity.this.setResult(CODE_HINT, resultIntent);
+                CaptureActivity.this.setResult(RESULT_OK, resultIntent);
                 CaptureActivity.this.finish();
             } else {
                 Toast.makeText(CaptureActivity.this, getString(R.string.plz_enter_qrcode), Toast.LENGTH_SHORT).show();
@@ -251,7 +251,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             Bundle bundle = new Bundle();
             bundle.putString("result", resultString);
             resultIntent.putExtras(bundle);
-            this.setResult(SCAN_HINT, resultIntent);
+            this.setResult(RESULT_OK, resultIntent);
         } else {
             Toast.makeText(CaptureActivity.this, "扫描失败，请重试", Toast.LENGTH_SHORT).show();
         }

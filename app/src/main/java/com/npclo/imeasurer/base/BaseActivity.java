@@ -1,6 +1,5 @@
 package com.npclo.imeasurer.base;
 
-import android.Manifest;
 import android.app.ActivityManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -17,7 +16,6 @@ import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.utils.Constant;
 import com.npclo.imeasurer.utils.SettingUtil;
 
-import kr.co.namee.permissiongen.PermissionGen;
 import me.yokeyword.fragmentation.SupportActivity;
 
 public abstract class BaseActivity extends SupportActivity {
@@ -26,25 +24,6 @@ public abstract class BaseActivity extends SupportActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        initC();
-    }
-
-    protected void initC() {
-        requestPermission();
-    }
-
-    private void requestPermission() {
-        PermissionGen.with(this)
-                .addRequestCode(100)
-                .permissions(
-                        Manifest.permission.LOCATION_HARDWARE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.CAMERA)
-                .request();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
@@ -53,7 +32,6 @@ public abstract class BaseActivity extends SupportActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(homeAsUpEnabled);
     }
-
 
     @Override
     protected void onResume() {
@@ -77,11 +55,5 @@ public abstract class BaseActivity extends SupportActivity {
                 getWindow().setNavigationBarColor(Color.BLACK);
             }
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 }

@@ -1,5 +1,6 @@
 package com.npclo.imeasurer.main;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,6 +31,8 @@ import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.CircleImageView;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
+
+import kr.co.namee.permissiongen.PermissionGen;
 
 /**
  * @author Endless
@@ -75,6 +78,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (homePresenter != null) {
+            homePresenter.unsubscribe();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (speechSynthesizer != null) {
@@ -91,6 +102,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             homePresenter = new HomePresenter(BaseApplication.getRxBleClient(this),
                     homeFragment, SchedulerProvider.getInstance());
         }
+        requestPermission();
+    }
+
+    private void requestPermission() {
+        PermissionGen.with(this)
+                .addRequestCode(100)
+                .permissions(
+                        Manifest.permission.LOCATION_HARDWARE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.CAMERA)
+                .request();
     }
 
     protected void initView() {
@@ -277,5 +303,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             logoView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 }

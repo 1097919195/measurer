@@ -48,8 +48,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * @author Endless
  */
 public class HomeFragment extends BaseFragment implements HomeContract.View {
-    public static final int REQUEST_CODE_WECHATUSER = 1201;
-    private static final int REQUEST_CODE_CONTRACT = 1202;
     public static final String REDIRECT_URI = "redirect_uri";
     @BindView(R.id.scan_img)
     ImageView scanImg;
@@ -57,8 +55,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     TextView scanHint;
     Unbinder unbinder;
     private HomeContract.Presenter mPresenter;
-    private static final int SCAN_HINT = 1001;
-    private static final int CODE_HINT = 1002;
     private List<BleDevice> bleDeviceList = new ArrayList<>();
     private List<String> rxBleDeviceAddressList = new ArrayList<>();
     private ScanResultsAdapter scanResultsAdapter;
@@ -116,7 +112,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
      */
     private void startScan() {
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_WECHATUSER);
+        startActivityForResult(intent, Constant.REQUEST_CODE_WECHATUSER_CODE);
     }
 
     @Override
@@ -238,6 +234,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onHandleScanResult(ScanResult result) {
+        fillScanResult();
+
         if (cirProgressBar != null) {
             cirProgressBar.dismiss();
             cirProgressBar = null;
@@ -256,26 +254,31 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         }
     }
 
+    private void fillScanResult() {
+        if (scanResultDialog == null) {
+            scanResultDialog = new MaterialDialog.Builder(getActivity())
+                    .title(R.string.choose_device_prompt)
+                    .backgroundColor(getResources().getColor(R.color.white))
+                    .titleColor(getResources().getColor(R.color.scan_result_list_title))
+                    .dividerColor(getResources().getColor(R.color.divider))
+                    .adapter(scanResultsAdapter, null);
+        }
+    }
+
     @Override
     public void onShowError(String s) {
         showToast(s);
     }
 
     private void configureResultList() {
-        scanResultsAdapter = new ScanResultsAdapter(this, bleDeviceList);
-        scanResultDialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.choose_device_prompt)
-                .backgroundColor(getResources().getColor(R.color.white))
-                .titleColor(getResources().getColor(R.color.scan_result_list_title))
-                .dividerColor(getResources().getColor(R.color.divider))
-                .adapter(scanResultsAdapter, null);
-        ;
-        //选择目的蓝牙设备
-        scanResultsAdapter.setOnAdapterItemClickListener(v -> {
-                    String s = ((TextView) v.findViewById(R.id.txt_mac)).getText().toString();
-                    mPresenter.connectDevice(s);
-                }
-        );
+        if (scanResultsAdapter == null) {
+            scanResultsAdapter = new ScanResultsAdapter(this, bleDeviceList);
+            //选择目的蓝牙设备
+            scanResultsAdapter.setOnAdapterItemClickListener(v -> {
+                String s = ((TextView) v.findViewById(R.id.txt_mac)).getText().toString();
+                mPresenter.connectDevice(s);
+            });
+        }
     }
 
     @Override
@@ -407,48 +410,55 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void startScanContractNum() {
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_CONTRACT);
+        startActivityForResult(intent, Constant.REQUEST_CODE_CONTRACT_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            Bundle bundle = data.getExtras();
-            String result = bundle.getString("result");
-            switch (resultCode) {
-                case SCAN_HINT:
-                    if (result != null) {
-                        if (requestCode == REQUEST_CODE_CONTRACT) {
-                            mPresenter.getContractInfoWithCode(result);
-                        } else if (requestCode == REQUEST_CODE_WECHATUSER) {
-                            if (result.contains("https")) {
-                                //解析出tid(ThirdMember中id)
-                                int redirectUriIndex = result.indexOf(REDIRECT_URI) + REDIRECT_URI.length() + 1;
-                                String s = result.substring(redirectUriIndex);
-                                try {
-                                    String tid = LogUtils.getParams(s, "tid");
-                                    String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
-                                    mPresenter.getThirdMemberInfo(tid, cid);
-                                } catch (Exception e) {
-                                    showToast("二维码解析失败，请重试");
-                                    return;
-                                }
-                            } else {
-                                mPresenter.getUserInfoWithOpenID(result);
-                            }
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Constant.REQUEST_CODE_WECHATUSER_CODE:
+                    if (data != null) {
+                        Bundle bundle = data.getExtras();
+                        String result = bundle.getString("result");
+                        if (result.contains("https")) {
+                            //解析出tid(ThirdMember中id)
+                            int redirectUriIndex = result.indexOf(REDIRECT_URI) + REDIRECT_URI.length() + 1;
+                            String s = result.substring(redirectUriIndex);
+                            String tid = LogUtils.getParams(s, "tid");
+                            String cid = PreferencesUtils.getInstance(getActivity()).getMeasureCid();
+                            mPresenter.getThirdMemberInfo(tid, cid);
+                        } else {
+                            mPresenter.getUserInfoWithOpenID(result);
                         }
                     } else {
                         showToast(getString(R.string.scan_qrcode_failed));
                     }
                     break;
-                case CODE_HINT:
-                    if (result != null) {
-                        if (requestCode == REQUEST_CODE_CONTRACT) {
-                            mPresenter.getContractInfoWithNum(result);
-                        } else if (requestCode == REQUEST_CODE_WECHATUSER) {
-                            mPresenter.getUserInfoWithCode(result);
-                        }
+                case Constant.REQUEST_CODE_WECHATUSER_NUM:
+                    if (data != null) {
+                        Bundle bundle = data.getExtras();
+                        String result = bundle.getString("result");
+                        mPresenter.getUserInfoWithCode(result);
+                    } else {
+                        showToast(getString(R.string.enter_qrcode_error));
+                    }
+                    break;
+                case Constant.REQUEST_CODE_CONTRACT_CODE:
+                    if (data != null) {
+                        Bundle bundle = data.getExtras();
+                        String result = bundle.getString("result");
+                        mPresenter.getContractInfoWithCode(result);
+                    } else {
+                        showToast(getString(R.string.scan_qrcode_failed));
+                    }
+                    break;
+                case Constant.REQUEST_CODE_CONTRACT_NUM:
+                    if (data != null) {
+                        Bundle bundle = data.getExtras();
+                        String result = bundle.getString("result");
+                        mPresenter.getContractInfoWithNum(result);
                     } else {
                         showToast(getString(R.string.enter_qrcode_error));
                     }
