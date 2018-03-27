@@ -35,7 +35,7 @@ public class Constant {
 
     public static String getHttpScheme() {
         if ("production".equals(BuildConfig.ENV)) {
-            return SCHEME_HTTP;
+            return SCHEME_HTTPS;
         } else if ("development".equals(BuildConfig.ENV)) {
             return SCHEME_HTTP;
         }

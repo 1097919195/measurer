@@ -343,7 +343,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private class DownloadChangeObserver extends ContentObserver {
 
-        public DownloadChangeObserver(Handler handler) {
+        DownloadChangeObserver(Handler handler) {
             super(handler);
         }
 
@@ -400,7 +400,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         //3.给下载的文件指定路径
         request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "GT_company_" + app.getVersion() + ".apk");
         //4.设置显示在文件下载Notification（通知栏）中显示的文字。6.0的手机Description不显示
-        request.setTitle("有新的版本: " + app.getVersion());
+        request.setTitle("GT_company_" + app.getVersion() + ".apk");
         request.setDescription(app.getInfo());
         //5更改服务器返回的minetype为android包类型
         request.setMimeType("application/vnd.android.package-archive");
@@ -412,7 +412,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         request.setVisibleInDownloadsUi(true);
         lastDownloadId = dowanloadmanager.enqueue(request);
         //9.保存id到缓存
-        PreferencesUtils.getInstance(this).putLong(DOWNLOAD_ID, lastDownloadId);
+        PreferencesUtils.getInstance(this).putFloat(DOWNLOAD_ID, lastDownloadId);
         //10.采用内容观察者模式实现进度
         downloadObserver = new DownloadChangeObserver(null);
         getContentResolver().registerContentObserver(CONTENT_URI, true, downloadObserver);

@@ -22,9 +22,9 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
     @SuppressLint("NewApi")
     public void onReceive(Context context, Intent intent) {
-        long downLoadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+        float downLoadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
         PreferencesUtils instance = PreferencesUtils.getInstance(context);
-        long cacheDownLoadId = instance.getLong(MainActivity.DOWNLOAD_ID);
+        float cacheDownLoadId = instance.getFloat(MainActivity.DOWNLOAD_ID);
         if (cacheDownLoadId == downLoadId) {
             install(context);
         }
@@ -43,10 +43,10 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
     public static File queryDownloadedApk(Context context) {
         File targetApkFile = null;
         DownloadManager downloader = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        long downloadId = PreferencesUtils.getLong(context, MainActivity.DOWNLOAD_ID);
+        float downloadId = PreferencesUtils.getFloat(context, MainActivity.DOWNLOAD_ID);
         if (downloadId != -1) {
             DownloadManager.Query query = new DownloadManager.Query();
-            query.setFilterById(downloadId);
+            query.setFilterById((long) downloadId);
             query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);
             Cursor cur = downloader.query(query);
             if (cur != null) {

@@ -254,19 +254,19 @@ public final class PreferencesUtils {
         assign(MEASURE_OFFSET, measureOffset);
     }
 
-    public long getLong(String key) {
-        return mPreferences.getLong(key, 0);
+    public float getFloat(String key) {
+        return mPreferences.getFloat(key, 0);
     }
 
-    public static long getLong(Context context, String key) {
-        return getLong(context, key, -1);
+    public static float getFloat(Context context, String key) {
+        return getFloat(context, key, -1);
     }
 
-    public static long getLong(Context context, String key, long defaultValue) {
-        return mPreferences.getLong(key, defaultValue);
+    public static float getFloat(Context context, String key, float defaultValue) {
+        return mPreferences.getFloat(key, defaultValue);
     }
 
-    public void putLong(String downloadId, long lastDownloadId) {
+    public void putFloat(String downloadId, float lastDownloadId) {
         assign(downloadId, lastDownloadId);
     }
 }
