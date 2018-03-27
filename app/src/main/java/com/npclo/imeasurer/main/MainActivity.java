@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userNameView.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
         String logoSrc = instance.getUserLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.getImgUrl() + logoSrc)
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(logoView);
         } else {
@@ -287,7 +287,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userNameView.setText(!TextUtils.isEmpty(user.getNickname()) ? user.getNickname() : user.getName());
         String logoSrc = user.getLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.getImgUrl() + logoSrc)
+            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(logoView);
         } else {

@@ -33,12 +33,12 @@ public class Constant {
     public static final int REQUEST_CODE_WECHATUSER_NUM = 1203;
     public static final int REQUEST_CODE_CONTRACT_NUM = 1204;
 
-    public static String getApiUrl() {
+    public static String getHttpScheme() {
         if ("production".equals(BuildConfig.ENV)) {
-            return SCHEME_HTTPS + BASE_API_URL;
+            return SCHEME_HTTPS;
         } else if ("development".equals(BuildConfig.ENV)) {
-            return SCHEME_HTTP + BASE_API_URL;
+            return SCHEME_HTTP;
         }
-        return SCHEME_HTTP + BASE_API_URL;
+        return SCHEME_HTTP;
     }
 }
