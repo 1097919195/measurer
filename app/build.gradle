@@ -7,8 +7,8 @@ android {
         applicationId "com.npclo.IMeasurer_company"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 22
-        versionName "1.3.4"
+        versionCode 24
+        versionName "1.3.6"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         jackOptions {

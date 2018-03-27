@@ -1,8 +1,15 @@
 package com.npclo.imeasurer.main;
 
 import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -22,6 +29,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.base.BaseActivity;
 import com.npclo.imeasurer.base.BaseApplication;
+import com.npclo.imeasurer.data.App;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.user.UserActivity;
 import com.npclo.imeasurer.utils.Constant;
@@ -31,6 +39,9 @@ import com.npclo.imeasurer.utils.schedulers.SchedulerProvider;
 import com.npclo.imeasurer.utils.views.CircleImageView;
 import com.unisound.client.SpeechConstants;
 import com.unisound.client.SpeechSynthesizer;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import kr.co.namee.permissiongen.PermissionGen;
 
@@ -43,13 +54,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public NavigationView navView;
     private DrawerLayout drawerLayout;
     private HomePresenter homePresenter;
-    private String macAddress;
-    private String deviceName;
+    private String macAddress, deviceName;
     public SpeechSynthesizer speechSynthesizer;//提供对已安装的语音合成引擎的功能的访问
-    private TextView currTimesView;
-    private TextView totalTimesView;
-    private TextView userNameView;
+    private TextView currTimesView, totalTimesView, userNameView;
     private CircleImageView logoView;
+    public static final String DOWNLOAD_ID = "download_id";
+    private DownloadChangeObserver downloadObserver;
+    private long lastDownloadId = 0;
+    //"content://downloads/my_downloads"必须这样写不可更改
+    public static final Uri CONTENT_URI = Uri.parse("content://downloads/my_downloads");
+    private MaterialDialog materialDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -316,5 +330,92 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (speechSynthesizer != null) {
             speechSynthesizer = null;
         }
+
+        getContentResolver().unregisterContentObserver(downloadObserver);
+        materialDialog.dismiss();
     }
+
+    public void updateApp(App app) {
+        initDownloadDialog();
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+        cachedThreadPool.execute(new DownLoadTask(app));
+    }
+
+    private class DownloadChangeObserver extends ContentObserver {
+
+        public DownloadChangeObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(lastDownloadId);
+            DownloadManager dManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+            final Cursor cursor = dManager.query(query);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int totalColumn = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+                final int currentColumn = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+                int totalSize = cursor.getInt(totalColumn);
+                int currentSize = cursor.getInt(currentColumn);
+                float percent = (float) currentSize / (float) totalSize;
+                int progress = Math.round(percent * 100);
+                materialDialog.setProgress(progress);
+                if (progress == 100) {
+                    materialDialog.dismiss();
+                }
+            }
+        }
+    }
+
+    private void initDownloadDialog() {
+        if (materialDialog == null) {
+            materialDialog = new MaterialDialog.Builder(MainActivity.this)
+                    .title("版本升级")
+                    .content("正在下载安装包，请稍候")
+                    .progress(false, 100, false)
+                    .cancelable(false)
+                    .show();
+        }
+    }
+
+    private class DownLoadTask implements Runnable {
+        private App a;
+
+        DownLoadTask(App app) {
+            a = app;
+        }
+
+        @Override
+        public void run() {
+            initDownLoad(a);
+        }
+    }
+
+    private void initDownLoad(App app) {
+        //1.得到下载对象
+        DownloadManager dowanloadmanager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        //2.创建下载请求对象，并且把下载的地址放进去
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(app.getPath()));
+        //3.给下载的文件指定路径
+        request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "GT_company_" + app.getVersion() + ".apk");
+        //4.设置显示在文件下载Notification（通知栏）中显示的文字。6.0的手机Description不显示
+        request.setTitle("有新的版本: " + app.getVersion());
+        request.setDescription(app.getInfo());
+        //5更改服务器返回的minetype为android包类型
+        request.setMimeType("application/vnd.android.package-archive");
+        //6.设置在什么连接状态下执行下载操作
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+        //7. 设置为可被媒体扫描器找到
+        request.allowScanningByMediaScanner();
+        //8. 设置为可见和可管理
+        request.setVisibleInDownloadsUi(true);
+        lastDownloadId = dowanloadmanager.enqueue(request);
+        //9.保存id到缓存
+        PreferencesUtils.getInstance(this).putLong(DOWNLOAD_ID, lastDownloadId);
+        //10.采用内容观察者模式实现进度
+        downloadObserver = new DownloadChangeObserver(null);
+        getContentResolver().registerContentObserver(CONTENT_URI, true, downloadObserver);
+    }
+
 }

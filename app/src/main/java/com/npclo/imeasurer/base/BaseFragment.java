@@ -16,7 +16,6 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.JsonSyntaxException;
 import com.npclo.imeasurer.R;
 import com.npclo.imeasurer.account.AccountActivity;
-import com.npclo.imeasurer.data.App;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Gog;
 import com.npclo.imeasurer.utils.LogUtils;
@@ -29,7 +28,6 @@ import java.net.SocketTimeoutException;
 
 import me.yokeyword.fragmentation.SupportFragment;
 import retrofit2.HttpException;
-import util.UpdateAppUtils;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -131,15 +129,6 @@ public abstract class BaseFragment extends SupportFragment {
         } catch (PackageManager.NameNotFoundException e) {
             return 0;
         }
-    }
-
-    protected void updateApp(App app) {
-        UpdateAppUtils.from(getActivity())
-                .serverVersionCode(app.getCode())
-                .serverVersionName(app.getVersion())
-                .apkPath(app.getPath() + "?v=" + app.getVersion())
-                .updateInfo(app.getInfo().trim())
-                .update();
     }
 
     private void goToSignIn() {

@@ -194,7 +194,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             PreferencesUtils.getInstance(getActivity()).setCurrentDate(getTodayStr());
         }
         if (app.getCode() > code && code != 0) {
-            updateApp(app);
+            ((MainActivity) getActivity()).updateApp(app);
         } else {
             if (Constant.MANUAL.equals(type)) {
                 showToast("已经是最新版");

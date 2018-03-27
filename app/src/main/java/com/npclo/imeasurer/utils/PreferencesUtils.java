@@ -253,4 +253,20 @@ public final class PreferencesUtils {
     public void setMeasureOffset(float measureOffset) {
         assign(MEASURE_OFFSET, measureOffset);
     }
+
+    public long getLong(String key) {
+        return mPreferences.getLong(key, 0);
+    }
+
+    public static long getLong(Context context, String key) {
+        return getLong(context, key, -1);
+    }
+
+    public static long getLong(Context context, String key, long defaultValue) {
+        return mPreferences.getLong(key, defaultValue);
+    }
+
+    public void putLong(String downloadId, long lastDownloadId) {
+        assign(downloadId, lastDownloadId);
+    }
 }
