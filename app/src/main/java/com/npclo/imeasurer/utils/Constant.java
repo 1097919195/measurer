@@ -17,7 +17,7 @@ public class Constant {
 
     private static final String SCHEME_HTTP = "http";
     private static final String SCHEME_HTTPS = "https";
-    public static final String API_BASE_URL = "://www.npclo.com/api/";
+    public static final String BASE_API_URL = "://www.npclo.com/api/";
     public static final String MANUAL = "manual";
     public static final String AUTO = "auto";
     public static final int USER_PWD = 1;
@@ -33,12 +33,12 @@ public class Constant {
     public static final int REQUEST_CODE_WECHATUSER_NUM = 1203;
     public static final int REQUEST_CODE_CONTRACT_NUM = 1204;
 
-    public static String getHttpScheme() {
+    public static String getApiUrl() {
         if ("production".equals(BuildConfig.ENV)) {
-            return Constant.SCHEME_HTTPS;
+            return SCHEME_HTTPS + BASE_API_URL;
         } else if ("development".equals(BuildConfig.ENV)) {
-            return Constant.SCHEME_HTTP;
+            return SCHEME_HTTP + BASE_API_URL;
         }
-        return SCHEME_HTTP;
+        return SCHEME_HTTP + BASE_API_URL;
     }
 }

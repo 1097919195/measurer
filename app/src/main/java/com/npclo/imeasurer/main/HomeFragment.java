@@ -17,11 +17,7 @@ import com.npclo.imeasurer.account.AccountActivity;
 import com.npclo.imeasurer.base.BaseApplication;
 import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.camera.CaptureActivity;
-import com.npclo.imeasurer.data.App;
-import com.npclo.imeasurer.data.ThirdMember;
-import com.npclo.imeasurer.data.WechatUser;
 import com.npclo.imeasurer.data.ble.BleDevice;
-import com.npclo.imeasurer.data.measure.Contract;
 import com.npclo.imeasurer.data.measure.Item;
 import com.npclo.imeasurer.measure.MeasureActivity;
 import com.npclo.imeasurer.utils.Constant;
@@ -29,13 +25,11 @@ import com.npclo.imeasurer.utils.LogUtils;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.exceptions.BleScanException;
-import com.polidea.rxandroidble.scan.ScanResult;
 import com.unisound.client.SpeechSynthesizer;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,7 +72,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         configureResultList();
         String userLogo = PreferencesUtils.getInstance(getActivity()).getUserLogo();
         if (!TextUtils.isEmpty(userLogo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo)
+            Glide.with(this).load(Constant.getImgUrl() + userLogo)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(scanImg);
         }
@@ -157,7 +151,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                     .show();
         } else {
             cirProgressBar.dismiss();
-        }
     }
 
     /**

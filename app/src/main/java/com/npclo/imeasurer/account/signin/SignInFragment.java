@@ -22,6 +22,7 @@ import com.npclo.imeasurer.base.BaseFragment;
 import com.npclo.imeasurer.data.User;
 import com.npclo.imeasurer.main.MainActivity;
 import com.npclo.imeasurer.utils.Constant;
+import com.npclo.imeasurer.utils.LoadingTip;
 import com.npclo.imeasurer.utils.PreferencesUtils;
 
 import butterknife.BindView;
@@ -99,10 +100,11 @@ public class SignInFragment extends BaseFragment implements SignInContract.View 
     @Override
     protected void initView(View mRootView) {
         unbinder = ButterKnife.bind(this, mRootView);
+
         PreferencesUtils instance = PreferencesUtils.getInstance(getActivity());
         String userLogo = instance.getUserLogo();
         if (!TextUtils.isEmpty(userLogo)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + userLogo)
+            Glide.with(this).load(Constant.getHttpScheme()+Constant.IMG_BASE_URL + userLogo)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(logo);
         } else {

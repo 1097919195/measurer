@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private HomePresenter homePresenter;
     private String macAddress;
     private String deviceName;
-    public SpeechSynthesizer speechSynthesizer;
+    public SpeechSynthesizer speechSynthesizer;//提供对已安装的语音合成引擎的功能的访问
     private TextView currTimesView;
     private TextView totalTimesView;
     private TextView userNameView;
@@ -85,14 +85,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (speechSynthesizer != null) {
-            speechSynthesizer = null;
-        }
-    }
-
     private void init() {
         //加载登录后的欢迎界面
         HomeFragment homeFragment = findFragment(HomeFragment.class);
@@ -121,6 +113,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     protected void initView() {
         setContentView(R.layout.act_main_new);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.basetoolbar);
         setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -165,7 +158,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userNameView.setText(!TextUtils.isEmpty(nickname) ? nickname : name);
         String logoSrc = instance.getUserLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc)
+            Glide.with(this).load(Constant.getImgUrl() + logoSrc)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(logoView);
         } else {
@@ -294,7 +287,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userNameView.setText(!TextUtils.isEmpty(user.getNickname()) ? user.getNickname() : user.getName());
         String logoSrc = user.getLogo();
         if (!TextUtils.isEmpty(logoSrc)) {
-            Glide.with(this).load(Constant.getHttpScheme() + Constant.IMG_BASE_URL + logoSrc)
+            Glide.with(this).load(Constant.getImgUrl() + logoSrc)
                     .apply(new RequestOptions().error(R.drawable.load_fail_pic))
                     .into(logoView);
         } else {
@@ -315,5 +308,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return;
         }
         super.onBackPressedSupport();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (speechSynthesizer != null) {
+            speechSynthesizer = null;
+        }
     }
 }

@@ -11,7 +11,7 @@ import rx.Observable;
 /**
  * Created by Endless on 2017/7/20.
  */
-
+//相当于Model类
 public class UserRepository implements UserDataSource {
     @Override
     public Observable<HttpMsg> signIn(String name, String pwd) {

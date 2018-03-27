@@ -10,7 +10,7 @@ import rx.Observable;
 /**
  * Created by Endless on 2017/7/20.
  */
-
+//相当于契约类的model接口
 public interface UserDataSource {
     Observable<HttpMsg> signIn(String name, String pwd);
 
