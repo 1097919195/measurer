@@ -156,4 +156,5 @@
     <string name="ble_error_hint">智能尺连接失败，请重试</string>
     <string name="app_config">gt_config</string>
     <string name="login_time_out">登录状态超时，请重新登录</string>
+    <string name="cancel">取消</string>
 </resources>

@@ -331,8 +331,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             speechSynthesizer = null;
         }
 
-        getContentResolver().unregisterContentObserver(downloadObserver);
-        materialDialog.dismiss();
+        if (downloadObserver != null) {
+            getContentResolver().unregisterContentObserver(downloadObserver);
+        }
+        if (materialDialog != null) {
+            materialDialog.dismiss();
+        }
     }
 
     public void updateApp(App app) {
