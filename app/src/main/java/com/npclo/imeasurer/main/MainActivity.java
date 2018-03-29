@@ -340,9 +340,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     public void updateApp(App app) {
-        initDownloadDialog();
-        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-        cachedThreadPool.execute(new DownLoadTask(app));
+        new MaterialDialog.Builder(MainActivity.this)
+                .title("发现新的版本号: v" + app.getVersion())
+                .content(app.getInfo())
+                .positiveText("下载")
+                .negativeText("忽略")
+                .onPositive((d, r) -> {
+                    initDownloadDialog();
+                    ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+                    cachedThreadPool.execute(new DownLoadTask(app));
+                })
+                .onNegative((p, r) -> {
+                })
+                .show();
+
     }
 
     private class DownloadChangeObserver extends ContentObserver {
