@@ -27,7 +27,8 @@ android {
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
                         def fileName = "GTcompany_${defaultConfig.versionCode}_${defaultConfig.versionName}.apk"
-                        output.outputFile = new File(outputFile.parent, fileName)
+                        output.outputFileName  = fileName//studio3.0中要这么写
+//                        output.outputFile = new File(outputFile.parent, fileName)//2.3中
                     }
                 }
             }
